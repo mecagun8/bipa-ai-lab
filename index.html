@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부산정보산업진흥원 AI 서비스 LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --done-blue:   #0077D4;
+    --done-teal:   #00C49A;
+    --active-blue: #009FE3;
+    --active-wip:  #f59e0b;
+    --blue-main:   #003b8e;
+    --blue-mid:    #0060c0;
+    --blue-bright: #009FE3;
+  }
+
+  body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #001f54 0%, #003b8e 30%, #0060c0 65%, #0090d8 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 52px 16px 72px;
+  }
+
+  .header { text-align: center; margin-bottom: 40px; }
+  .header-icon { font-size: 52px; display: block; margin-bottom: 14px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
+  .header h1 { font-size: 27px; font-weight: 800; color: #fff; letter-spacing: -0.5px; text-shadow: 0 2px 16px rgba(0,0,0,0.25); }
+  .header p { font-size: 14px; color: rgba(255,255,255,0.72); margin-top: 9px; }
+
+  .section-label {
+    width: 100%; max-width: 600px;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+
+  .card-list { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px 20px 18px;
+    box-shadow: 0 6px 28px rgba(0,45,114,0.16), 0 1px 4px rgba(0,0,0,0.06);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(0,45,114,0.22), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .status-badge {
+    position: absolute; top: 14px; right: 16px;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .s-live { background: #e0f2fe; color: #0369a1; }
+  .s-wip  { background: #fffbeb; color: #b45309; }
+
+  .card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+
+  .app-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  .icon-navy   { background: linear-gradient(135deg, #003b8e, #0060c0); }
+  .icon-indigo { background: linear-gradient(135deg, #3b3fa5, #6366f1); }
+  .icon-green  { background: linear-gradient(135deg, #22a861, #0e7a44); }
+  .icon-teal   { background: linear-gradient(135deg, #00a8a8, #007a7a); }
+  .icon-amber  { background: linear-gradient(135deg, #d97706, #92400e); }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-body h2 {
+    font-size: 16px; font-weight: 700; color: #111827;
+    display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap;
+  }
+  .card-body p { font-size: 12.5px; color: #7a8899; line-height: 1.4; }
+
+  .link-btn {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+    background: var(--blue-main);
+    color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.16s, transform 0.12s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,55,143,0.25);
+  }
+  .link-btn:hover { background: var(--blue-mid); transform: scale(1.04); }
+  .link-btn svg { width: 11px; height: 11px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ══════════════════
+     STEPPER
+  ══════════════════ */
+  .stepper { display: flex; align-items: flex-start; }
+  .step-line {
+    flex: 1; height: 2px; background: #e2e8f0;
+    border-radius: 2px; margin-top: 5px; min-width: 16px;
+  }
+  .step-line.d { background: var(--done-blue); }
+
+  .step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 0 0 auto; }
+
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid #d1dce8; background: #f1f5f9; flex-shrink: 0;
+  }
+  .dot.d  { background: var(--done-blue); border-color: var(--done-blue); }
+  /* active = 실제운영 완료 상태 (filled + 체크 느낌) */
+  .dot.a  { background: var(--active-blue); border-color: var(--active-blue); box-shadow: 0 0 0 3px rgba(0,159,227,.2); }
+  /* active-wip = 기초개발 단계 */
+  .dot.aw { width:14px;height:14px;background:#fff;border:2.5px solid var(--active-wip);box-shadow:0 0 0 3.5px rgba(245,158,11,.2);margin:-1px; }
+
+  .lbl { font-size: 10.5px; color: #b0bec8; font-weight: 500; white-space: nowrap; }
+  .lbl.d  { color: var(--done-blue);   font-weight: 600; }
+  .lbl.a  { color: var(--active-blue); font-weight: 700; }
+  .lbl.aw { color: var(--active-wip);  font-weight: 700; }
+
+  /* ── NOTICE ── */
+  .notice {
+    width: 100%; max-width: 600px;
+    background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 14px; padding: 14px 18px; margin-top: 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .notice-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .notice p { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; line-height: 1.55; }
+
+  .footer { margin-top: 40px; text-align: center; }
+  .footer blockquote { font-size: 13.5px; color: rgba(255,255,255,0.55); font-style: italic; margin-bottom: 8px; }
+  .footer a { font-size: 12px; color: rgba(255,255,255,0.38); text-decoration: none; transition: color .2s; }
+  .footer a:hover { color: rgba(255,255,255,0.85); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <span class="header-icon">🏛️</span>
+  <h1>부산정보산업진흥원 AI 서비스 LAB</h1>
+</header>
+
+<p class="section-label">📎 &nbsp;AI 활용 업무용 앱</p>
+
+<div class="card-list">
+
+  <!-- ① 부서별 담당기업 -->
+  <div class="card">
+    <span class="status-badge s-live">🟢 운영중</span>
+    <div class="card-head">
+      <div class="app-icon icon-navy">🏢</div>
+      <div class="card-body">
+        <h2>부서별 담당기업</h2>
+        <p>팀별 기업 배정 현황 조회 및 관리</p>
+      </div>
+      <a class="link-btn" href="https://google-sheets-viewer-599487465976.us-west1.run.app/" target="_blank">
+        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+      </a>
+    </div>
+    <div class="stepper">
+      <div class="step"><div class="dot d"></div><span class="lbl d">기초개발</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">데이터 반영</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">디자인</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot a"></div><span class="lbl a">실제운영</span></div>
+    </div>
+  </div>
+
+  <!-- ② 지시사항 관련 -->
+  <div class="card">
+    <span class="status-badge s-live">🟢 운영중</span>
+    <div class="card-head">
+      <div class="app-icon icon-indigo">📌</div>
+      <div class="card-body">
+        <h2>지시사항 관련</h2>
+        <p>내부 지시사항 공유 및 이행 현황 확인</p>
+      </div>
+      <a class="link-btn" href="https://instruction-viewer-54538175130.us-west1.run.app/" target="_blank">
+        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+      </a>
+    </div>
+    <div class="stepper">
+      <div class="step"><div class="dot d"></div><span class="lbl d">기초개발</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">데이터 반영</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">디자인</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot a"></div><span class="lbl a">실제운영</span></div>
+    </div>
+  </div>
+
+  <!-- ③ 일자리 실적 -->
+  <div class="card">
+    <span class="status-badge s-live">🟢 운영중</span>
+    <div class="card-head">
+      <div class="app-icon icon-green">💼</div>
+      <div class="card-body">
+        <h2>일자리 실적</h2>
+        <p>2026년 취업 연계 및 일자리 사업 성과 집계</p>
+      </div>
+      <a class="link-btn" href="https://bipa-2026-315678420000.us-west1.run.app/" target="_blank">
+        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+      </a>
+    </div>
+    <div class="stepper">
+      <div class="step"><div class="dot d"></div><span class="lbl d">기초개발</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">데이터 반영</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">디자인</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot a"></div><span class="lbl a">실제운영</span></div>
+    </div>
+  </div>
+
+  <!-- ④ 교육실적 -->
+  <div class="card">
+    <span class="status-badge s-live">🟢 운영중</span>
+    <div class="card-head">
+      <div class="app-icon icon-teal">📚</div>
+      <div class="card-body">
+        <h2>교육실적</h2>
+        <p>연간 훈련 과정별 수료·수강 실적 현황</p>
+      </div>
+      <a class="link-btn" href="https://bipa-710912146510.us-west1.run.app/" target="_blank">
+        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+      </a>
+    </div>
+    <div class="stepper">
+      <div class="step"><div class="dot d"></div><span class="lbl d">기초개발</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">데이터 반영</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot d"></div><span class="lbl d">디자인</span></div>
+      <div class="step-line d"></div>
+      <div class="step"><div class="dot a"></div><span class="lbl a">실제운영</span></div>
+    </div>
+  </div>
+
+  <!-- ⑤ 일자리 사업 DB 관리 LLM -->
+  <div class="card">
+    <span class="status-badge s-wip">🔨 개발중</span>
+    <div class="card-head">
+      <div class="app-icon icon-amber">🧠</div>
+      <div class="card-body">
+        <h2>일자리 사업 DB 관리 LLM</h2>
+        <p>일자리 사업 데이터베이스 AI 기반 자동 관리</p>
+      </div>
+      <span style="font-size:18px;color:#d1dce8;flex-shrink:0;margin-left:4px;">→</span>
+    </div>
+    <div class="stepper">
+      <div class="step"><div class="dot aw"></div><span class="lbl aw">기초개발</span></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="dot"></div><span class="lbl">데이터 반영</span></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="dot"></div><span class="lbl">디자인</span></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="dot"></div><span class="lbl">실제운영</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="notice">
+  <span class="notice-icon">⚠️</span>
+  <p>각 서비스는 MVP(Minimum Viable Product) 모델이므로 실제 결과와 다를 수 있습니다. 오류 및 개선 사항은 담당자에게 알려주세요.</p>
+</div>
+
+<footer class="footer">
+
+</footer>
+
+</body>
+</html>
