@@ -27,12 +27,10 @@
     padding: 52px 20px 72px;
   }
 
-  /* ── HEADER ── */
   .header { text-align: center; margin-bottom: 40px; }
   .header-icon { font-size: 52px; display: block; margin-bottom: 14px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25)); }
   .header h1 { font-size: 27px; font-weight: 800; color: #fff; letter-spacing: -0.5px; text-shadow: 0 2px 16px rgba(0,0,0,0.25); }
 
-  /* ── SECTION LABEL ── */
   .section-label {
     width: 100%; max-width: 1240px;
     font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
@@ -40,8 +38,8 @@
     text-transform: uppercase;
     margin: 0 0 10px;
   }
+  .section-label + .section-label { margin-top: 32px; }
 
-  /* ── GRID ── */
   .card-grid {
     width: 100%;
     max-width: 1240px;
@@ -50,12 +48,9 @@
     gap: 12px;
   }
   @media (min-width: 768px) {
-    .card-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .card-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* ── CARD ── */
   .card {
     background: #fff;
     border-radius: 20px;
@@ -72,7 +67,6 @@
     box-shadow: 0 12px 36px rgba(0,45,114,0.22), 0 2px 8px rgba(0,0,0,0.08);
   }
 
-  /* ── STATUS BADGE ── */
   .status-badge {
     position: absolute; top: 14px; right: 14px;
     font-size: 11px; font-weight: 600;
@@ -80,8 +74,8 @@
   }
   .s-live { background: #e0f2fe; color: #0369a1; }
   .s-wip  { background: #fffbeb; color: #b45309; }
+  .s-wiki { background: #f0fdf4; color: #166534; }
 
-  /* ── CARD HEAD ── */
   .card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 
   .app-icon {
@@ -96,6 +90,7 @@
   .icon-teal   { background: linear-gradient(135deg, #00a8a8, #007a7a); }
   .icon-amber  { background: linear-gradient(135deg, #d97706, #92400e); }
   .icon-rose   { background: linear-gradient(135deg, #e11d48, #9f1239); }
+  .icon-emerald{ background: linear-gradient(135deg, #059669, #065f46); }
 
   .card-body { flex: 1; min-width: 0; }
   .card-body h2 {
@@ -105,7 +100,6 @@
   }
   .card-body p { font-size: 12px; color: #7a8899; line-height: 1.4; padding-right: 72px; }
 
-  /* ── LINK BUTTON ── */
   .link-btn {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--blue-main);
@@ -122,7 +116,23 @@
   .link-btn:hover { background: var(--blue-mid); transform: scale(1.03); }
   .link-btn svg { width: 11px; height: 11px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── NO-LINK placeholder ── */
+  /* 위키 전용 버튼 */
+  .wiki-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #059669;
+    color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 7px 14px; border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.16s, transform 0.12s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+    margin-top: 14px;
+    align-self: flex-start;
+  }
+  .wiki-btn:hover { background: #047857; transform: scale(1.03); }
+  .wiki-btn svg { width: 11px; height: 11px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
   .no-link {
     display: inline-flex; align-items: center; gap: 5px;
     background: #e2e8f0; color: #94a3b8;
@@ -132,9 +142,15 @@
     white-space: nowrap; cursor: default;
   }
 
-  /* ══════════════════
-     STEPPER
-  ══════════════════ */
+  /* 위키 카드 태그 목록 */
+  .wiki-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+  .wiki-tag {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px;
+    background: #f0fdf4; color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
   .stepper { display: flex; align-items: flex-start; margin-top: auto; padding-top: 14px; }
   .step-line {
     flex: 1; height: 2px; background: #e2e8f0;
@@ -154,7 +170,6 @@
   .lbl.a  { color: var(--active-blue); font-weight: 700; }
   .lbl.aw { color: var(--active-wip);  font-weight: 700; }
 
-  /* ── NOTICE ── */
   .notice {
     width: 100%; max-width: 1240px;
     background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.25);
@@ -340,6 +355,33 @@
       <div class="step"><div class="dot"></div><span class="lbl">실제운영</span></div>
     </div>
     <span class="no-link">준비중</span>
+  </div>
+
+</div>
+
+<!-- ── 위키 섹션 ── -->
+<p class="section-label" style="margin-top:36px">📚 &nbsp;팀 기술 위키</p>
+
+<div class="card-grid">
+
+  <div class="card">
+    <span class="status-badge s-wiki">📖 운영중</span>
+    <div class="card-head">
+      <div class="app-icon icon-emerald">🗂️</div>
+      <div class="card-body">
+        <h2>BIPA AI Lab 위키</h2>
+        <p>인프라 설정, AI 도구 사용법, 업무 가이드 모음</p>
+      </div>
+    </div>
+    <div class="wiki-tags">
+      <span class="wiki-tag">Cloudflare</span>
+      <span class="wiki-tag">Ollama</span>
+      <span class="wiki-tag">Open WebUI</span>
+      <span class="wiki-tag">운영 가이드</span>
+    </div>
+    <a class="wiki-btn" href="wiki/index.html">
+      위키 보기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+    </a>
   </div>
 
 </div>
