@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ollama + Open WebUI 초기 설치 · BIPA 위키</title>
+<style>
+  :root {
+    --blue: #005bac;
+    --blue-light: #e8f0fb;
+    --teal: #00897b;
+    --teal-light: #e0f2f0;
+    --text: #1a1a2e;
+    --text-muted: #5a6478;
+    --border: #e2e6ed;
+    --bg: #f7f9fc;
+    --white: #ffffff;
+    --radius: 12px;
+    --font: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    --mono: 'JetBrains Mono', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); }
+
+  nav {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 0 2rem; display: flex; align-items: center; height: 56px; gap: 2rem;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; font-size: 15px; color: var(--blue); }
+  .nav-logo .dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; }
+  .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+  .nav-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; transition: all .15s; }
+  .nav-links a:hover { color: var(--blue); border-color: var(--blue); }
+
+  .breadcrumb { padding: 1rem 2rem; font-size: 13px; color: var(--text-muted); max-width: 820px; margin: 0 auto; }
+  .breadcrumb a { color: var(--blue); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { margin: 0 6px; }
+
+  .layout {
+    max-width: 820px; margin: 0 auto; padding: 0 1.5rem 4rem;
+    display: grid; grid-template-columns: 1fr 220px; gap: 2rem; align-items: start;
+  }
+
+  .article-header { margin-bottom: 2rem; }
+  .article-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--blue-light); color: var(--blue); border: 1px solid #c5d9f5; }
+  .tag.warn { background: #fff3e0; color: #e65100; border-color: #ffcc80; }
+  .article-title { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: .75rem; }
+  .article-meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+  .content { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+  .content h2 { font-size: 17px; font-weight: 600; color: var(--text); margin: 2rem 0 .75rem; padding-bottom: .4rem; border-bottom: 1px solid var(--border); }
+  .content h2:first-child { margin-top: 0; }
+  .content p { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 1rem; }
+  .content strong { color: var(--text); font-weight: 600; }
+
+  .step { display: flex; gap: 14px; margin-bottom: 1.2rem; padding: 1.2rem; background: var(--bg); border-radius: 10px; border-left: 3px solid var(--blue); }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: .4rem; }
+  .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  .terminal { background: #1a1a2e; border-radius: 10px; overflow: hidden; margin: 1rem 0; font-family: var(--mono); }
+  .terminal-bar { background: #2a2a40; padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
+  .dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; }
+  .dot-y { width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e; }
+  .dot-g { width: 10px; height: 10px; border-radius: 50%; background: #27c93f; }
+  .terminal-label { font-size: 11px; color: #888; margin-left: auto; font-family: var(--font); }
+  .terminal-body { padding: 14px 16px; font-size: 13px; line-height: 1.7; color: #c9d1d9; }
+  .cmd { color: #79c0ff; }
+  .out { color: #56d364; }
+  .comment { color: #6e7681; font-style: italic; }
+  .url { color: #9FE1CB; }
+
+  .callout { border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.65; display: flex; gap: 10px; margin: 1rem 0; }
+  .callout.info { background: var(--blue-light); border: 1px solid #c5d9f5; color: #1a3a6e; }
+  .callout.warn { background: #fff8e1; border: 1px solid #ffe082; color: #5d4037; }
+  .callout.danger { background: #fce8e8; border: 1px solid #f5c2c2; color: #7b1c1c; }
+  .callout.success { background: #e8f5e9; border: 1px solid #c8e6c9; color: #1b5e20; }
+  .callout-icon { font-size: 16px; flex-shrink: 0; }
+  .callout strong { font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0; }
+  th { background: var(--bg); padding: 8px 12px; text-align: left; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  tr:last-child td { border-bottom: none; }
+
+  .sidebar { position: sticky; top: 72px; }
+  .sidebar-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1rem; }
+  .sidebar-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: .75rem; }
+  .toc-link { display: block; font-size: 13px; color: var(--text-muted); text-decoration: none; padding: 4px 0; border-left: 2px solid transparent; padding-left: 8px; margin-left: -1px; transition: all .15s; }
+  .toc-link:hover { color: var(--blue); border-color: var(--blue); }
+  .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--text-muted); }
+  .info-val { font-weight: 500; color: var(--text); }
+
+  code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-size: 12px; color: var(--text); }
+
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+
+  @media (max-width: 640px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="dot"></div>
+    BIPA AI Lab
+  </a>
+  <div class="nav-links">
+    <a href="../index.html">서비스</a>
+    <a href="index.html">위키</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">위키</a>
+  <span>›</span>
+  <a href="index.html">인프라 · 네트워크</a>
+  <span>›</span>
+  Ollama + Open WebUI 초기 설치
+</div>
+
+<div class="layout">
+
+  <div>
+    <div class="article-header">
+      <div class="article-tags">
+        <span class="tag">Ollama</span>
+        <span class="tag">Open WebUI</span>
+        <span class="tag">Docker</span>
+        <span class="tag">Windows</span>
+        <span class="tag warn">VRAM 8GB 최저사양</span>
+      </div>
+      <h1 class="article-title">Ollama + Open WebUI<br>초기 설치 가이드</h1>
+      <div class="article-meta">
+        <span>⚙️ 인프라 · 네트워크</span>
+        <span>⏱ 소요시간 30분</span>
+        <span>📅 2026.05</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <h2 id="intro">개요</h2>
+      <p>
+        이 가이드는 <strong>Windows 10 + RTX 2070 Super</strong> 환경에서 로컬 LLM 스택을 구성하는 방법이에요.
+        Ollama로 모델을 실행하고, Open WebUI로 ChatGPT 같은 인터페이스를 제공하는 구조예요.
+      </p>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div>
+          <strong>환경 기준</strong><br>
+          OS: Windows 10/11 · GPU: 상용 그래픽 카드 (VRAM 8GB 이상) · RAM: 32GB 이상 권장<br>
+          VRAM 8GB는 사실상 최저 사양이에요. 7B 모델은 무난하지만 14B 이상은 버거울 수 있어요. VRAM이 클수록 더 큰 모델을 쾌적하게 쓸 수 있어요.
+        </div>
+      </div>
+
+      <h2 id="structure">구성 구조</h2>
+      <p>설치 후 이런 구조로 동작해요:</p>
+      <table>
+        <tr><th>구성요소</th><th>역할</th><th>포트</th></tr>
+        <tr><td>Ollama</td><td>LLM 모델 실행 엔진</td><td>11434</td></tr>
+        <tr><td>Open WebUI</td><td>웹 채팅 인터페이스</td><td>3000</td></tr>
+        <tr><td>Docker</td><td>Open WebUI 컨테이너 실행</td><td>—</td></tr>
+      </table>
+
+      <h2 id="prereq">사전 준비</h2>
+      <table>
+        <tr><th>항목</th><th>확인 방법</th></tr>
+        <tr><td>NVIDIA 드라이버 최신 버전</td><td>nvidia-smi 명령어로 확인</td></tr>
+        <tr><td>Docker Desktop 설치</td><td>docker.com에서 다운로드</td></tr>
+        <tr><td>WSL2 활성화</td><td>Docker Desktop 설치 시 자동 안내</td></tr>
+      </table>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div>
+          <strong>Docker Desktop 설치 전 WSL2 먼저</strong><br>
+          PowerShell 관리자 모드에서 <code>wsl --install</code> 실행 후 재부팅하고 Docker 설치하세요.
+        </div>
+      </div>
+
+      <h2 id="ollama">1단계 · Ollama 설치</h2>
+      <p>Ollama 공식 사이트에서 Windows용 설치파일을 받아 설치해요.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">설치파일 다운로드 및 실행</div>
+          <div class="step-desc">ollama.com → Download for Windows → 설치 실행<br>설치 완료 후 트레이 아이콘에 Ollama가 나타나요.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">설치 확인</div>
+          <div class="step-desc">PowerShell에서 아래 명령어로 정상 설치 확인</div>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><span class="terminal-label">PowerShell</span></div>
+        <div class="terminal-body">
+          <div><span class="cmd">ollama --version</span></div>
+          <div><span class="out">ollama version is 0.x.x</span></div>
+        </div>
+      </div>
+
+      <h2 id="model">2단계 · 모델 다운로드</h2>
+      <p>VRAM 8GB (최저사양) 기준 추천 모델이에요. VRAM이 클수록 더 큰 모델을 쓸 수 있어요.</p>
+      <table>
+        <tr><th>모델</th><th>크기</th><th>특징</th></tr>
+        <tr><td>gemma3:12b</td><td>~7GB</td><td>팀 메인 사용 모델, 한글 우수 · 8GB VRAM 한계치</td></tr>
+        <tr><td>qwen2.5:7b</td><td>~4GB</td><td>한글 성능 좋음, 여유 있게 동작</td></tr>
+        <tr><td>llama3.1:8b</td><td>~5GB</td><td>영문 범용</td></tr>
+      </table>
+
+      <div class="terminal">
+        <div class="terminal-bar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><span class="terminal-label">PowerShell</span></div>
+        <div class="terminal-body">
+          <div><span class="comment"># 팀 기본 모델 설치 (시간 걸림 — 약 7GB)</span></div>
+          <div><span class="cmd">ollama pull gemma3:12b</span></div>
+          <br>
+          <div><span class="comment"># 설치된 모델 목록 확인</span></div>
+          <div><span class="cmd">ollama list</span></div>
+        </div>
+      </div>
+
+      <h2 id="docker">3단계 · Docker Desktop 설치 및 설정</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Docker Desktop 설치</div>
+          <div class="step-desc">docker.com/products/docker-desktop → Windows용 다운로드 후 설치<br>설치 중 WSL2 백엔드 사용 옵션 체크 확인</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">NVIDIA Container Toolkit 활성화</div>
+          <div class="step-desc">Docker Desktop → Settings → Resources → GPU 활성화 체크</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">설치 확인</div>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><span class="terminal-label">PowerShell</span></div>
+        <div class="terminal-body">
+          <div><span class="cmd">docker --version</span></div>
+          <div><span class="out">Docker version 2x.x.x</span></div>
+        </div>
+      </div>
+
+      <h2 id="openwebui">4단계 · Open WebUI 설치 및 실행</h2>
+      <p>Docker로 Open WebUI를 실행해요. 처음 실행 시 이미지를 다운로드하므로 시간이 걸려요.</p>
+
+      <div class="terminal">
+        <div class="terminal-bar"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div><span class="terminal-label">PowerShell</span></div>
+        <div class="terminal-body">
+          <div><span class="cmd">docker run -d `</span></div>
+          <div>&nbsp;&nbsp;-p 3000:8080 `</div>
+          <div>&nbsp;&nbsp;--add-host=host.docker.internal:host-gateway `</div>
+          <div>&nbsp;&nbsp;-v open-webui:/app/backend/data `</div>
+          <div>&nbsp;&nbsp;--name open-webui `</div>
+          <div>&nbsp;&nbsp;--restart always `</div>
+          <div>&nbsp;&nbsp;ghcr.io/open-webui/open-webui:main</div>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div>
+          <strong>--restart always 옵션</strong><br>
+          PC 재부팅해도 Docker Desktop 실행되면 Open WebUI가 자동으로 같이 켜져요.
+        </div>
+      </div>
+
+      <h2 id="check">5단계 · 접속 및 초기 설정</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">브라우저에서 접속</div>
+          <div class="step-desc"><code>http://localhost:3000</code> 접속 → 관리자 계정 생성 (처음 가입한 계정이 자동으로 관리자)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Ollama 연결 확인</div>
+          <div class="step-desc">Settings → Connections → Ollama API URL이 <code>http://host.docker.internal:11434</code> 로 되어 있으면 정상</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">모델 선택 후 채팅 시작</div>
+          <div class="step-desc">상단 드롭다운에서 <code>gemma3:12b</code> 선택 → 채팅 시작</div>
+        </div>
+      </div>
+
+      <div class="callout success">
+        <span class="callout-icon">✅</span>
+        <div>
+          <strong>설치 완료!</strong><br>
+          채팅창에서 모델이 응답하면 정상이에요. 처음 응답은 모델 로딩 때문에 10~20초 걸릴 수 있어요.
+        </div>
+      </div>
+
+      <h2 id="trouble">자주 하는 실수 · 트러블슈팅</h2>
+
+      <div class="callout danger" style="margin-bottom:10px">
+        <span class="callout-icon">✗</span>
+        <div><strong>Open WebUI에서 모델이 안 보임</strong><br>
+        Ollama가 실행 중인지 확인. 트레이 아이콘 확인 또는 <code>ollama list</code> 실행해보기</div>
+      </div>
+      <div class="callout danger" style="margin-bottom:10px">
+        <span class="callout-icon">✗</span>
+        <div><strong>localhost:3000 접속 안 됨</strong><br>
+        Docker Desktop이 실행 중인지 확인. <code>docker ps</code>로 open-webui 컨테이너 상태 확인</div>
+      </div>
+      <div class="callout danger">
+        <span class="callout-icon">✗</span>
+        <div><strong>GPU 안 씀 (응답 매우 느림)</strong><br>
+        Docker Desktop Settings → Resources → GPU 체크 여부 확인. NVIDIA 드라이버 최신 버전인지 확인</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">목차</div>
+      <a class="toc-link" href="#intro">개요</a>
+      <a class="toc-link" href="#structure">구성 구조</a>
+      <a class="toc-link" href="#prereq">사전 준비</a>
+      <a class="toc-link" href="#ollama">1단계 · Ollama 설치</a>
+      <a class="toc-link" href="#model">2단계 · 모델 다운로드</a>
+      <a class="toc-link" href="#docker">3단계 · Docker 설치</a>
+      <a class="toc-link" href="#openwebui">4단계 · Open WebUI 설치</a>
+      <a class="toc-link" href="#check">5단계 · 접속 및 초기 설정</a>
+      <a class="toc-link" href="#trouble">트러블슈팅</a>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">문서 정보</div>
+      <div class="info-row"><span class="info-label">난이도</span><span class="info-val">⭐⭐ 보통</span></div>
+      <div class="info-row"><span class="info-label">소요시간</span><span class="info-val">30분</span></div>
+      <div class="info-row"><span class="info-label">OS</span><span class="info-val">Windows 10/11</span></div>
+      <div class="info-row"><span class="info-label">GPU</span><span class="info-val">VRAM 8GB+ (최저)</span></div>
+      <div class="info-row"><span class="info-label">비용</span><span class="info-val">무료</span></div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">관련 가이드</div>
+      <a href="cloudflare-tunnel.html" style="display:block;font-size:13px;color:var(--blue);text-decoration:none;padding:4px 0">→ Cloudflare Tunnel 외부 공유</a>
+      <a href="#" style="display:block;font-size:13px;color:var(--blue);text-decoration:none;padding:4px 0">→ Modelfile 컨텍스트 설정</a>
+      <a href="#" style="display:block;font-size:13px;color:var(--blue);text-decoration:none;padding:4px 0">→ Open WebUI 계정 관리</a>
+    </div>
+  </aside>
+
+</div>
+
+<footer>부산정보산업진흥원 인재양성단 내부 기술 위키 · BIPA AI Lab</footer>
+
+</body>
+</html>
