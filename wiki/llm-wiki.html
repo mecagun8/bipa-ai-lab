@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM-Wiki 구축 가이드 · BIPA 위키</title>
+<style>
+  :root {
+    --blue: #005bac; --blue-light: #e8f0fb;
+    --teal: #00897b; --teal-light: #e0f2f0;
+    --amber: #d97706; --amber-light: #fffbeb;
+    --purple: #6d28d9; --purple-light: #ede9fe;
+    --text: #1a1a2e; --text-muted: #5a6478;
+    --border: #e2e6ed; --bg: #f7f9fc;
+    --white: #ffffff; --radius: 12px;
+    --font: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    --mono: 'JetBrains Mono', 'Consolas', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); }
+  nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; height: 56px; gap: 2rem; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; font-size: 15px; color: var(--blue); }
+  .nav-logo .dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; }
+  .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+  .nav-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; transition: all .15s; }
+  .nav-links a:hover { color: var(--blue); border-color: var(--blue); }
+  .breadcrumb { padding: 1rem 2rem; font-size: 13px; color: var(--text-muted); max-width: 820px; margin: 0 auto; }
+  .breadcrumb a { color: var(--blue); text-decoration: none; }
+  .breadcrumb span { margin: 0 6px; }
+  .layout { max-width: 820px; margin: 0 auto; padding: 0 1.5rem 4rem; display: grid; grid-template-columns: 1fr 220px; gap: 2rem; align-items: start; }
+  .article-header { margin-bottom: 2rem; }
+  .article-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--teal-light); color: var(--teal); border: 1px solid #b2dfdb; }
+  .tag.purple { background: var(--purple-light); color: var(--purple); border-color: #ddd6fe; }
+  .tag.amber  { background: var(--amber-light); color: var(--amber); border-color: #fde68a; }
+  .article-title { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: .75rem; }
+  .article-meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .content { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+  .content h2 { font-size: 17px; font-weight: 600; color: var(--text); margin: 2rem 0 .75rem; padding-bottom: .4rem; border-bottom: 1px solid var(--border); }
+  .content h2:first-child { margin-top: 0; }
+  .content p { font-size: 14px; color: var(--text-muted); line-height: 1.75; margin-bottom: 1rem; }
+  .content strong { color: var(--text); font-weight: 600; }
+  .step { display: flex; gap: 14px; margin-bottom: 1.2rem; padding: 1.2rem; background: var(--bg); border-radius: 10px; border-left: 3px solid var(--teal); }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--teal); color: white; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: .4rem; }
+  .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .callout { border-radius: 8px; padding: 12px 16px; font-size: 13px; line-height: 1.65; display: flex; gap: 10px; margin: 1rem 0; }
+  .callout.info   { background: var(--blue-light); border: 1px solid #c5d9f5; color: #1a3a6e; }
+  .callout.warn   { background: var(--amber-light); border: 1px solid #fde68a; color: #78350f; }
+  .callout.teal   { background: var(--teal-light); border: 1px solid #b2dfdb; color: #004d40; }
+  .callout.purple { background: var(--purple-light); border: 1px solid #ddd6fe; color: #3b0764; }
+  .callout-icon   { font-size: 16px; flex-shrink: 0; }
+  .callout strong { font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0; }
+  th { background: var(--bg); padding: 8px 12px; text-align: left; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  .good { color: #2e7d32; font-weight: 600; }
+  .bad  { color: #c62828; font-weight: 600; }
+  code { background: var(--bg); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-size: 12px; border: 1px solid var(--border); }
+  pre { background: #1a1a2e; color: #c9d1d9; border-radius: 10px; padding: 14px 16px; font-family: var(--mono); font-size: 12px; line-height: 1.7; overflow-x: auto; margin: 1rem 0; }
+  pre .c { color: #6e7681; }
+  pre .k { color: #79c0ff; }
+  pre .s { color: #56d364; }
+
+  /* 흐름도 */
+  .flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 1rem 0; }
+  .flow-box { background: var(--teal-light); border: 1.5px solid var(--teal); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--teal); }
+  .flow-box.muted { background: var(--bg); border-color: var(--border); color: var(--text-muted); }
+  .flow-arrow { font-size: 16px; color: var(--text-muted); }
+
+  /* 폴더 구조 */
+  .tree { background: #1a1a2e; border-radius: 10px; padding: 16px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #c9d1d9; margin: 1rem 0; }
+  .tree .dir { color: #79c0ff; }
+  .tree .file { color: #56d364; }
+  .tree .desc { color: #6e7681; }
+
+  .sidebar { position: sticky; top: 72px; }
+  .sidebar-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1rem; }
+  .sidebar-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: .75rem; }
+  .toc-link { display: block; font-size: 13px; color: var(--text-muted); text-decoration: none; padding: 4px 0; border-left: 2px solid transparent; padding-left: 8px; margin-left: -1px; transition: all .15s; }
+  .toc-link:hover { color: var(--teal); border-color: var(--teal); }
+  .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--text-muted); }
+  .info-val { font-weight: 500; color: var(--text); }
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+  @media (max-width: 640px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../index.html"><div class="dot"></div>BIPA AI Lab</a>
+  <div class="nav-links">
+    <a href="../index.html">서비스</a>
+    <a href="index.html">위키</a>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">위키</a><span>›</span>
+  <a href="index.html">AI 도구 사용법</a><span>›</span>
+  LLM-Wiki 구축 가이드
+</div>
+
+<div class="layout">
+  <div>
+    <div class="article-header">
+      <div class="article-tags">
+        <span class="tag">LLM-Wiki</span>
+        <span class="tag purple">Claude Code</span>
+        <span class="tag amber">Karpathy</span>
+      </div>
+      <h1 class="article-title">LLM-Wiki 구축 가이드<br>AI가 직접 관리하는 지식베이스</h1>
+      <div class="article-meta">
+        <span>🤖 AI 도구 사용법</span>
+        <span>⏱ 초기 설정 1시간</span>
+        <span>📅 2026.05</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <h2 id="why">왜 LLM-Wiki가 필요한가</h2>
+      <p>
+        RAG는 질문할 때마다 원문에서 다시 검색해요. 그러다 보니 <strong>지식이 쌓이지 않고</strong>, 비용도 매번 발생해요.
+        반면 LLM-Wiki는 <strong>LLM이 직접 마크다운 위키를 작성하고 관리</strong>해요.
+        새 문서가 들어오면 관련 페이지를 업데이트하고, 시간이 갈수록 지식이 복리로 쌓여요.
+      </p>
+
+      <div class="callout purple">
+        <span class="callout-icon">💬</span>
+        <div>
+          <strong>Andrej Karpathy (전 Tesla AI 디렉터)</strong><br>
+          "나는 요즘 코드보다 개인 지식 저장소 구축에 토큰을 더 많이 쓰고 있다.
+          RAG가 매번 원문에서 재추출하는 동안, LLM-Wiki는 지식이 점진적으로 축적되는 영속적 위키를 구축한다.
+          <strong>위키 유지 관리 비용이 거의 0에 수렴</strong>하는 게 핵심이다."
+        </div>
+      </div>
+
+      <h2 id="when">이런 상황에 쓰세요</h2>
+      <table>
+        <tr><th>상황</th><th>LLM-Wiki가 맞는 이유</th></tr>
+        <tr><td>내부 용어·약어가 많아서 AI가 자꾸 틀림</td><td>용어집 페이지를 만들어두면 모든 대화에 일관 적용</td></tr>
+        <tr><td>같은 규정을 반복해서 물어봄</td><td>한 번 위키에 정리해두면 이후 토큰 비용 없음</td></tr>
+        <tr><td>여러 문서를 종합해서 판단해야 함</td><td>LLM이 교차 참조 페이지를 자동 생성</td></tr>
+        <tr><td>지식을 팀원과 공유하고 싶음</td><td>마크다운 파일 = git으로 버전 관리·공유 가능</td></tr>
+        <tr><td>RAG 검색이 자꾸 엉뚱한 청크를 가져옴</td><td>LLM이 이미 합성한 위키 페이지를 직접 읽음</td></tr>
+      </table>
+
+      <h2 id="structure">폴더 구조</h2>
+      <p>마크다운 파일 디렉터리 하나면 충분해요. Claude Code가 이 폴더를 읽고 관리해요.</p>
+
+      <div class="tree">
+        <div><span class="dir">bipa-wiki/</span></div>
+        <div>&nbsp;&nbsp;<span class="dir">sources/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="desc"># 원문 소스 (변경 불가, 읽기 전용)</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">복무규정_2026.txt</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">사업안내_일자리.txt</span></div>
+        <div>&nbsp;&nbsp;<span class="dir">wiki/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="desc"># LLM이 작성·관리하는 위키</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">index.md</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="desc"># 전체 페이지 목록 + 한줄 요약</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">log.md</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="desc"># 인제스트·쿼리 이력</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">용어집_BIPA.md</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">복무규정_요약.md</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">팀별역할.md</span></div>
+        <div>&nbsp;&nbsp;<span class="file">CLAUDE.md</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="desc"># Claude Code에게 위키 규칙을 알려주는 파일</span></div>
+      </div>
+
+      <div class="callout teal">
+        <span class="callout-icon">💡</span>
+        <div>
+          <strong>레이어 역할 분리</strong><br>
+          <code>sources/</code> — 원문. LLM은 읽기만 해요. 진실의 원천이에요.<br>
+          <code>wiki/</code> — LLM이 작성·관리. 사람은 읽기만 해도 돼요.<br>
+          <code>CLAUDE.md</code> — 위키 구조와 규칙을 Claude Code에게 알려주는 설정 파일이에요.
+        </div>
+      </div>
+
+      <h2 id="claude-md">CLAUDE.md 작성</h2>
+      <p>이 파일이 LLM-Wiki의 핵심이에요. Claude Code가 처음 실행될 때 읽고 위키 관리 방식을 파악해요.</p>
+
+      <pre><span class="c"># BIPA AI Lab — LLM Wiki 관리 규칙</span>
+
+<span class="k">## 역할</span>
+<span class="s">당신은 BIPA 인재양성단의 내부 지식 위키 관리자입니다.
+sources/ 폴더의 원문을 읽고 wiki/ 폴더의 마크다운 페이지를 작성·유지합니다.</span>
+
+<span class="k">## 규칙</span>
+<span class="s">- sources/ 파일은 절대 수정하지 않습니다 (읽기 전용)
+- 새 소스 인제스트 시 관련 wiki 페이지를 모두 업데이트합니다
+- 모든 페이지는 wiki/index.md에 등록합니다
+- 작업마다 wiki/log.md에 기록합니다</span>
+
+<span class="k">## 내부 용어</span>
+<span class="s">- BIPA: 부산정보산업진흥원
+- 인재양성단: 교육훈련 담당 부서
+- (추가 용어는 wiki/용어집_BIPA.md 참조)</span>
+
+<span class="k">## 명령어</span>
+<span class="s">- "인제스트: [파일명]" → 해당 소스를 읽고 위키에 통합
+- "쿼리: [질문]" → 위키를 검색해 답변
+- "린트" → 위키 상태 점검 (모순, 고아 페이지 등)</span></pre>
+
+      <h2 id="how">실제 운영 방법</h2>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">초기 설정</div>
+          <div class="step-desc">
+            폴더 구조 생성 후 <code>CLAUDE.md</code> 작성해요.<br>
+            Claude Code로 해당 폴더를 열고 "위키를 시작합니다. CLAUDE.md를 읽고 초기 구조를 만들어줘"라고 하면 <code>index.md</code>, <code>log.md</code>를 자동 생성해요.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">문서 인제스트 (새 문서 추가)</div>
+          <div class="step-desc">
+            원문을 <code>sources/</code>에 넣고 Claude Code에게 지시해요.<br>
+            <code>"인제스트: 복무규정_2026.txt"</code><br>
+            → LLM이 읽고 → 위키 페이지 작성 → index.md 업데이트 → log.md 기록<br>
+            단일 소스가 10~15개 페이지에 영향을 줄 수 있어요.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">질문 (쿼리)</div>
+          <div class="step-desc">
+            <code>"쿼리: 연차 휴가 신청 절차가 어떻게 돼?"</code><br>
+            → Claude Code가 index.md 먼저 확인 → 관련 페이지 탐색 → 답변 합성<br>
+            좋은 답변은 위키에 새 페이지로 저장할 수도 있어요.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">린트 (주기적 정리)</div>
+          <div class="step-desc">
+            <code>"린트"</code> 명령으로 위키 상태를 점검해요.<br>
+            모순 페이지, 오래된 내용, 연결이 없는 고아 페이지를 찾아 정리해줘요.
+          </div>
+        </div>
+      </div>
+
+      <h2 id="flow">전체 흐름</h2>
+      <div class="flow">
+        <div class="flow-box">원문 추가</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">인제스트 지시</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">위키 페이지 생성·업데이트</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">지식 누적</div>
+      </div>
+      <div class="flow">
+        <div class="flow-box muted">질문</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">index.md 탐색</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">위키 페이지 참조</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box">답변</div>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div>
+          <strong>RAG와 함께 쓰는 방법</strong><br>
+          · <strong>LLM-Wiki</strong> → 용어집, 규정 요약, 자주 참조되는 지식 (Claude Code 관리)<br>
+          · <strong>RAG</strong> → 원문 검색이 필요할 때, 자주 바뀌는 데이터 (Open WebUI Knowledge)<br>
+          두 방식은 경쟁이 아니라 역할 분담이에요.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">목차</div>
+      <a class="toc-link" href="#why">왜 필요한가</a>
+      <a class="toc-link" href="#when">이런 상황에 쓰세요</a>
+      <a class="toc-link" href="#structure">폴더 구조</a>
+      <a class="toc-link" href="#claude-md">CLAUDE.md 작성</a>
+      <a class="toc-link" href="#how">실제 운영 방법</a>
+      <a class="toc-link" href="#flow">전체 흐름</a>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">문서 정보</div>
+      <div class="info-row"><span class="info-label">난이도</span><span class="info-val">⭐⭐ 보통</span></div>
+      <div class="info-row"><span class="info-label">초기 설정</span><span class="info-val">1시간</span></div>
+      <div class="info-row"><span class="info-label">필요 도구</span><span class="info-val">Claude Code</span></div>
+      <div class="info-row"><span class="info-label">파일 형식</span><span class="info-val">Markdown</span></div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-title">관련 가이드</div>
+      <a href="openwebui-rag.html" style="display:block;font-size:13px;color:var(--blue);text-decoration:none;padding:4px 0">→ RAG 문서 등록 가이드</a>
+      <a href="ollama-openwebui-install.html" style="display:block;font-size:13px;color:var(--blue);text-decoration:none;padding:4px 0">→ Ollama + Open WebUI 설치</a>
+    </div>
+  </aside>
+</div>
+
+<footer>부산정보산업진흥원 인재양성단 내부 기술 위키 · BIPA AI Lab</footer>
+</body>
+</html>
