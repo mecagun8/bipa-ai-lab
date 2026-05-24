@@ -1,1 +1,627 @@
-1
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소형 GPU 분산 AI 인프라 구축 — BIPA AI 위키</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy:       #001f54;
+  --blue-deep:  #003b8e;
+  --blue-mid:   #0060c0;
+  --blue-bright:#009FE3;
+  --accent:     #00d4aa;
+  --warn:       #f59e0b;
+  --text:       #1a2744;
+  --muted:      #6b7a99;
+  --card-bg:    #ffffff;
+  --tag-bg:     #e8f0fe;
+  --tag-text:   #1a56db;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #001f54 0%, #003b8e 30%, #0060c0 65%, #0090d8 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 80px;
+  color: var(--text);
+}
+
+.topbar {
+  width: 100%;
+  max-width: 920px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.2); }
+.breadcrumb { font-size: 12px; color: rgba(255,255,255,0.45); }
+.breadcrumb span { color: rgba(255,255,255,0.7); }
+
+.page-header {
+  text-align: center;
+  margin-bottom: 36px;
+  max-width: 720px;
+}
+.article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.meta-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+}
+.meta-badge.infra { background: rgba(0,212,170,0.2); border-color: rgba(0,212,170,0.4); color: #7fffd4; }
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  margin-bottom: 10px;
+}
+.page-header p {
+  font-size: 14.5px;
+  color: rgba(255,255,255,0.68);
+  line-height: 1.7;
+}
+
+.content {
+  width: 100%;
+  max-width: 920px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 24px 26px;
+  box-shadow: 0 6px 28px rgba(0,45,114,0.18), 0 1px 4px rgba(0,0,0,0.06);
+}
+.card h2 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--blue-deep);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 .icon { font-size: 20px; }
+
+.hero-card {
+  background: linear-gradient(135deg, #0a2a6e 0%, #0055b3 100%);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 8px 32px rgba(0,30,100,0.35);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.hero-card h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.95);
+}
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.stat-box {
+  background: rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.stat-box .num { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; }
+.stat-box .unit { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.stat-box .label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 6px; }
+
+.arch {
+  background: #f3f7fd;
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-top: 8px;
+}
+.arch-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.arch-node {
+  background: #fff;
+  border: 2px solid #c7daf8;
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 88px;
+  box-shadow: 0 2px 8px rgba(0,60,150,0.08);
+}
+.arch-node .node-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+.arch-node .node-label { font-size: 11px; font-weight: 700; color: var(--blue-deep); }
+.arch-node .node-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.arch-node.highlight { background: var(--blue-deep); border-color: var(--blue-deep); }
+.arch-node.highlight .node-label,
+.arch-node.highlight .node-sub { color: #fff; }
+.arch-label {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+.gpu-cluster { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.gpu-box {
+  background: #fff;
+  border: 2px solid #c7daf8;
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: center;
+  min-width: 72px;
+  box-shadow: 0 2px 6px rgba(0,60,150,0.07);
+}
+.gpu-box .gi { font-size: 18px; display: block; }
+.gpu-box .gl { font-size: 10px; font-weight: 700; color: var(--blue-deep); }
+.gpu-box .gs { font-size: 9px; color: var(--muted); }
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin-top: 6px;
+}
+.compare-table th {
+  background: var(--blue-deep);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+}
+.compare-table th:first-child { border-radius: 10px 0 0 0; }
+.compare-table th:last-child  { border-radius: 0 10px 0 0; }
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #edf0f7;
+  color: var(--text);
+  vertical-align: middle;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:nth-child(even) td { background: #f7f9fe; }
+.good { color: #15803d; font-weight: 700; }
+.bad  { color: #dc2626; font-weight: 700; }
+.mid  { color: #d97706; font-weight: 700; }
+
+.step-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.step-item { display: flex; gap: 14px; align-items: flex-start; }
+.step-num {
+  background: var(--blue-deep);
+  color: #fff;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+  flex-shrink: 0; margin-top: 2px;
+}
+.step-body h3 { font-size: 14px; font-weight: 700; color: var(--blue-deep); margin-bottom: 3px; }
+.step-body p  { font-size: 13px; color: #4a5568; line-height: 1.6; }
+
+.callout {
+  background: #fffbeb;
+  border-left: 4px solid var(--warn);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #78350f;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+.callout.info  { background: #eff6ff; border-color: var(--blue-bright); color: #1e40af; }
+.callout.green { background: #f0fdf4; border-color: #22c55e; color: #15803d; }
+.callout.red   { background: #fff1f2; border-color: #f43f5e; color: #9f1239; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+@media (max-width: 600px) {
+  .two-col { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; }
+}
+.mini-card {
+  background: #f7f9fe;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid #dde8f8;
+}
+.mini-card .mc-icon { font-size: 26px; margin-bottom: 8px; }
+.mini-card h3 { font-size: 13px; font-weight: 800; color: var(--blue-deep); margin-bottom: 6px; }
+.mini-card p  { font-size: 12.5px; color: #4a5568; line-height: 1.6; }
+
+.tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin: 2px 2px;
+}
+
+.scope-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+}
+.scope-table th {
+  background: #f3f7fd;
+  color: var(--blue-deep);
+  padding: 9px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 11.5px;
+  border-bottom: 2px solid #c7daf8;
+}
+.scope-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #edf0f7;
+  color: var(--text);
+  vertical-align: middle;
+  line-height: 1.5;
+}
+.scope-table tr:last-child td { border-bottom: none; }
+
+.footer {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="index.html">← 위키 목록</a>
+  <span class="breadcrumb">BIPA AI 위키 / <span>인프라</span></span>
+</div>
+
+<header class="page-header">
+  <div class="article-meta">
+    <span class="meta-badge">BIPA AI LAB · 기술 가이드</span>
+    <span class="meta-badge infra">인프라</span>
+  </div>
+  <h1>소형 GPU 분산 AI 인프라 구축<br>왜 비싼 서버가 필요 없는가</h1>
+  <p>RTX 3060급 PC 10대를 네트워크로 묶어<br>엔터프라이즈급 AI 서비스를 구현하는 방법</p>
+</header>
+
+<div class="content">
+
+  <div class="hero-card">
+    <h2>📊 핵심 수치 요약</h2>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="num">10</div>
+        <div class="unit">대</div>
+        <div class="label">GPU 서버 대수</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">~1/5</div>
+        <div class="unit">수준</div>
+        <div class="label">구축 비용 (대비 전용 AI 서버)</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">24/7</div>
+        <div class="unit">운영</div>
+        <div class="label">한 대 꺼져도 서비스 유지</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">개념 이해</div>
+  <div class="card">
+    <h2><span class="icon">💡</span>분산 AI 서버란 무엇인가</h2>
+    <p style="font-size:14px;line-height:1.75;color:#374151;margin-bottom:14px;">
+      AI 모델을 돌리려면 <strong>GPU(그래픽 처리장치)</strong>가 필요합니다. 보통은 고성능 GPU가 탑재된 비싼 서버 한 대를 사는 방식을 생각하지만, <strong>작은 GPU 여러 대를 네트워크로 연결</strong>하면 같은 효과를 훨씬 저렴하게 낼 수 있습니다.
+    </p>
+    <div class="two-col">
+      <div class="mini-card">
+        <div class="mc-icon">🏢</div>
+        <h3>기존 방식 — 단일 고성능 서버</h3>
+        <p>AI 전용 서버 1대 구매. GPU 1장이 모든 요청을 처리. 비싸고, 고장 시 전체 중단.</p>
+      </div>
+      <div class="mini-card">
+        <div class="mc-icon">🌐</div>
+        <h3>분산 방식 — 소형 PC 다수 연결</h3>
+        <p>일반 PC에 게이밍 GPU 탑재 후 LAN으로 묶음. 요청을 자동으로 나눠 처리. 저렴하고 유연함.</p>
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:14px;">
+      <strong>쉬운 비유:</strong> AI 서버 1대를 사는 건 대형 트럭 1대, 분산 구성은 일반 승용차 10대입니다. 총 운반 능력은 비슷하지만 비용과 유연성이 다릅니다. 한 대가 고장나도 나머지 9대가 계속 운행합니다.
+    </div>
+  </div>
+
+  <div class="section-label">시스템 구성도</div>
+  <div class="card">
+    <h2><span class="icon">🗺️</span>전체 아키텍처</h2>
+    <div class="arch">
+      <div class="arch-row">
+        <div class="arch-node">
+          <span class="node-icon">👩‍💼</span>
+          <div class="node-label">직원 A</div>
+          <div class="node-sub">웹브라우저</div>
+        </div>
+        <div class="arch-node">
+          <span class="node-icon">👨‍💼</span>
+          <div class="node-label">직원 B</div>
+          <div class="node-sub">웹브라우저</div>
+        </div>
+        <div class="arch-node">
+          <span class="node-icon">🧑‍💼</span>
+          <div class="node-label">직원 C</div>
+          <div class="node-sub">웹브라우저</div>
+        </div>
+      </div>
+      <div class="arch-label">↓ 모두 같은 주소(URL)로 접속</div>
+      <div class="arch-row" style="margin-top:12px;">
+        <div class="arch-node highlight">
+          <span class="node-icon" style="color:#7dd3fc;">🖥️</span>
+          <div class="node-label">Open WebUI</div>
+          <div class="node-sub">AI 채팅 화면</div>
+        </div>
+      </div>
+      <div class="arch-label">↓ AI 요청 전달</div>
+      <div class="arch-row" style="margin-top:12px;">
+        <div class="arch-node highlight" style="background:linear-gradient(135deg,#0a4a90,#006bd6);min-width:160px;">
+          <span class="node-icon" style="color:#93c5fd;">⚖️</span>
+          <div class="node-label">Nginx 로드밸런서</div>
+          <div class="node-sub">요청 자동 분배 (least_conn)</div>
+        </div>
+      </div>
+      <div class="arch-label">↓ 가장 여유 있는 PC로 자동 라우팅</div>
+      <div style="margin-top:12px;">
+        <div class="gpu-cluster">
+          <div class="gpu-box"><span class="gi">💻</span><div class="gl">PC-01</div><div class="gs">RTX 3060 12GB</div></div>
+          <div class="gpu-box"><span class="gi">💻</span><div class="gl">PC-02</div><div class="gs">RTX 3060 12GB</div></div>
+          <div class="gpu-box"><span class="gi">💻</span><div class="gl">PC-03</div><div class="gs">RTX 3060 12GB</div></div>
+          <div class="gpu-box"><span class="gi">💻</span><div class="gl">PC-04</div><div class="gs">RTX 3060 12GB</div></div>
+          <div class="gpu-box"><span class="gi">💻</span><div class="gl">PC-05</div><div class="gs">RTX 3060 12GB</div></div>
+          <div class="gpu-box" style="border-style:dashed;opacity:0.6;"><span class="gi">💻</span><div class="gl">PC-06~10</div><div class="gs">+ 5대 추가</div></div>
+        </div>
+        <div class="arch-label" style="margin-top:8px;">각 PC에 Ollama + AI 모델 설치 — 독립 실행</div>
+      </div>
+    </div>
+    <div class="callout green" style="margin-top:16px;">
+      <strong>Nginx 로드밸런서의 역할:</strong> 여러 PC 중 지금 가장 한가한 PC에 요청을 자동으로 넘겨줍니다. PC 한 대가 꺼지면 자동으로 제외하고 나머지로만 운영합니다. 관리자가 별도 조작할 필요 없습니다.
+    </div>
+  </div>
+
+  <div class="section-label">활용 범위</div>
+  <div class="card">
+    <h2><span class="icon">🎯</span>이 구성으로 할 수 있는 것 / 없는 것</h2>
+    <p style="font-size:13.5px;color:#374151;line-height:1.7;margin-bottom:14px;">
+      소형 GPU(RTX 3060, 12GB VRAM) 기반 분산 구성은 <strong>7B~14B 규모의 경량 모델</strong>을 운영합니다.
+      대형 모델(70B 이상)보다 처리 능력이 제한되므로 <strong>업무 유형에 따라 기대 수준을 맞춰야</strong> 합니다.
+    </p>
+    <table class="scope-table">
+      <thead>
+        <tr><th>업무 유형</th><th>적합도</th><th>비고</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>공문·보고서 초안 작성, 요약</td><td class="good">✅ 적합</td><td>7B 모델의 핵심 강점</td></tr>
+        <tr><td>번역 (한↔영 등 기본 번역)</td><td class="good">✅ 적합</td><td>짧은 분량 기준</td></tr>
+        <tr><td>질의응답, 내부 규정 검색(RAG)</td><td class="good">✅ 적합</td><td>문서 기반 검색과 병행 시 효과적</td></tr>
+        <tr><td>간단한 데이터 정리, 표 변환</td><td class="good">✅ 적합</td><td>단순 형식 변환 수준</td></tr>
+        <tr><td>복잡한 법령 해석, 다단계 논리 추론</td><td class="mid">⚠️ 제한적</td><td>오류 가능성 있음, 검토 필요</td></tr>
+        <tr><td>코딩 보조, 코드 생성</td><td class="mid">⚠️ 제한적</td><td>간단한 스크립트 수준만 가능</td></tr>
+        <tr><td>장문 분석 (50페이지 이상 문서 전체)</td><td class="bad">❌ 부적합</td><td>컨텍스트 길이 한계</td></tr>
+        <tr><td>고품질 이미지·영상 생성</td><td class="bad">❌ 부적합</td><td>언어 모델 전용 구성</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:14px;">
+      <strong>요약:</strong> 이 구성은 <strong>일상적인 문서 작업·요약·간단한 질의응답</strong>에 최적화되어 있습니다. ChatGPT 유료 플랜 수준의 고급 추론이나 복잡한 코딩 보조가 필요하다면 상위 모델 또는 클라우드 API 병행 검토가 필요합니다.
+    </div>
+  </div>
+
+  <div class="section-label">비용 분석</div>
+  <div class="card">
+    <h2><span class="icon">💰</span>비용 비교: 전용 AI 서버 vs 분산 구성</h2>
+    <table class="compare-table">
+      <thead>
+        <tr><th>항목</th><th>엔터프라이즈 AI 서버</th><th>RTX 3060 × 10대 분산</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>초기 구축 비용</td><td class="bad">5,000만 ~ 2억원+</td><td class="good">약 3,000 ~ 4,000만원</td></tr>
+        <tr><td>GPU VRAM 총합</td><td>A100 80GB × 1~2장</td><td class="good">12GB × 10대 = 120GB</td></tr>
+        <tr><td>동시 처리 사용자</td><td>서버 스펙 의존</td><td class="good">10명 완전 병렬 처리</td></tr>
+        <tr><td>장애 내성</td><td class="bad">서버 다운 → 전체 중단</td><td class="good">1대 꺼져도 9대 계속 운영</td></tr>
+        <tr><td>확장성</td><td class="mid">서버 추가 = 고비용</td><td class="good">PC 한 대씩 추가 가능</td></tr>
+        <tr><td>유지보수</td><td class="bad">전문 업체 의존</td><td class="good">일반 PC 수준으로 처리</td></tr>
+        <tr><td>외부 클라우드 의존도</td><td class="mid">부분적</td><td class="good">완전 내부망 운영 가능</td></tr>
+        <tr><td>데이터 보안</td><td class="mid">클라우드 경유 리스크</td><td class="good">완전 내부 처리 (유출 없음)</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:14px;">
+      <strong>※ 구성 특성 안내:</strong> 분산 구성은 모델 하나를 여러 GPU에 나눠 돌리는 방식이 아닙니다. 각 PC가 같은 모델을 독립적으로 실행하며 요청만 분산합니다. 따라서 <strong>7B~14B 규모의 경량 모델 + 일상 업무 보조</strong> 용도에 최적화됩니다.
+    </div>
+  </div>
+
+  <div class="section-label">소프트웨어 구성</div>
+  <div class="card">
+    <h2><span class="icon">🧩</span>사용하는 소프트웨어 (모두 무료·오픈소스)</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Ollama — AI 모델 실행 엔진</h3>
+          <p>각 PC에 설치하는 AI 모델 구동 소프트웨어. 명령어 한 줄로 모델 다운로드 및 실행. Windows 지원. <span class="tag">무료</span> <span class="tag">오픈소스</span></p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Nginx — 요청 분배기 (로드밸런서)</h3>
+          <p>모든 사용자 요청을 받아 10대의 PC 중 가장 여유로운 PC로 자동으로 전달. 설정 파일 몇 줄로 동작. <span class="tag">무료</span> <span class="tag">오픈소스</span></p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Open WebUI — 직원 접속 화면</h3>
+          <p>ChatGPT와 동일한 UX의 웹 채팅 인터페이스. 로그인, 대화 기록, 부서별 모델 설정 등 지원. <span class="tag">무료</span> <span class="tag">오픈소스</span></p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>AI 모델 — EXAONE / Gemma 등 한국어 지원 모델</h3>
+          <p>LG AI 연구원의 EXAONE(한국어 특화) 또는 Google의 Gemma 등 12GB VRAM에서 실행 가능한 7B~14B 모델 사용. <span class="tag">무료 라이선스</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">구축 절차</div>
+  <div class="card">
+    <h2><span class="icon">🛠️</span>구축 단계 (개략)</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>PC 수배 및 GPU 설치</h3>
+          <p>RTX 3060 12GB 탑재 PC 10대 확보. 기존 교육용 PC를 야간·주말 활용하거나, 전용 PC 별도 수배. 각 PC는 내부 LAN으로 연결.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>각 PC에 Ollama + 모델 설치</h3>
+          <p>Ollama 설치 후 AI 모델 다운로드. PowerShell 스크립트로 10대에 일괄 배포 가능. 소요 시간: PC당 약 30분.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Nginx 로드밸런서 설정</h3>
+          <p>중앙 PC(또는 서버) 1대에 Nginx 설치 후 10대 PC 주소를 등록. <code style="background:#f0f4ff;padding:1px 5px;border-radius:4px;font-size:12px;">least_conn</code> 알고리즘으로 자동 분배 설정.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Open WebUI 배포 및 직원 안내</h3>
+          <p>웹 인터페이스 배포 후 내부 URL 공유. 직원은 별도 설치 없이 브라우저로 바로 사용 가능. Cloudflare 터널로 재택근무 접속도 지원.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">자주 묻는 질문</div>
+  <div class="card">
+    <h2><span class="icon">❓</span>예상 질문 및 답변</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num" style="background:#0ea5e9;">Q</div>
+        <div class="step-body">
+          <h3>"PC 한 대가 꺼지면 어떻게 되나요?"</h3>
+          <p>Nginx가 자동으로 해당 PC를 제외하고 나머지 PC로만 요청을 분배합니다. 관리자 개입 없이 수 초 내 자동 전환됩니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#0ea5e9;">Q</div>
+        <div class="step-body">
+          <h3>"정보 유출 위험은 없나요?"</h3>
+          <p>모든 데이터가 기관 내부 서버에서만 처리됩니다. ChatGPT 등 외부 서비스와 달리 입력 내용이 외부로 전송되지 않습니다. 인터넷 차단 환경에서도 동작합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#0ea5e9;">Q</div>
+        <div class="step-body">
+          <h3>"기존 업무용 PC를 활용할 수 있나요?"</h3>
+          <p>GPU 사양만 충족하면 가능합니다. 교육생이 사용하지 않는 야간·주말 시간대에만 AI 서버로 활용하는 방식도 검토할 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#0ea5e9;">Q</div>
+        <div class="step-body">
+          <h3>"몇 명이 동시에 사용할 수 있나요?"</h3>
+          <p>PC 10대 기준, 10명이 동시에 별도 처리됩니다. 한 사람당 한 대가 전담하는 구조이므로 응답 속도가 일정하게 유지됩니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" style="background:#0ea5e9;">Q</div>
+        <div class="step-body">
+          <h3>"ChatGPT처럼 뭐든 다 되나요?"</h3>
+          <p>아닙니다. 문서 요약·초안 작성·번역·간단한 질의응답에는 충분히 활용 가능합니다. 다만 복잡한 논리 추론이나 전문 코딩 보조는 경량 모델의 한계상 제한적입니다. 용도에 맞게 기대 수준을 설정하는 것이 중요합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  부산정보산업진흥원 AI LAB 내부 기술 가이드 · 문의: 인재양성단
+</div>
+
+</body>
+</html>
