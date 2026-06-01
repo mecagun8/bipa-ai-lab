@@ -91,6 +91,8 @@
   .card-body h2 { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 3px; line-height: 1.3; }
   .card-body p  { font-size: 12px; color: #7a8899; line-height: 1.4; }
 
+  .btn-group { display: inline-flex; gap: 5px; flex-shrink: 0; }
+
   .link-btn {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--blue-main); color: #fff;
@@ -104,6 +106,21 @@
   }
   .link-btn:hover { background: var(--blue-mid); transform: scale(1.03); }
   .link-btn svg { width: 10px; height: 10px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .new-tab-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; color: var(--blue-main);
+    font-size: 11px; font-weight: 600;
+    padding: 5px 9px; border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.16s, transform 0.12s;
+    white-space: nowrap;
+    border: 1.5px solid var(--blue-main);
+    flex-shrink: 0;
+  }
+  .new-tab-btn:hover { background: var(--blue-main); color: #fff; transform: scale(1.03); }
+  .new-tab-btn:hover svg { stroke: #fff; }
+  .new-tab-btn svg { width: 10px; height: 10px; fill: none; stroke: var(--blue-main); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.16s; }
 
   .wiki-btn {
     display: inline-flex; align-items: center; gap: 5px;
@@ -197,9 +214,10 @@
           <p>내부 지시사항 공유 및 이행 현황 확인</p>
         </div>
       </div>
-      <a class="link-btn" href="https://instruction-viewer-54538175130.us-west1.run.app/" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" href="https://instruction-viewer-54538175130.us-west1.run.app/">열기</a>
+        <a class="new-tab-btn" href="https://instruction-viewer-54538175130.us-west1.run.app/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-live">🟢 운영중</span>
@@ -221,9 +239,10 @@
           <p>2026년 취업 연계 및 일자리 사업 성과 집계</p>
         </div>
       </div>
-      <a class="link-btn" href="https://bipa-2026-315678420000.us-west1.run.app/" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" href="https://bipa-2026-315678420000.us-west1.run.app/">열기</a>
+        <a class="new-tab-btn" href="https://bipa-2026-315678420000.us-west1.run.app/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-live">🟢 운영중</span>
@@ -245,9 +264,10 @@
           <p>연간 훈련 과정별 수료·수강 실적 현황</p>
         </div>
       </div>
-      <a class="link-btn" href="https://bipa-710912146510.us-west1.run.app/" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" href="https://bipa-710912146510.us-west1.run.app/">열기</a>
+        <a class="new-tab-btn" href="https://bipa-710912146510.us-west1.run.app/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-live">🟢 운영중</span>
@@ -269,9 +289,10 @@
           <p>기업 미팅 이력과 액션 아이템 기록·추적 팀 전용 CRM</p>
         </div>
       </div>
-      <a class="link-btn" href="https://bipa-com-info.base44.app" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" href="https://bipa-com-info.base44.app">열기</a>
+        <a class="new-tab-btn" href="https://bipa-com-info.base44.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-wip">🔧 개발중</span>
@@ -293,9 +314,10 @@
           <p>기관 MOU 체결 및 이행 현황 성과 집계</p>
         </div>
       </div>
-      <a class="link-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app">열기</a>
+        <a class="new-tab-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-wip">🔧 개발중</span>
@@ -378,9 +400,10 @@
           <p>팀별 기업 배정 현황 조회 및 관리</p>
         </div>
       </div>
-      <a class="link-btn" style="background:#64748b;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/" target="_blank">
-        열기<svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
-      </a>
+      <div class="btn-group">
+        <a class="link-btn" style="background:#64748b;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/">열기</a>
+        <a class="new-tab-btn" style="border-color:#64748b; color:#64748b;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/" target="_blank"><svg style="stroke:#64748b;" viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
     </div>
     <div class="card-bottom">
       <span class="status-badge s-retired">🔴 종료예정</span>
