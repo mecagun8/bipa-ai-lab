@@ -1,0 +1,37 @@
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    container_name: bookstack
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Seoul
+      - APP_URL=http://localhost:6875   # 실제 URL로 변경하세요
+      - APP_KEY=                        # 아래 명령어로 생성: openssl rand -base64 32
+      - DB_HOST=bookstack_db
+      - DB_PORT=3306
+      - DB_USER=bookstack
+      - DB_PASS=bookstack_pass          # 변경 권장
+      - DB_DATABASE=bookstack
+    volumes:
+      - ./data:/config
+    ports:
+      - "6875:80"
+    depends_on:
+      - bookstack_db
+    restart: unless-stopped
+
+  bookstack_db:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: bookstack_db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=root_pass  # 변경 권장
+      - MYSQL_DATABASE=bookstack
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=bookstack_pass  # 위 bookstack DB_PASS와 동일하게
+    volumes:
+      - ./db:/config
+    restart: unless-stopped
