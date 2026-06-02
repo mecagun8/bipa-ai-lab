@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부산정보산업진흥원 AI 서비스 LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary:         #0070d1;
+    --primary-pressed: #0064b7;
+    --primary-active:  #004d8d;
+    --canvas-dark:     #000000;
+    --surface-dark-el: #121314;
+    --surface-dark-card: #181818;
+    --canvas-light:    #ffffff;
+    --surface-soft:    #f3f3f3;
+    --surface-card:    #f5f7fa;
+    --ink:             #000000;
+    --body-light:      rgba(0,0,0,0.6);
+    --mute-light:      #6b6b6b;
+    --ash-light:       #cccccc;
+    --on-dark:         #ffffff;
+    --body-dark:       rgba(255,255,255,0.7);
+    --on-dark-mute:    #cccccc;
+    --hairline-light:  #f3f3f3;
+    --hairline-dark:   rgba(229,229,229,0.2);
+    --warning:         #c81b3a;
+  }
+
+  body {
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, sans-serif;
+    background: var(--canvas-dark);
+    color: var(--on-dark);
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--canvas-dark);
+    border-bottom: 1px solid var(--hairline-dark);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--on-dark);
+    letter-spacing: 0.4px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    background: var(--primary);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    margin-left: 48px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--on-dark-mute);
+    text-decoration: none;
+    letter-spacing: 0.1px;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--on-dark); }
+
+  /* ── HERO BAND (DARK) ── */
+  .hero-band {
+    background: var(--canvas-dark);
+    padding: 96px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-size: 54px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.1px;
+    color: var(--on-dark);
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--body-dark);
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+  .pill-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.324px;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background 0.15s;
+    border: none; cursor: pointer;
+  }
+  .pill-primary:hover { background: var(--primary-pressed); }
+  .pill-outline-dark {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--on-dark);
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.324px;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    border: 1px solid var(--hairline-dark);
+    text-decoration: none;
+    transition: border-color 0.15s;
+    margin-left: 12px;
+  }
+  .pill-outline-dark:hover { border-color: rgba(229,229,229,0.5); }
+
+  /* ── LIGHT BAND ── */
+  .light-band {
+    background: var(--canvas-light);
+    padding: 96px 48px;
+  }
+  .light-band-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    color: var(--mute-light);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 44px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: 0.1px;
+    color: var(--ink);
+    margin-bottom: 48px;
+  }
+  .section-title-dark {
+    font-size: 44px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: 0.1px;
+    color: var(--on-dark);
+    margin-bottom: 48px;
+  }
+
+  /* ── APP CARDS (LIGHT) ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1024px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .card-grid { grid-template-columns: 1fr; } }
+
+  .app-card {
+    background: var(--surface-card);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.15s;
+  }
+  .app-card:hover { transform: translateY(-2px); }
+  .app-card.retired { opacity: 0.5; }
+  .app-card.retired:hover { transform: none; }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .icon-blue   { background: linear-gradient(135deg, #003b8e, #0060c0); }
+  .icon-indigo { background: linear-gradient(135deg, #3b3fa5, #6366f1); }
+  .icon-green  { background: linear-gradient(135deg, #22a861, #0e7a44); }
+  .icon-teal   { background: linear-gradient(135deg, #00a8a8, #007a7a); }
+  .icon-amber  { background: linear-gradient(135deg, #d97706, #92400e); }
+  .icon-rose   { background: linear-gradient(135deg, #e11d48, #9f1239); }
+  .icon-emerald{ background: linear-gradient(135deg, #059669, #065f46); }
+  .icon-slate  { background: linear-gradient(135deg, #64748b, #475569); }
+
+  .card-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--body-light);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline-light);
+    margin-top: auto;
+  }
+  .status-pill {
+    font-size: 11px; font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 9999px;
+  }
+  .s-live    { background: #e0f2fe; color: #0369a1; }
+  .s-wip     { background: #fffbeb; color: #b45309; }
+  .s-wiki    { background: #f0fdf4; color: #166534; }
+  .s-retired { background: var(--surface-soft); color: var(--mute-light); }
+
+  .stage-dots { display: flex; gap: 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--ash-light); }
+  .dot.on  { background: #22a861; }
+  .dot.wip { background: #f59e0b; }
+  .dot.off { background: var(--mute-light); }
+
+  .card-btn-group { display: flex; gap: 6px; margin-top: 4px; }
+  .btn-sm {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-sm:hover { background: var(--primary-pressed); }
+  .btn-sm-outline {
+    display: inline-flex; align-items: center;
+    background: transparent;
+    color: var(--primary);
+    font-size: 12px; font-weight: 700;
+    padding: 7px 10px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--primary);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-sm-outline:hover { background: var(--primary); color: #fff; }
+  .btn-sm-outline svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .no-link-pill {
+    display: inline-flex; align-items: center;
+    background: var(--surface-soft);
+    color: var(--ash-light);
+    font-size: 12px; font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    cursor: default;
+  }
+
+  /* ── DARK BAND (WIKI) ── */
+  .dark-band {
+    background: var(--canvas-dark);
+    padding: 96px 48px;
+    border-top: 1px solid var(--hairline-dark);
+  }
+  .dark-band-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .wiki-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .wiki-grid { grid-template-columns: 1fr; } }
+
+  .wiki-card {
+    background: var(--surface-dark-card);
+    border-radius: 8px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.15s;
+  }
+  .wiki-card:hover { transform: translateY(-2px); }
+
+  .wiki-card-label {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--on-dark);
+    line-height: 1.25;
+  }
+  .wiki-card-desc {
+    font-size: 14px;
+    color: var(--body-dark);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: rgba(0,112,209,0.2);
+    color: #53b1ff;
+    border: 1px solid rgba(0,112,209,0.3);
+  }
+  .wiki-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid var(--hairline-dark);
+  }
+
+  .btn-wiki {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-wiki:hover { background: var(--primary-pressed); }
+  .btn-wiki svg { width: 10px; height: 10px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── RETIRED BAND ── */
+  .retired-band {
+    background: var(--surface-dark-el);
+    padding: 64px 48px;
+  }
+  .retired-band-inner { max-width: 1280px; margin: 0 auto; }
+  .retired-title {
+    font-size: 18px; font-weight: 300;
+    color: var(--on-dark-mute);
+    margin-bottom: 24px;
+    letter-spacing: 0.1px;
+  }
+  .retired-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface-dark-card);
+    border-radius: 8px;
+    padding: 20px 24px;
+    opacity: 0.6;
+  }
+  .retired-label { font-size: 14px; font-weight: 400; color: var(--on-dark-mute); }
+
+  /* ── BLUE FOOTER BAND ── */
+  footer {
+    background: var(--primary);
+    padding: 64px 48px;
+  }
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-size: 22px;
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: 0.1px;
+  }
+  .footer-brand span { font-weight: 700; }
+  .footer-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">🏛️</div>
+    BIPA AI LAB
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">업무용 앱</a></li>
+    <li><a href="#">기술위키</a></li>
+    <li><a href="#">규정집</a></li>
+  </ul>
+</nav>
+
+<!-- HERO BAND (DARK) -->
+<div class="hero-band">
+  <p class="hero-eyebrow">부산정보산업진흥원</p>
+  <h1 class="hero-title">AI 서비스 LAB</h1>
+  <p class="hero-sub">인공지능 기반 업무 자동화·성과 집계·지식 관리 서비스를 한 곳에서 사용하세요.</p>
+  <a class="pill-primary" href="#apps">앱 바로가기</a>
+  <a class="pill-outline-dark" href="wiki/index.html">기술위키</a>
+</div>
+
+<!-- LIGHT BAND — AI 활용 업무용 앱 -->
+<div class="light-band" id="apps">
+  <div class="light-band-inner">
+    <p class="section-eyebrow">AI 활용 업무용 앱</p>
+    <h2 class="section-title">업무를 더 빠르고 정확하게</h2>
+
+    <div class="card-grid">
+
+      <!-- ① 지시사항 관련 -->
+      <div class="app-card">
+        <div class="card-icon icon-indigo">📌</div>
+        <div class="card-label">지시사항 관련</div>
+        <div class="card-desc">내부 지시사항 공유 및 이행 현황 확인</div>
+        <div class="card-btn-group">
+          <a class="btn-sm" href="https://bipa-54538175130.us-west1.run.app/">열기</a>
+          <a class="btn-sm-outline" href="https://bipa-54538175130.us-west1.run.app/" target="_blank">
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-live">🟢 운영중</span>
+          <div class="stage-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 일자리 실적 -->
+      <div class="app-card">
+        <div class="card-icon icon-green">💼</div>
+        <div class="card-label">일자리 실적</div>
+        <div class="card-desc">2026년 취업 연계 및 일자리 사업 성과 집계</div>
+        <div class="card-btn-group">
+          <a class="btn-sm" href="https://bipa-2026-315678420000.us-west1.run.app/">열기</a>
+          <a class="btn-sm-outline" href="https://bipa-2026-315678420000.us-west1.run.app/" target="_blank">
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-live">🟢 운영중</span>
+          <div class="stage-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ 교육실적 -->
+      <div class="app-card">
+        <div class="card-icon icon-teal">📚</div>
+        <div class="card-label">교육실적</div>
+        <div class="card-desc">연간 훈련 과정별 수료·수강 실적 현황</div>
+        <div class="card-btn-group">
+          <a class="btn-sm" href="https://bipa-710912146510.us-west1.run.app/">열기</a>
+          <a class="btn-sm-outline" href="https://bipa-710912146510.us-west1.run.app/" target="_blank">
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-live">🟢 운영중</span>
+          <div class="stage-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ BIPA CRM -->
+      <div class="app-card">
+        <div class="card-icon icon-indigo">🤝</div>
+        <div class="card-label">BIPA CRM</div>
+        <div class="card-desc">기업 미팅 이력과 액션 아이템 기록·추적 팀 전용 CRM</div>
+        <div class="card-btn-group">
+          <a class="btn-sm" href="https://bipa-com-info.base44.app">열기</a>
+          <a class="btn-sm-outline" href="https://bipa-com-info.base44.app" target="_blank">
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-wip">🔧 개발중</span>
+          <div class="stage-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot wip"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ MOU 이행 성과 대시보드 -->
+      <div class="app-card">
+        <div class="card-icon icon-rose">📈</div>
+        <div class="card-label">MOU 이행 성과 대시보드</div>
+        <div class="card-desc">기관 MOU 체결 및 이행 현황 성과 집계</div>
+        <div class="card-btn-group">
+          <a class="btn-sm" href="https://mou-performance-dashboard-599487465976.us-west1.run.app">열기</a>
+          <a class="btn-sm-outline" href="https://mou-performance-dashboard-599487465976.us-west1.run.app" target="_blank">
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-wip">🔧 개발중</span>
+          <div class="stage-dots">
+            <div class="dot on"></div><div class="dot wip"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑥ 일자리 사업 DB 관리 LLM -->
+      <div class="app-card">
+        <div class="card-icon icon-amber">🧠</div>
+        <div class="card-label">일자리 사업 DB 관리 LLM</div>
+        <div class="card-desc">일자리 사업 데이터베이스 AI 기반 자동 관리</div>
+        <div class="card-btn-group">
+          <span class="no-link-pill">준비중</span>
+        </div>
+        <div class="card-footer">
+          <span class="status-pill s-wip">🔨 개발중</span>
+          <div class="stage-dots">
+            <div class="dot wip"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DARK BAND — 지식 허브 -->
+<div class="dark-band">
+  <div class="dark-band-inner">
+    <p class="section-eyebrow" style="color: rgba(255,255,255,0.4);">지식 허브</p>
+    <h2 class="section-title-dark">문서와 규정을 한 곳에서</h2>
+
+    <div class="wiki-grid">
+
+      <!-- BIPA AI Lab 위키 -->
+      <div class="wiki-card">
+        <div class="card-icon icon-emerald">🗂️</div>
+        <div class="wiki-card-label">BIPA AI Lab 위키</div>
+        <div class="wiki-card-desc">인프라 설정, AI 도구 사용법, 업무 가이드 모음</div>
+        <div class="tag-row">
+          <span class="tag">Cloudflare</span>
+          <span class="tag">Ollama</span>
+          <span class="tag">Open WebUI</span>
+          <span class="tag">운영 가이드</span>
+        </div>
+        <div class="wiki-card-footer">
+          <span class="status-pill s-wiki">📖 운영중</span>
+          <a class="btn-wiki" href="wiki/index.html">
+            위키 보기
+            <svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- BIPA 규정집 -->
+      <div class="wiki-card">
+        <div class="card-icon icon-indigo">📋</div>
+        <div class="wiki-card-label">BIPA 규정집</div>
+        <div class="wiki-card-desc">기관 내부 규정 및 지침 온라인 열람 시스템</div>
+        <div class="tag-row">
+          <span class="tag">BookStack</span>
+          <span class="tag">규정</span>
+          <span class="tag">지침</span>
+        </div>
+        <div class="wiki-card-footer">
+          <span class="status-pill s-wip">🔧 개발중</span>
+          <span class="no-link-pill" style="background:rgba(255,255,255,0.06); color:var(--on-dark-mute);">BookStack 구축 예정</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- RETIRED BAND -->
+<div class="retired-band">
+  <div class="retired-band-inner">
+    <p class="retired-title">종료 예정</p>
+    <div class="retired-card">
+      <div class="card-icon icon-slate" style="width:40px;height:40px;font-size:18px;">🏢</div>
+      <div>
+        <div style="font-size:14px;font-weight:500;color:var(--on-dark-mute);margin-bottom:4px;">부서별 담당기업</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.3);">BIPA CRM으로 대체 예정</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-left:16px;">
+        <a class="btn-sm" style="background:#475569;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/">열기</a>
+        <a class="btn-sm-outline" style="border-color:#475569;color:#94a3b8;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/" target="_blank">
+          <svg style="stroke:#94a3b8;" viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLUE FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">부산정보산업진흥원 <span>AI LAB</span></div>
+    <div class="footer-meta">
+      내부 운영용 서비스 포털<br>
+      문의: AI LAB 담당자
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
