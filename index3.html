@@ -40,14 +40,18 @@
   .logo-badge {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 20px;
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.22);
     border-radius: 20px;
-    padding: 14px 24px 14px 16px;
+    padding: 16px 28px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     margin-bottom: 18px;
+  }
+  .logo-divider {
+    width: 1px; height: 40px;
+    background: rgba(255,255,255,0.25);
   }
   .logo-icon-wrap {
     width: 52px; height: 52px;
@@ -332,7 +336,15 @@
 <!-- ━━━━━━━━━━━━━━ ① 강화된 헤더 ━━━━━━━━━━━━━━ -->
 <header class="header">
   <div class="logo-badge">
-    <div class="logo-icon-wrap">🏛️</div>
+    <!-- BIPA 공식 로고 SVG -->
+    <svg width="160" height="48" viewBox="0 0 160 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- BIPA 레터링 -->
+      <text x="0"  y="38" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff">B</text>
+      <text x="33" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff">I</text>
+      <text x="48" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff">P</text>
+      <text x="78" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#ffffff">A</text>
+    </svg>
+    <div class="logo-divider"></div>
     <div class="logo-text">
       <div class="logo-text-main">부산정보산업진흥원</div>
       <div class="logo-text-sub">AI Service LAB</div>
