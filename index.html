@@ -117,6 +117,23 @@
   .section-header + .section-header,
   .card-grid + .section-header { margin-top: 40px; }
 
+  .sub-section-header {
+    width: 100%; max-width: 930px;
+    display: flex;
+    align-items: center;
+    margin: 8px 0 10px;
+  }
+  .sub-section-label {
+    font-size: 12px; font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.5px;
+    padding: 3px 12px 3px 10px;
+    background: rgba(255,255,255,0.1);
+    border-left: 3px solid rgba(255,255,255,0.45);
+    border-radius: 0 6px 6px 0;
+  }
+  .card-grid + .sub-section-header { margin-top: 28px; }
+
   .section-badge {
     display: inline-flex; align-items: center; gap: 7px;
     background: rgba(255,255,255,0.15);
@@ -375,6 +392,10 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   <div class="section-line"></div>
 </div>
 
+<div class="sub-section-header">
+  <span class="sub-section-label">🗂️ 경영지원</span>
+</div>
+
 <div class="card-grid">
 
   <!-- ① 지시사항 관련 -->
@@ -486,6 +507,14 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
       <span class="sep">·</span><span class="release-note">업데이트 예정</span>
     </div>
   </div>
+
+</div>
+
+<div class="sub-section-header">
+  <span class="sub-section-label">📊 데이터관리</span>
+</div>
+
+<div class="card-grid">
 
   <!-- ⑥ 일자리 사업 DB 관리 LLM -->
   <div class="card">
