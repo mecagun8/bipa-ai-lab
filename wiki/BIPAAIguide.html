@@ -1,0 +1,2848 @@
+<!-- readability edit v7: font sizes increased, repeated text and excess bullets reduced --><!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>공공기관 AI 파일럿 운영 가이드</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --navy: #173b6c;
+      --navy-deep: #0f2c52;
+      --blue: #2c5aa0;
+      --blue-mid: #3a6cb5;
+      --blue-light: #e8f0fb;
+      --blue-pale: #f3f7fd;
+      --accent: #4a82d4;
+      --green: #2f7d52;
+      --green-light: #e9f4ed;
+      --teal: #1f9d8f;
+      --purple: #5b4a9e;
+      --purple-light: #efecf8;
+      --red: #c0392b;
+      --red-light: #fbecea;
+      --ink: #1f2a3a;
+      --gray: #5d6b80;
+      --line: #dde6f2;
+      --card: #ffffff;
+      --bg: #eef3fa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y proximity
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%
+    }
+
+    /* ---------- Top progress + nav ---------- */
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--blue));
+      z-index: 200;
+      transition: width .1s linear
+    }
+
+    nav#topnav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      z-index: 150;
+      transition: transform .35s ease
+    }
+
+    nav#topnav.hidden {
+      transform: translateY(-100%)
+    }
+
+    .nav-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 24px;
+      flex-wrap: wrap
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 15px;
+      margin-right: auto
+    }
+
+    .nav-brand .logo {
+      width: 26px;
+      height: 26px;
+      flex: none
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 6px 11px;
+      border-radius: 20px;
+      transition: .2s;
+      font-weight: 500
+    }
+
+    .nav-links a:hover {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    .nav-links a.active {
+      background: var(--navy);
+      color: #fff
+    }
+
+    @media(max-width:760px) {
+      .nav-links {
+        display: none
+      }
+    }
+
+    /* ---------- Sections (slide-like) ---------- */
+    section {
+      padding: 40px 40px;
+      scroll-margin-top: 60px;
+      scroll-snap-align: start;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 8px
+    }
+
+    .eyebrow .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 13px
+    }
+
+    h2.sec-title {
+      font-size: clamp(22px, 2.6vw, 30px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.18;
+      letter-spacing: -.02em
+    }
+
+    .sec-lead {
+      margin-top: 8px;
+      font-size: clamp(13px, 1.3vw, 15px);
+      color: var(--gray);
+      max-width: 880px;
+      line-height: 1.5
+    }
+
+    .sec-lead b {
+      color: var(--blue)
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none
+    }
+
+    /* ---------- HERO ---------- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 82px 40px 34px;
+      background:
+        radial-gradient(circle at 78% 30%, rgba(74, 130, 212, .20), transparent 45%),
+        radial-gradient(circle at 18% 85%, rgba(23, 59, 108, .16), transparent 50%),
+        linear-gradient(160deg, #f7faff 0%, #e4eefb 55%, #d3e2f6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: "";
+      position: absolute;
+      right: -180px;
+      top: -120px;
+      width: 620px;
+      height: 620px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(44, 90, 160, .10), transparent 70%)
+    }
+
+    .hero-grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 2
+    }
+
+    @media(max-width:920px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 34px
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 7px 15px;
+      border-radius: 30px;
+      box-shadow: 0 4px 14px rgba(23, 59, 108, .08)
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 5.2vw, 62px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin: 18px 0 6px
+    }
+
+    .hero h1 .light {
+      color: var(--blue);
+      display: block
+    }
+
+    .hero .tagline {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 14px
+    }
+
+    .hero .sub {
+      font-size: 14.5px;
+      color: var(--gray);
+      margin-top: 8px;
+      font-weight: 500
+    }
+
+    .hero-cta {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      padding: 13px 24px;
+      border-radius: 30px;
+      transition: .2s
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(23, 59, 108, .25)
+    }
+
+    .btn-primary:hover {
+      background: var(--navy-deep);
+      transform: translateY(-2px)
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--line)
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    /* org/CI lockup */
+    .org-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 3
+    }
+
+    .org-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 26px;
+      box-shadow: 0 8px 22px rgba(23, 59, 108, .10)
+    }
+
+    .org-card img {
+      height: 40px;
+      width: auto;
+      display: block
+    }
+
+    .org-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: .01em
+    }
+
+    @media(max-width:520px) {
+      .org-card img {
+        height: 30px
+      }
+
+      .org-card {
+        padding: 10px 18px
+      }
+
+      .org-name {
+        font-size: 13px
+      }
+    }
+
+    .nav-brand img {
+      height: 22px;
+      width: auto
+    }
+
+    .bipa-logo {
+      background-image: url('data:image/png;base64,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');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: inline-block
+    }
+
+    .org-card .bipa-logo {
+      width: 300px;
+      height: 66px
+    }
+
+    .nav-brand .bipa-logo {
+      width: 120px;
+      height: 26px;
+      background-position: left center
+    }
+
+    @media(max-width:520px) {
+      .org-card .bipa-logo {
+        width: 225px;
+        height: 50px
+      }
+    }
+
+    /* hero visual */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      min-height: 300px;
+      padding: 0 70px
+    }
+
+    .ai-core {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #5d8fd6, #2c5aa0 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 46px;
+      box-shadow: 0 20px 50px rgba(44, 90, 160, .4);
+      position: relative;
+      z-index: 3
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1.5px dashed rgba(44, 90, 160, .35);
+      border-radius: 50%
+    }
+
+    .orbit.o1 {
+      width: 250px;
+      height: 250px;
+      animation: spin 26s linear infinite
+    }
+
+    .orbit.o2 {
+      width: 330px;
+      height: 330px;
+      animation: spin 40s linear infinite reverse
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .chip {
+      position: absolute;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 8px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--navy);
+      box-shadow: 0 8px 20px rgba(23, 59, 108, .12);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+      z-index: 4
+    }
+
+    .chip svg {
+      width: 15px;
+      height: 15px
+    }
+
+    .c1 {
+      top: 4%;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+
+    .c2 {
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%)
+    }
+
+    .c3 {
+      bottom: 4%;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+
+    .c4 {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%)
+    }
+
+    /* hero pillars */
+    .pillars {
+      max-width: 1180px;
+      margin: 34px auto 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      position: relative;
+      z-index: 2
+    }
+
+    @media(max-width:920px) {
+      .pillars {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:520px) {
+      .pillars {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .pillar {
+      background: rgba(255, 255, 255, .72);
+      border: 1px solid rgba(255, 255, 255, .9);
+      border-radius: 16px;
+      padding: 16px 14px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      transition: .25s
+    }
+
+    .pillar:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(23, 59, 108, .12);
+      background: #fff
+    }
+
+    .pillar .ico {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 10px;
+      border-radius: 12px;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue)
+    }
+
+    .pillar .ico svg {
+      width: 22px;
+      height: 22px
+    }
+
+    .pillar h4 {
+      font-size: 14.5px;
+      color: var(--navy);
+      font-weight: 700
+    }
+
+    .pillar p {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 5px;
+      line-height: 1.5
+    }
+
+    /* ---------- generic cards ---------- */
+    .cards {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px
+    }
+
+    .cols-2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .cols-3 {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    @media(max-width:880px) {
+
+      .cols-2,
+      .cols-3 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 6px 22px rgba(23, 59, 108, .05)
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px
+    }
+
+    .card-num {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 15px
+    }
+
+    .card-head h3 {
+      font-size: 17px;
+      color: var(--navy);
+      font-weight: 700;
+      line-height: 1.3
+    }
+
+    .card p.desc {
+      color: var(--gray);
+      font-size: 13px;
+      margin-bottom: 12px;
+      line-height: 1.55
+    }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13.5px;
+      color: var(--ink);
+      line-height: 1.4
+    }
+
+    .list li .dot {
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 7px;
+      background: var(--blue-light);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px
+    }
+
+    .list li .dot svg {
+      width: 12px;
+      height: 12px
+    }
+
+    .subbox {
+      background: var(--blue-pale);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-top: 10px
+    }
+
+    .subbox h5 {
+      font-size: 13.5px;
+      color: var(--blue);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    /* tag chips grid */
+    .tag-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 6px
+    }
+
+    @media(max-width:620px) {
+      .tag-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    .tag {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 10px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      transition: .2s
+    }
+
+    .tag:hover {
+      border-color: var(--accent);
+      box-shadow: 0 6px 16px rgba(44, 90, 160, .1)
+    }
+
+    .tag .ti {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--blue-light);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .tag .ti svg {
+      width: 18px;
+      height: 18px
+    }
+
+    /* flow */
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      justify-content: center
+    }
+
+    .flow-step {
+      flex: 1;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px 14px;
+      text-align: center;
+      position: relative
+    }
+
+    .flow-step .fi {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 9px;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .flow-step .fi svg {
+      width: 22px;
+      height: 22px
+    }
+
+    .flow-step h4 {
+      font-size: 14px;
+      color: var(--navy);
+      font-weight: 700
+    }
+
+    .flow-step p {
+      font-size: 11.5px;
+      color: var(--gray);
+      margin-top: 4px;
+      line-height: 1.45
+    }
+
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 300
+    }
+
+    @media(max-width:880px) {
+      .flow-arrow {
+        transform: rotate(90deg)
+      }
+    }
+
+    /* key message banner */
+    .keymsg {
+      margin-top: 16px;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      border-radius: 18px;
+      padding: 18px 24px;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      box-shadow: 0 18px 40px rgba(23, 59, 108, .28)
+    }
+
+    .keymsg .ki {
+      flex: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .16);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .keymsg .ki svg {
+      width: 26px;
+      height: 26px
+    }
+
+    .keymsg h4 {
+      font-size: 16.5px;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .keymsg p {
+      font-size: 13.5px;
+      color: #dce8fb;
+      line-height: 1.65
+    }
+
+    .keymsg ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-top: 4px
+    }
+
+    .keymsg ul li {
+      font-size: 14.5px;
+      color: #e6effc;
+      display: flex;
+      gap: 9px
+    }
+
+    .keymsg ul li::before {
+      content: "›";
+      color: #9cc0f0;
+      font-weight: 700
+    }
+
+    /* section alt bg */
+    .alt {
+      background: #fff
+    }
+
+    .tint {
+      background: linear-gradient(180deg, #eef3fa, #e6eef9)
+    }
+
+    /* ===== Section colored columns (04) ===== */
+    .tri-col {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      flex-direction: column
+    }
+
+    .tri-head {
+      padding: 14px 18px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15.5px
+    }
+
+    .col-a .tri-head {
+      background: linear-gradient(135deg, #2f7d52, #1f9d8f)
+    }
+
+    .col-b .tri-head {
+      background: linear-gradient(135deg, #2c5aa0, #3a6cb5)
+    }
+
+    .col-c .tri-head {
+      background: linear-gradient(135deg, #5b4a9e, #7a64c4)
+    }
+
+    .tri-body {
+      padding: 12px 14px;
+      flex: 1
+    }
+
+    .tri-feat {
+      font-size: 11.5px;
+      color: var(--gray);
+      background: var(--blue-pale);
+      border-radius: 8px;
+      padding: 7px 11px;
+      margin-bottom: 10px
+    }
+
+    .col-a .tri-feat {
+      background: var(--green-light)
+    }
+
+    .col-c .tri-feat {
+      background: var(--purple-light)
+    }
+
+    .tri-item {
+      display: flex;
+      gap: 11px;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line)
+    }
+
+    .tri-item:last-child {
+      border-bottom: none
+    }
+
+    .tri-item .tii {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .col-a .tii {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .col-b .tii {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    .col-c .tii {
+      background: var(--purple-light);
+      color: var(--purple)
+    }
+
+    .tri-item .tii svg {
+      width: 16px;
+      height: 16px
+    }
+
+    .tri-item h5 {
+      font-size: 13.5px;
+      color: var(--navy);
+      font-weight: 700
+    }
+
+    .tri-item p {
+      font-size: 11.5px;
+      color: var(--gray);
+      margin-top: 2px;
+      line-height: 1.45
+    }
+
+    .tri-tech {
+      padding: 12px 18px;
+      background: var(--blue-pale);
+      border-top: 1px solid var(--line)
+    }
+
+    .col-a .tri-tech {
+      background: var(--green-light)
+    }
+
+    .col-c .tri-tech {
+      background: var(--purple-light)
+    }
+
+    .tri-tech .tt {
+      display: flex;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--ink);
+      padding: 2px 0
+    }
+
+    .tri-tech .tt svg {
+      width: 14px;
+      height: 14px;
+      flex: none;
+      margin-top: 3px;
+      color: var(--green)
+    }
+
+    /* benefits grid (checkmarks) */
+    .bene {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    @media(max-width:760px) {
+      .bene {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:460px) {
+      .bene {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .bene div {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .bene div svg {
+      width: 19px;
+      height: 19px;
+      flex: none;
+      color: var(--green)
+    }
+
+    /* expansion path (05) */
+    .expand {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 4px
+    }
+
+    .expand .ex {
+      background: var(--green-light);
+      border: 1px solid #cfe6d8;
+      border-radius: 10px;
+      padding: 10px 13px
+    }
+
+    .expand .ex h5 {
+      font-size: 13.5px;
+      color: var(--green);
+      font-weight: 700
+    }
+
+    .expand .ex p {
+      font-size: 11.5px;
+      color: var(--gray);
+      margin-top: 2px
+    }
+
+    .expand .arr {
+      text-align: center;
+      color: var(--green);
+      font-size: 15px;
+      line-height: 1
+    }
+
+    /* five-card row (05) */
+    .five {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 18px
+    }
+
+    @media(max-width:1000px) {
+      .five {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:520px) {
+      .five {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .fcard {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 16px;
+      box-shadow: 0 6px 18px rgba(23, 59, 108, .05)
+    }
+
+    .fcard .fhead {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .fcard .fn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+      flex: none
+    }
+
+    .fcard h3 {
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .fcard.t1 .fn {
+      background: var(--green)
+    }
+
+    .fcard.t1 h3 {
+      color: var(--green)
+    }
+
+    .fcard.t2 .fn {
+      background: var(--red)
+    }
+
+    .fcard.t2 h3 {
+      color: var(--red)
+    }
+
+    .fcard.t3 .fn {
+      background: var(--purple)
+    }
+
+    .fcard.t3 h3 {
+      color: var(--purple)
+    }
+
+    .fcard.t4 .fn {
+      background: var(--blue)
+    }
+
+    .fcard.t4 h3 {
+      color: var(--blue)
+    }
+
+    .fcard.t5 .fn {
+      background: var(--teal)
+    }
+
+    .fcard.t5 h3 {
+      color: var(--teal)
+    }
+
+    .fcard ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px
+    }
+
+    .fcard ul li {
+      font-size: 12.5px;
+      color: var(--ink);
+      display: flex;
+      gap: 8px;
+      line-height: 1.4;
+      align-items: center
+    }
+
+    .fcard ul li .m {
+      flex: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .fcard ul li .m svg {
+      width: 14px;
+      height: 14px
+    }
+
+    .fcard.t1 .m {
+      background: var(--green-light);
+      color: var(--green)
+    }
+
+    .fcard.t2 .m {
+      background: var(--red-light);
+      color: var(--red)
+    }
+
+    .fcard.t3 .m {
+      background: var(--purple-light);
+      color: var(--purple)
+    }
+
+    .fcard.t4 .m {
+      background: var(--blue-light);
+      color: var(--blue)
+    }
+
+    .fcard.t5 .m {
+      background: #e3f5f2;
+      color: var(--teal)
+    }
+
+    /* core message strip */
+    .core-strip {
+      margin-top: 18px;
+      background: var(--navy);
+      border-radius: 18px;
+      padding: 22px 26px;
+      color: #fff
+    }
+
+    .core-strip .ch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px
+    }
+
+    .core-strip .ch .b {
+      background: #fff;
+      color: var(--navy);
+      font-weight: 900;
+      border-radius: 10px;
+      padding: 5px 13px;
+      font-size: 13px
+    }
+
+    .core-strip .ch h3 {
+      font-size: 18px;
+      font-weight: 700
+    }
+
+    .core-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px
+    }
+
+    @media(max-width:860px) {
+      .core-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:460px) {
+      .core-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .core-grid .item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start
+    }
+
+    .core-grid .item .ci {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .14);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .core-grid .item .ci svg {
+      width: 22px;
+      height: 22px
+    }
+
+    .core-grid .item b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px
+    }
+
+    .core-grid .item span {
+      font-size: 12px;
+      color: #cfdef5;
+      line-height: 1.5
+    }
+
+    /* footer */
+    footer {
+      background: var(--navy-deep);
+      color: #fff;
+      text-align: center;
+      padding: 50px 24px;
+      min-height: auto;
+      scroll-snap-align: none
+    }
+
+    footer .logo {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 16px
+    }
+
+    footer p {
+      font-size: 15px;
+      color: #c7d6ee
+    }
+
+    footer .small {
+      font-size: 12.5px;
+      color: #7e92b5;
+      margin-top: 18px
+    }
+
+    /* data accumulation cycle (sec01) */
+    .cycle {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-top: 8px
+    }
+
+    @media(max-width:760px) {
+      .cycle {
+        grid-template-columns: 1fr;
+        gap: 10px
+      }
+
+      .cycle .cy-arr {
+        transform: rotate(90deg)
+      }
+    }
+
+    .cy-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px
+    }
+
+    .cy-box h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .cy-box.center {
+      text-align: center;
+      background: var(--blue-light);
+      border-color: var(--accent)
+    }
+
+    .cy-box.center .db {
+      width: 46px;
+      height: 46px;
+      margin: 4px auto 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .cy-box.center .db svg {
+      width: 24px;
+      height: 24px
+    }
+
+    .cy-box.center strong {
+      display: block;
+      font-size: 13px;
+      color: var(--navy)
+    }
+
+    .cy-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .cy-box ul li {
+      font-size: 11.5px;
+      color: var(--gray);
+      padding-left: 12px;
+      position: relative
+    }
+
+    .cy-box ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent)
+    }
+
+    .cy-arr {
+      color: var(--accent);
+      font-size: 24px;
+      text-align: center
+    }
+
+    /* lock-in chain */
+    .chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 6px 0 14px
+    }
+
+    .chain .node {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      min-width: 96px
+    }
+
+    .chain .node .ni {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 8px;
+      border-radius: 10px;
+      background: var(--purple-light);
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .chain .node .ni svg {
+      width: 20px;
+      height: 20px
+    }
+
+    .chain .ca {
+      color: var(--purple);
+      font-size: 18px
+    }
+
+    .warn {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--red);
+      margin-top: 6px
+    }
+
+    /* recommended start callout */
+    .callout {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px
+    }
+
+    @media(max-width:820px) {
+      .callout {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .callout .co {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 15px 16px
+    }
+
+    .callout .co h5 {
+      font-size: 14px;
+      color: var(--navy);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .callout .co p {
+      font-size: 12.5px;
+      color: var(--gray);
+      line-height: 1.55
+    }
+
+    /* ===== v3 interactions (subtle) ===== */
+    .card,
+    .fcard,
+    .tri-col,
+    .cy-box,
+    .callout .co,
+    .bene div,
+    .flow-step {
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease
+    }
+
+    .card:hover,
+    .fcard:hover,
+    .flow-step:hover,
+    .cy-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(23, 59, 108, .12)
+    }
+
+    .callout .co:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(23, 59, 108, .1)
+    }
+
+    .bene div:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 22px rgba(23, 59, 108, .1)
+    }
+
+    .pillar {
+      cursor: pointer
+    }
+
+    .ai-core {
+      transition: transform .4s ease
+    }
+
+    .ai-core:hover {
+      transform: scale(1.06)
+    }
+
+    .tri-col {
+      cursor: pointer
+    }
+
+    #services.focusing .tri-col {
+      opacity: .42;
+      filter: saturate(.75);
+      transform: scale(.99)
+    }
+
+    #services.focusing .tri-col.active {
+      opacity: 1;
+      filter: none;
+      transform: translateY(-5px);
+      box-shadow: 0 18px 42px rgba(23, 59, 108, .16)
+    }
+
+    #toTop {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 160;
+      box-shadow: 0 10px 26px rgba(23, 59, 108, .3);
+      transition: background .2s, transform .2s
+    }
+
+    #toTop.show {
+      display: flex
+    }
+
+    #toTop:hover {
+      background: var(--navy-deep);
+      transform: translateY(-2px)
+    }
+
+    @media print {
+
+      #toTop,
+      nav#topnav,
+      #progress {
+        display: none !important
+      }
+    }
+  
+    /* ===== hero hub layout (v4) ===== */
+    #hero{padding-top:86px}
+    .hero-head{text-align:center;max-width:800px;margin:0 auto}
+    .hero-head .hero-badge{margin:0 auto}
+    .hero-head .hero-cta{justify-content:center}
+    .hub{position:relative;width:min(620px,94vw);height:min(560px,calc(94vw*0.9));margin:18px auto 0}
+    .hub-lines{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+    .hub-lines line{stroke:rgba(44,90,160,.32);stroke-width:1.5;stroke-dasharray:3 5}
+    .hub .orbit{position:absolute;top:50%;left:50%;margin:0}
+    .hub .o1{width:300px;height:300px;margin:-150px 0 0 -150px}
+    .hub .o2{width:480px;height:480px;margin:-240px 0 0 -240px}
+    .hub .ai-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5}
+    .hub .ai-core:hover{transform:translate(-50%,-50%) scale(1.06)}
+    .hub-pillar{position:absolute;width:150px;transform:translate(-50%,-50%);z-index:4;margin:0;background:rgba(255,255,255,.92);box-shadow:0 8px 22px rgba(23,59,108,.10)}
+    .hub-pillar:hover{transform:translate(-50%,-50%) translateY(-4px);box-shadow:0 16px 34px rgba(23,59,108,.16);background:#fff}
+    .hub-pillar.p1{left:50%;top:11%}
+    .hub-pillar.p2{left:86%;top:38%}
+    .hub-pillar.p3{left:73%;top:82%}
+    .hub-pillar.p4{left:27%;top:82%}
+    .hub-pillar.p5{left:14%;top:38%}
+    @media(max-width:780px){
+      .hub{width:100%;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+      .hub-lines,.hub .orbit{display:none}
+      .hub .ai-core{position:static;transform:none;grid-column:1 / -1;margin:0 auto 4px}
+      .hub .ai-core:hover{transform:scale(1.06)}
+      .hub-pillar{position:static;width:auto;transform:none}
+      .hub-pillar:hover{transform:translateY(-4px)}
+    }
+  
+    /* ===== hero two-column (v5) ===== */
+    #hero{padding-top:80px}
+    .hero-grid2{display:grid;grid-template-columns:0.82fr 1fr;gap:24px;align-items:center;max-width:1240px;width:100%;margin:0 auto}
+    .hero-grid2 .hero-head{text-align:left;max-width:none;margin:0}
+    .hero-grid2 .hero-head .hero-badge{margin:0}
+    .hero-grid2 .hero-head .hero-cta{justify-content:flex-start}
+    .hero-grid2 .hub{margin:0}
+    /* solid cards (remove frosted blur artifacts) */
+    .hub-pillar{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff;border-color:var(--line)}
+    @media(max-width:880px){
+      .hero-grid2{grid-template-columns:1fr;gap:20px}
+      .hero-grid2 .hero-head{text-align:center}
+      .hero-grid2 .hero-head .hero-badge{margin:0 auto}
+      .hero-grid2 .hero-head .hero-cta{justify-content:center}
+    }
+  
+    /* ===== 02 risk color accents + risk3 grid (v6) ===== */
+    .rk1{border-top:3px solid var(--blue)}
+    .rk1 .card-head .card-num{background:var(--blue)}
+    .rk1 .card-head h3{color:var(--blue)}
+    .rk2{border-top:3px solid var(--purple)}
+    .rk2 .card-head .card-num{background:var(--purple)}
+    .rk2 .card-head h3{color:var(--purple)}
+    .rk3{border-top:3px solid var(--red)}
+    .rk3 .card-head .card-num{background:var(--red)}
+    .rk3 .card-head h3{color:var(--red)}
+    .risk3cols{grid-template-columns:0.74fr 1.7fr 0.96fr}
+    .risk3cols .chain{gap:6px}
+    .risk3cols .chain .ca{font-size:16px}
+    @media(max-width:880px){.risk3cols{grid-template-columns:1fr}}
+  
+
+    /* ===== readability pass: larger text + lower density (v7) ===== */
+    section { padding: 54px 44px; }
+    h2.sec-title { font-size: clamp(28px, 3.1vw, 40px); line-height: 1.14; }
+    .sec-lead { font-size: clamp(16px, 1.55vw, 18px); line-height: 1.65; max-width: 980px; }
+    .eyebrow { font-size: 13px; }
+    .eyebrow .num { width: 32px; height: 32px; font-size: 15px; }
+
+    .card { padding: 20px 22px; border-radius: 18px; }
+    .card-head h3 { font-size: 20px; }
+    .card-num { width: 40px; height: 40px; font-size: 17px; }
+    .card p.desc { font-size: 15.5px; line-height: 1.62; }
+    .list { gap: 10px; }
+    .list li { font-size: 15.5px; line-height: 1.5; }
+    .list li .dot { width: 24px; height: 24px; }
+    .subbox h5, .cy-box h5, .callout .co h5 { font-size: 15.5px; }
+    .cy-box ul li, .tri-feat, .tri-tech .tt { font-size: 13px; }
+    .cy-box.center strong { font-size: 15px; }
+
+    .keymsg { padding: 22px 28px; }
+    .keymsg h4 { font-size: 19px; }
+    .keymsg p, .keymsg ul li { font-size: 16px; line-height: 1.65; }
+
+    .flow-step { padding: 18px 16px; }
+    .flow-step h4 { font-size: 16.5px; }
+    .flow-step p { font-size: 13px; }
+
+    .tri-head { font-size: 18px; padding: 17px 20px; }
+    .tri-body { padding: 14px 18px; }
+    .tri-item { padding: 11px 0; }
+    .tri-item h5 { font-size: 16px; }
+    .tri-item p { font-size: 13.5px; line-height: 1.5; }
+    .tri-item .tii { width: 34px; height: 34px; }
+    .tri-tech { padding: 14px 20px; }
+    .tri-tech .tt { line-height: 1.45; }
+
+    .bene div { font-size: 15.5px; padding: 14px 16px; }
+    .callout .co p { font-size: 14.5px; line-height: 1.6; }
+
+    .five { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .fcard { padding: 20px 18px; }
+    .fcard h3 { font-size: 17.5px; }
+    .fcard ul li { font-size: 14.5px; line-height: 1.48; }
+    .expand .ex h5 { font-size: 15.5px; }
+    .expand .ex p { font-size: 13.5px; }
+
+    .core-strip { padding: 24px 28px; }
+    .core-strip .ch h3 { font-size: 21px; }
+    .core-grid .item b { font-size: 16px; }
+    .core-grid .item span { font-size: 13.5px; line-height: 1.55; }
+
+    footer p { font-size: 17px; }
+    footer .small { font-size: 14px; }
+
+    @media(max-width:1000px) { .five { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width:620px) { .five { grid-template-columns: 1fr; } section { padding: 44px 22px; } }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<nav id="topnav">
+<div class="nav-inner">
+<div class="nav-brand"><span aria-label="BIPA" class="bipa-logo navlogo" role="img"></span>(재)부산정보산업진흥원</div>
+<div class="nav-links">
+<a href="#hero">개요</a>
+<a href="#why">필요성</a>
+<a href="#risks">고려사항</a>
+<a href="#solution">해결책</a>
+<a href="#services">서비스 구성</a>
+<a href="#review">종합 검토</a>
+</div>
+</div>
+</nav>
+<!-- ============ HERO ============ -->
+<section id="hero">
+<div class="hero-grid2">
+<div class="hero-head">
+<span class="hero-badge">
+<svg fill="none" height="15" stroke="#2c5aa0" stroke-width="2" viewbox="0 0 24 24" width="15"><path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6"></path></svg>
+          AI for Public Sector
+        </span>
+<h1>AI 파일럿<span class="light">운영 가이드</span></h1>
+<p class="tagline">작게 시작하고, 안전하게 검증하고, 실질적으로 활용하기</p>
+<p class="sub">공공기관의 AI 도입을 위한 실무 중심 안내서</p>
+<div class="hero-cta">
+<a class="btn btn-primary" href="#why">시작하기
+            <svg fill="none" height="17" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="17"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</a>
+<a class="btn btn-ghost" href="#solution">핵심 해결책 보기</a>
+</div>
+</div>
+<div class="hub">
+<svg class="hub-lines" preserveaspectratio="none" viewbox="0 0 620 560">
+<line x1="310" x2="310" y1="280" y2="62"></line>
+<line x1="310" x2="533" y1="280" y2="213"></line>
+<line x1="310" x2="453" y1="280" y2="459"></line>
+<line x1="310" x2="167" y1="280" y2="459"></line>
+<line x1="310" x2="87" y1="280" y2="213"></line>
+</svg>
+<div class="orbit o1"></div>
+<div class="orbit o2"></div>
+<div class="ai-core">AI</div>
+<div class="pillar hub-pillar p1">
+<div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 22V4l11 4-11 4M4 13h7"></path></svg></div>
+<h4>작은 시작</h4>
+<p>핵심 업무에 집중한 파일럿 선택</p>
+</div>
+<div class="pillar hub-pillar p2">
+<div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+<h4>안전한 운영</h4>
+<p>보안과 개인정보를 고려한 환경 구성</p>
+</div>
+<div class="pillar hub-pillar p3">
+<div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></div>
+<h4>검증과 학습</h4>
+<p>효과 측정과 지속적인 개선</p>
+</div>
+<div class="pillar hub-pillar p4">
+<div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.81 1.18V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 7.51 19l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 13.4 1.65 1.65 0 0 0 3.18 13H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 5 7.51l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 11 4.6V4a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 2.49 1.42l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 20.4 11H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></div>
+<h4>실질적 활용</h4>
+<p>업무 효율과 서비스 품질 향상</p>
+</div>
+<div class="pillar hub-pillar p5">
+<div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path></svg></div>
+<h4>단계적 확장</h4>
+<p>성공 경험을 바탕으로 확대 적용</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 01 WHY ============ -->
+<section class="alt" id="why">
+<div class="wrap">
+<div class="reveal">
+<span class="eyebrow"><span class="num">01</span> Why Now</span>
+<h2 class="sec-title">왜 지금 공공기관에 AI 파일럿이 필요한가</h2>
+<p class="sec-lead">AI를 작게 도입하고 데이터를 축적해 행정부담과 업무 단절을 줄입니다.</p>
+</div>
+<div class="cards cols-2">
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num">1</div>
+<h3>점진적 업무 AI 도입으로<br/>행정부담 감소</h3>
+</div>
+<p class="desc">반복 문서·정리 업무를 줄여 실무자가 핵심 업무에 집중하도록 지원합니다.</p>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>반복 문서 작성 시간 단축</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>사업 결과보고 초안 자동화</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>회의 내용 정리 및 요약</li>
+
+
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>내부 자료 검색 및 업무 인수인계 보조</li>
+</ul>
+<div class="subbox">
+<h5>AI 업무지원 적용 예시</h5>
+<div class="tag-grid">
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<path d="M14 2v6h6"></path>
+</svg></span>문서 작성 지원</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 11H3v10h6zM21 3h-6v18h6zM15 7H9v14h6z"></path>
+</svg></span>결과보고 초안</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg></span>회의 요약</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m21 21-4.3-4.3"></path>
+</svg></span>자료 검색</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12h8M12 8v8"></path>
+</svg></span>민원 응대 지원</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 11l18-5v12L3 14zM11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
+</svg></span>홍보자료 작성</div>
+</div>
+</div>
+</div>
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num">2</div>
+<h3>데이터 누적을 통한<br/>사업 지속성 확보</h3>
+</div>
+<p class="desc">사업 경험과 자료를 기관 자산으로 축적해 업무 연속성을 확보합니다.</p>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>종료사업 자료의 재활용</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>유사사업 비교·분석</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>성과자료 및 보고서 검색</li>
+
+
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>신규 담당자의 빠른 업무 적응</li>
+</ul>
+<div class="subbox">
+<h5>데이터 누적과 활용 선순환 구조</h5>
+<div class="cycle">
+<div class="cy-box">
+<h5>데이터 누적</h5>
+<ul>
+<li>사업 자료</li>
+<li>보고서</li>
+<li>회의록</li>
+<li>성과 데이터</li>
+<li>민원/문의 내역</li>
+</ul>
+</div>
+<div class="cy-arr">→</div>
+<div class="cy-box center">
+<div class="db"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path>
+</svg></div>
+<strong>AI 기반<br/>통합 검색/분석<br/>(RAG)</strong>
+</div>
+<div class="cy-arr">→</div>
+<div class="cy-box">
+<h5>활용 가치</h5>
+<ul>
+<li>경험 재활용</li>
+<li>비교·분석</li>
+<li>성과 관리</li>
+<li>정책 개선</li>
+<li>사업 연속성 확보</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="keymsg reveal">
+<div class="ki"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2h6c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"></path>
+</svg></div>
+<div>
+<h4>작은 변화가 큰 차이를 만듭니다</h4>
+<p>AI는 조직을 한 번에 바꾸는 기술이 아니라, 반복 업무를 점진적으로 줄여나가는 도구입니다. AI 검색 체계를 통해 기관 내부에 축적된 사업 경험을 <b style="color:#fff">"검색 가능한 조직 자산"</b>으로 전환하면, 기관의 정책 연속성과 행정 기억(Administrative Memory)을 유지하는 기반이 됩니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 02 RISKS ============ -->
+<section class="tint" id="risks">
+<div class="wrap">
+<div class="reveal">
+<span class="eyebrow"><span class="num">02</span> Key Risks</span>
+<h2 class="sec-title">공공기관 AI 도입 시 고려해야 할 주요 문제점</h2>
+<p class="sec-lead">AI 도입 전 망분리·서비스 종속·데이터 단절 위험을 먼저 점검해야 합니다.</p>
+</div>
+<div class="cards">
+<!-- risk 1 -->
+<div class="card reveal rk1">
+<div class="card-head">
+<div class="card-num">1</div>
+<h3>망분리에 의한 내·외부 접근 문제</h3>
+</div>
+<p class="desc">망분리 환경에서는 외부 AI 접근과 내부 데이터 활용에 제약이 발생합니다.</p>
+<div class="cards cols-2" style="margin-top:6px">
+<div>
+<div class="subbox" style="margin-top:0;height:100%">
+<h5>주요 문제점</h5>
+<ul class="list">
+<li><span class="dot" style="background:var(--red-light);color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2.6" viewbox="0 0 24 24">
+<path d="M18 6 6 18M6 6l12 12"></path>
+</svg></span>외부 AI 서비스 접속 불가</li>
+<li><span class="dot" style="background:var(--red-light);color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2.6" viewbox="0 0 24 24">
+<path d="M18 6 6 18M6 6l12 12"></path>
+</svg></span>내부 데이터의 외부 활용 제한</li>
+
+
+
+</ul>
+</div>
+</div>
+<div>
+<div class="subbox" style="margin-top:0;height:100%">
+<h5>고려 사항</h5>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg></span>보안과 활용의 균형을 고려한 AI 인프라 전략 수립</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 10h-1.3A7 7 0 1 0 4 16h13a4 4 0 0 0 1-7.9z"></path>
+</svg></span>내부 전용 AI 환경 구축 또는 안전한 연계 방식 검토</li>
+
+
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- risk 2 -->
+<div class="card reveal rk2">
+<div class="card-head">
+<div class="card-num">2</div>
+<h3>랩핑 서비스의 락인(Lock-in) 효과</h3>
+</div>
+<p class="desc">특정 랩핑 서비스에 의존하면 전환 비용과 운영 제약이 커질 수 있습니다.</p>
+<div class="cards cols-3" style="margin-top:6px;gap:18px">
+<div class="subbox" style="margin-top:0">
+<h5>주요 문제점</h5>
+<ul class="list">
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>특정 서비스·플랫폼 종속
+                </li>
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>전환 시 비용 및 시간 손실
+                </li>
+
+
+
+</ul>
+</div>
+<div class="subbox" style="margin-top:0">
+<h5>랩핑 서비스 종속 구조</h5>
+<div class="chain">
+<div class="node">
+<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5"></path>
+</svg></div>우리 기관<br/>업무/데이터
+                </div>
+<span class="ca">→</span>
+<div class="node">
+<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg></div>특정 랩핑<br/>서비스
+                </div>
+<span class="ca">→</span>
+<div class="node">
+<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"></path>
+</svg></div>AI 모델/<br/>인프라
+                </div>
+</div>
+<p class="warn">구조적 종속으로 인한 전환 어려움 및 비용 증가</p>
+</div>
+<div class="subbox" style="margin-top:0">
+<h5>고려 사항</h5>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<path d="M14 2v6h6"></path>
+</svg></span>표준 기술 및 개방형 구조 우선 검토</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 1 1-6.2-8.6"></path>
+<path d="M22 4 12 14.01l-3-3"></path>
+</svg></span>데이터 반출/이관 가능성 확인</li>
+
+
+</ul>
+</div>
+</div>
+</div>
+<!-- risk 3 -->
+<div class="card reveal rk3">
+<div class="card-head">
+<div class="card-num">3</div>
+<h3>서비스 종료/중단에 의한 데이터 분리 문제</h3>
+</div>
+<p class="desc">외부 서비스 중단 시 데이터 접근과 업무 연속성이 흔들릴 수 있습니다.</p>
+<div class="cards risk3cols" style="margin-top:6px;gap:16px">
+<div class="subbox" style="margin-top:0">
+<h5>주요 문제점</h5>
+<ul class="list">
+<li><span class="dot" style="background:var(--red-light);color:var(--red)">•</span>서비스 종료 시 데이터 접근 불가
+                </li>
+<li><span class="dot" style="background:var(--red-light);color:var(--red)">•</span>데이터 반출 제한 또는 추가 비용 발생
+                </li>
+
+<li><span class="dot" style="background:var(--red-light);color:var(--red)">•</span>업무 중단 및 연속성 훼손</li>
+
+</ul>
+</div>
+<div class="subbox" style="margin-top:0">
+<h5>서비스 생애주기와 데이터 위험</h5>
+<div class="chain">
+<div class="node" style="min-width:66px">
+<div class="ni" style="background:var(--blue-light);color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg></div>서비스 사용
+                </div>
+<span class="ca">→</span>
+<div class="node" style="min-width:66px">
+<div class="ni" style="background:var(--blue-light);color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+</svg></div>서비스 변경
+                </div>
+<span class="ca">→</span>
+<div class="node" style="min-width:66px">
+<div class="ni" style="background:var(--red-light);color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M18 6 6 18"></path>
+</svg></div>중단/종료
+                </div>
+<span class="ca">→</span>
+<div class="node" style="min-width:66px">
+<div class="ni" style="background:var(--red-light);color:var(--red)"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></div>접근 불가
+                </div>
+</div>
+<p class="warn">데이터 주권 상실로 인한 기관 자산 손실 및 업무 마비</p>
+</div>
+<div class="subbox" style="margin-top:0">
+<h5>고려 사항</h5>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M8 12h8"></path>
+</svg></span>데이터 소유권 및 관리 주체 명확화</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 1 1-6.2-8.6"></path>
+<path d="M22 4 12 14l-3-3"></path>
+</svg></span>정기적 데이터 백업 및 이관 체계 구축</li>
+
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></span>내부 저장소 기반의 데이터 관리 원칙 마련</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="keymsg reveal">
+<div class="ki"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2h6c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"></path>
+</svg></div>
+<div>
+<h4>핵심 메시지</h4>
+<p>AI 도입은 단순한 기술 선택이 아니라, <b style="color:#fff">환경·구조·데이터 관점의 전략적 결정</b>입니다. 보안, 유연성, 지속가능성을 동시에 고려한 설계가 성공적인
+            AI 활용의 기반이 됩니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 03 SOLUTION ============ -->
+<section class="alt" id="solution">
+<div class="wrap">
+<div class="reveal">
+<span class="eyebrow"><span class="num">03</span> Solution</span>
+<h2 class="sec-title">공공기관 AI 도입의 현실적 해결책<br/><span style="color:var(--blue)">내부 문서 기반 AI (LLM Wiki)</span></h2>
+<p class="sec-lead">복잡한 RAG 인프라나 외부 SaaS 의존 없이, 내부 데이터를 안전하게 활용하는 <b>경량형 LLM Wiki 구조</b>로 작게 시작하고, 점진적으로 확장할 수
+          있습니다.</p>
+</div>
+<!-- requirements -->
+<div class="reveal" style="margin-top:14px">
+<h3 style="font-size:18px;color:var(--navy);margin-bottom:18px">현실적인 접근 방향 (요구사항)</h3>
+<div class="tag-grid" style="grid-template-columns:repeat(5,1fr)">
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></span>내부 데이터<br/>주권 확보</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg></span>망분리 환경<br/>운영 가능</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path>
+</svg></span>작게 시작하고<br/>단계적 확장</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>사용자 접근<br/>용이성 확보</div>
+<div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+</svg></span>운영·유지보수<br/>부담 최소화</div>
+</div>
+</div>
+<!-- architecture flow -->
+<div class="reveal" style="margin-top:14px">
+<h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">해결책: 내부 문서 기반 AI (LLM Wiki) 구조</h3>
+<p class="desc" style="color:var(--gray);font-size:14.5px">내부 문서를 중심으로 검색·요약·생성 기능을 제공하는 경량형 AI 시스템을 구축하여, 폐쇄망
+          환경에서도 안전하고 효율적으로 활용할 수 있습니다.</p>
+<div class="flow">
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg></div>
+<h4>① 내부 데이터<br/>수집·정리</h4>
+<p>사업보고서 · 회의록 · 공고문 · 성과/통계 · 매뉴얼</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path>
+</svg></div>
+<h4>② LLM Wiki<br/>(내부 문서 DB)</h4>
+<p>문서 변환 → 색인/구조화 → 내부 지식 DB</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3"></path>
+</svg></div>
+<h4>③ LLM 연동<br/>(경량 AI)</h4>
+<p>자연어 질문 → 검색/요약/생성 → 답변 제공</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<rect height="14" rx="2" width="20" x="2" y="3"></rect>
+<path d="M8 21h8M12 17v4"></path>
+</svg></div>
+<h4>④ 사용자 접근<br/>(내부망 웹)</h4>
+<p>HTML 기반 웹 UI → 검색/요약/초안 → 업무 활용</p>
+</div>
+</div>
+</div>
+<!-- operation + why + effect -->
+<div class="cards cols-3" style="margin-top:14px">
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num" style="font-size:14px">04</div>
+<h3 style="font-size:17px">운영 구조<br/>(소규모 서버+웹)</h3>
+</div>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="8" rx="2" width="20" x="2" y="2"></rect>
+<rect height="8" rx="2" width="20" x="2" y="14"></rect>
+<path d="M6 6h.01M6 18h.01"></path>
+</svg></span>일반 PC 또는 소형 서버 1대</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="8" rx="2" width="20" x="2" y="2"></rect>
+</svg></span>Linux / Windows 기반 운영</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></span>문서 저장 + 경량 DB + LLM 실행</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>GPU 없이도 경량 모델 운영 가능</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20"></path>
+</svg></span>HTML/CSS/JS, 브라우저만으로 접근</li>
+
+</ul>
+</div>
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num" style="font-size:14px">05</div>
+<h3 style="font-size:17px">왜 이 접근이<br/>현실적인가?</h3>
+</div>
+<ul class="list">
+<li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>RAG 같은 복잡한 인프라 없이 시작 가능</li>
+<li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>기존 문서 자산을 그대로 활용</li>
+<li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>소규모 서버 추가만으로 운영 가능</li>
+<li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>보안·망분리 환경에서도 안전하게 사용</li>
+<li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg></span>단계적 확장으로 위험과 비용 최소화</li>
+</ul>
+</div>
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num" style="font-size:14px">06</div>
+<h3 style="font-size:17px">기대 효과</h3>
+</div>
+<ul class="list">
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m21 21-4.3-4.3"></path>
+</svg></span>자료 검색 시간 대폭 단축</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+</svg></span>보고서 재활용 및 업무 생산성 향상</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>업무 연속성 및 신규 담당자 적응 지원</li>
+<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg></span>내부 데이터 주권 및 보안 강화</li>
+</ul>
+</div>
+</div>
+<!-- recommended start -->
+<div class="callout reveal">
+<div class="co">
+<h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+</svg>시작은 작게, 효과는 크게</h5>
+<p>내부 문서 검색 → 요약 → 초안 보조 순으로 확장합니다.</p>
+</div>
+<div class="co">
+<h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
+<path d="M5 12h14M13 6l6 6-6 6"></path>
+</svg>권장 시작 영역</h5>
+<p>종료사업 검색, 결과보고서 검색, 공고문 초안, 회의록 요약부터 시작합니다.</p>
+</div>
+<div class="co">
+<h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+</svg>핵심 원칙</h5>
+<p>데이터는 내부에, 시스템은 단순하게, 사용은 쉽게 유지합니다.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 04 SERVICES ============ -->
+<section class="tint" id="services">
+<div class="wrap">
+<div class="reveal">
+<span class="eyebrow"><span class="num">04</span> Service Design</span>
+<h2 class="sec-title">AI와 데이터 기반의 업무 서비스 구성과 적용 방안</h2>
+<p class="sec-lead">내부 문서·데이터 자산과 AI 기능을 활용하여 업무 성격과 운영 환경에 따라 <b>3가지 영역으로 구분</b>하여 서비스화하고, 필요한 경우 외부 서비스와 연계하여
+          활용할 수 있습니다.</p>
+</div>
+<!-- linkage flow -->
+<div class="flow reveal" style="margin-top:12px">
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></div>
+<h4>내부 문서 DB</h4>
+<p>LLM Wiki</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m21 21-4.3-4.3"></path>
+</svg></div>
+<h4>검색·요약·연결</h4>
+<p>데이터 활용</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+</svg></div>
+<h4>AI 처리</h4>
+<p>온프레미스 경량AI</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<rect height="14" rx="2" width="20" x="2" y="3"></rect>
+<path d="M8 21h8M12 17v4"></path>
+</svg></div>
+<h4>업무 서비스 활용</h4>
+<p>내부/외부 연계</p>
+</div>
+</div>
+<!-- three columns -->
+<div class="cards cols-3" style="margin-top:14px">
+<!-- A -->
+<div class="tri-col col-a reveal">
+<div class="tri-head">A. 단순 웹서비스로 가능한 것</div>
+<div class="tri-body">
+<div class="tri-feat">내부 데이터의 체계적 관리·검색·활용을 지원하는 영역</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg></span>
+<div>
+<h5>문서·자료 관리</h5>
+<p>파일 관리 / 버전·태그·분류체계 관리</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m21 21-4.3-4.3"></path>
+</svg></span>
+<div>
+<h5>통합 검색 서비스</h5>
+<p>내부 문서 통합 검색 / 사업·연도·유형 필터</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 17l6-6 4 4 8-8"></path>
+</svg></span>
+<div>
+<h5>사업·성과 데이터 관리</h5>
+<p>사업 정보 등록 / 성과지표·통계 시각화</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path>
+</svg></span>
+<div>
+<h5>업무 지식·매뉴얼 관리</h5>
+<p>절차·규정·양식·FAQ / 업무 연속성 확보</p>
+</div>
+</div>
+
+</div>
+<div class="tri-tech">
+<div class="tt"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>HTML 기반 단순 웹서비스로 구현</div>
+<div class="tt"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>내부망에서 브라우저로 사용 가능</div>
+<div class="tt"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>별도 AI 모델 없이도 즉시 운영 가능</div>
+</div>
+</div>
+<!-- B -->
+<div class="tri-col col-b reveal">
+<div class="tri-head">B. 온프레미스(경량 AI) 내부망 가능</div>
+<div class="tri-body">
+<div class="tri-feat">내부 데이터를 기반으로 AI가 단순 업무를 보조하는 영역</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<path d="M14 2v6h6"></path>
+</svg></span>
+<div>
+<h5>문서 작성 보조</h5>
+<p>결과보고서·공문·회의록·보도자료 초안</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h10M4 18h7"></path>
+</svg></span>
+<div>
+<h5>문서 요약·정리</h5>
+<p>긴 문서 요약 / 회의록·보고서 핵심 정리</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg></span>
+<div>
+<h5>내부 자료 기반 질의응답</h5>
+<p>규정·절차·사업지식 Q&amp;A / 신규자 지원</p>
+</div>
+</div>
+
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 3v18h18M7 14l4-4 3 3 5-6"></path>
+</svg></span>
+<div>
+<h5>데이터 분석 보조</h5>
+<p>통계 데이터 분석 / 간단한 패턴·추세 분석</p>
+</div>
+</div>
+</div>
+<div class="tri-tech">
+<div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>온프레미스 경량 AI 모델(예: LLM) 사용</div>
+<div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>내부망 서버에 설치하여 데이터 외부 반출 없음</div>
+<div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>서류 작성·정리 등 단순 반복 업무 효율화</div>
+</div>
+</div>
+<!-- C -->
+<div class="tri-col col-c reveal">
+<div class="tri-head">C. 외부 연결이 반드시 필요한 업무</div>
+<div class="tri-body">
+<div class="tri-feat">공공기관 특성상 외부 서비스·플랫폼 연계가 필요한 영역</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" width="18" x="3" y="3"></rect>
+<circle cx="8.5" cy="8.5" r="1.5"></circle>
+<path d="m21 15-5-5L5 21"></path>
+</svg></span>
+<div>
+<h5>홍보물 제작</h5>
+<p>카드뉴스·포스터·배너 / 디자인·영상 콘텐츠</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 18v-6a9 9 0 0 1 18 0v6M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+</svg></span>
+<div>
+<h5>민원·고객 대응</h5>
+<p>챗봇 연계 민원 대응 / 외부 민원 플랫폼 연동</p>
+</div>
+</div>
+<div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M7 10v12M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88z"></path>
+</svg></span>
+<div>
+<h5>SNS·온라인 홍보 운영</h5>
+<p>SNS 콘텐츠 제작·관리 / 채널 운영·모니터링</p>
+</div>
+</div>
+
+
+</div>
+<div class="tri-tech">
+<div class="tt" style="color:var(--purple)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>외부 인터넷 연결 및 계정 필요</div>
+<div class="tt" style="color:var(--purple)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>보안 구간 분리(망분리 환경) 고려</div>
+<div class="tt" style="color:var(--purple)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>필요한 데이터만 안전하게 연계·활용</div>
+</div>
+</div>
+</div>
+<!-- apply flow + strategy -->
+<div class="cards cols-2" style="margin-top:14px">
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num" style="font-size:14px">04</div>
+<h3 style="font-size:17px">서비스 구성 및 적용 흐름</h3>
+</div>
+<div class="flow" style="margin-top:6px">
+<div class="flow-step" style="min-width:0;padding:14px 8px">
+<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></div>
+<h4 style="font-size:12.5px">① 데이터 자산 구축</h4>
+</div>
+<div class="flow-arrow" style="font-size:18px">→</div>
+<div class="flow-step" style="min-width:0;padding:14px 8px">
+<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+</svg></div>
+<h4 style="font-size:12.5px">② 서비스 구성</h4>
+</div>
+<div class="flow-arrow" style="font-size:18px">→</div>
+<div class="flow-step" style="min-width:0;padding:14px 8px">
+<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></div>
+<h4 style="font-size:12.5px">③ 내부 서비스 적용</h4>
+</div>
+<div class="flow-arrow" style="font-size:18px">→</div>
+<div class="flow-step" style="min-width:0;padding:14px 8px">
+<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path>
+</svg></div>
+<h4 style="font-size:12.5px">④ 지속적 개선</h4>
+</div>
+</div>
+<p class="desc" style="margin-top:16px;font-size:13px">데이터를 지속적으로 축적·관리하고, 서비스를 단계적으로 확장하여 업무 효율성과 데이터 가치를
+            높입니다.</p>
+</div>
+<div class="card reveal">
+<div class="card-head">
+<div class="card-num" style="font-size:14px">05</div>
+<h3 style="font-size:17px">적용 전략 (소규모 조직 대응)</h3>
+</div>
+<div class="tag-grid" style="grid-template-columns:repeat(2,1fr);text-align:left">
+<div class="subbox" style="margin-top:0;padding:14px">
+<h5 style="margin-bottom:8px">단계적 도입</h5>
+<p style="font-size:12.5px;color:var(--gray)">작은 범위 테스트 후 성공 경험 기반으로 확대합니다.</p>
+</div>
+<div class="subbox" style="margin-top:0;padding:14px">
+<h5 style="margin-bottom:8px">역할 분담 운영</h5>
+<p style="font-size:12.5px;color:var(--gray)">데이터·서비스 운영 담당과 권한을 명확히 합니다.</p>
+</div>
+<div class="subbox" style="margin-top:0;padding:14px">
+<h5 style="margin-bottom:8px">보안 및 안정성 확보</h5>
+<p style="font-size:12.5px;color:var(--gray)">내부 데이터 보호 · 접근 권한 관리 · 백업/복구 체계</p>
+</div>
+<div class="subbox" style="margin-top:0;padding:14px">
+<h5 style="margin-bottom:8px">성과 측정 및 개선</h5>
+<p style="font-size:12.5px;color:var(--gray)">업무 시간 절감 측정 · 데이터 활용도 분석 · 지속 개선</p>
+</div>
+</div>
+</div>
+</div>
+<!-- expected effects -->
+<div class="reveal" style="margin-top:14px">
+<h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">기대 효과</h3>
+<div class="bene">
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>내부 데이터 체계화 및 자산화</div>
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>업무 시간 절감 및 생산성 향상</div>
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>반복 업무 자동화 및 오류 감소</div>
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>문서 작성 품질 및 일관성 향상</div>
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>업무 연속성 및 지식 자산 확보</div>
+<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>대외 서비스 연계로 공공 가치 확대</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 05 REVIEW ============ -->
+<section class="alt" id="review">
+<div class="wrap">
+<div class="reveal">
+<span class="eyebrow"><span class="num">05</span> Review</span>
+<h2 class="sec-title">경량형 공공기관 AI 구조 검토</h2>
+<p class="sec-lead">경량형 AI 구조의 장점·한계·운영조건·다음 단계를 요약합니다.</p>
+</div>
+<div class="five">
+<div class="fcard t1 reveal">
+<div class="fhead"><span class="fn">1</span>
+<h3>장점</h3>
+</div>
+<ul>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 22V4l11 4-11 4"></path>
+</svg></span>작은 규모로 시작 가능</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg></span>내부망에서 안전하게 운영</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></span>내부 데이터 자산화</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>업무 연속성 및 행정 기억 확보</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 3v18h18M7 14l4-4 3 3 5-6"></path>
+</svg></span>반복 업무 감소 및 효율 향상</li>
+</ul>
+</div>
+<div class="fcard t2 reveal">
+<div class="fhead"><span class="fn">2</span>
+<h3>한계점</h3>
+</div>
+<ul>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+</svg></span>데이터 정리 및 품질 관리 필요</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 3v18h18M7 12l4 4 3-6 4 4"></path>
+</svg></span>AI 성능 및 품질 편차 존재</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>지속적인 내부 운영 인력 필요</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>사용자 적응 및 조직 협조 필요</li>
+</ul>
+</div>
+<div class="fcard t3 reveal">
+<div class="fhead"><span class="fn">3</span>
+<h3>운영 고려사항</h3>
+</div>
+<ul>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg></span>민감정보 및 보안 관리</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="m8 12 3 3 5-6"></path>
+</svg></span>AI 결과 검증 및 최종 판단 필요</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+</svg></span>접근권한 및 데이터 관리</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 17l6-6 4 4 8-8"></path>
+</svg></span>단계적 도입 및 점진적 확대</li>
+</ul>
+</div>
+<div class="fcard t4 reveal">
+<div class="fhead"><span class="fn">4</span>
+<h3>다음 단계 준비</h3>
+</div>
+<ul>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+</svg></span>문서 표준화 및 메타데이터 정비</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg></span>데이터 분류체계 구축</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="7"></circle>
+<path d="m21 21-4.3-4.3"></path>
+</svg></span>내부 검색 체계 고도화</li>
+<li><span class="m"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path>
+</svg></span>AI 활용 가이드 및 운영 체계 마련</li>
+</ul>
+</div>
+<div class="fcard t5 reveal">
+<div class="fhead"><span class="fn">5</span>
+<h3>향후 확장 방향</h3>
+</div>
+<div class="expand">
+<div class="ex">
+<h5>경량형 업무 서비스</h5>
+<p>검색/요약/단순지원</p>
+</div>
+<div class="arr">↓</div>
+<div class="ex">
+<h5>내부 AI 서비스 고도화</h5>
+<p>챗봇/문서작성지원 등</p>
+</div>
+<div class="arr">↓</div>
+<div class="ex">
+<h5>기관 간 데이터 연계</h5>
+<p>공공 데이터 연계 확대</p>
+</div>
+<div class="arr">↓</div>
+<div class="ex">
+<h5>업무 자동화 확대</h5>
+<p>프로세스 개선 및 자동화</p>
+</div>
+</div>
+</div>
+</div>
+<!-- core message -->
+<div class="core-strip reveal">
+<div class="ch"><span class="b">핵심 메시지</span>
+<h3>경량형 AI 구조의 4가지 원칙</h3>
+</div>
+<div class="core-grid">
+<div class="item">
+<div class="ci"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<circle cx="12" cy="12" r="4"></circle>
+<circle cx="12" cy="12" r="1"></circle>
+</svg></div>
+<div><b>작게 시작하고</b><span>현실적인 범위에서 단계적으로 도입</span></div>
+</div>
+<div class="item">
+<div class="ci"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+</svg></div>
+<div><b>데이터를 축적하며</b><span>내부 데이터를 지속적으로 정리·활용</span></div>
+</div>
+<div class="item">
+<div class="ci"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path>
+</svg></div>
+<div><b>단계적으로 확장하여</b><span>업무 연속성과 행정 효율을 함께 향상</span></div>
+</div>
+<div class="item">
+<div class="ci"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg></div>
+<div><b>안전한 내부 운영</b><span>외부 연계를 균형 있게 고려하여 공공 가치 실현</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer>
+<svg class="logo" fill="none" stroke="#9cc0f0" stroke-width="1.6" viewbox="0 0 24 24">
+<path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6M9 21v-5h6v5"></path>
+</svg>
+<p>경량형 AI 구조는 한 번에 완성되는 것이 아니라,<br/>지속적인 개선과 축적을 통해 기관의 업무 환경에 최적화되어 나갑니다.</p>
+<p class="small">공공기관 AI 파일럿 운영 가이드 · AI for Public Sector</p>
+</footer>
+<script>
+    // progress bar
+    const bar = document.getElementById('progress');
+    const nav = document.getElementById('topnav');
+    let lastY = 0;
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (window.scrollY / h * 100) + '%';
+      // hide nav on scroll down
+      if (window.scrollY > lastY && window.scrollY > 200) { nav.classList.add('hidden') } else { nav.classList.remove('hidden') }
+      lastY = window.scrollY;
+    });
+
+    // reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target) } });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // active nav link
+    const sections = [...document.querySelectorAll('section[id]')];
+    const links = [...document.querySelectorAll('.nav-links a')];
+    const navObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)); } });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(s => navObs.observe(s));
+    window.addEventListener('load', () => { setTimeout(() => { document.querySelectorAll('.reveal:not(.show)').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('show'); }); }, 300); });
+  </script>
+<script>
+  (function () {
+    // back-to-top
+    var btn = document.createElement('button');
+    btn.id = 'toTop';
+    btn.setAttribute('aria-label', '\uB9E8 \uC704\uB85C');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    document.body.appendChild(btn);
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    window.addEventListener('scroll', function () { btn.classList.toggle('show', window.scrollY > window.innerHeight * 0.8); });
+
+    // pillars -> jump to first content section
+    document.querySelectorAll('.pillar').forEach(function (p) {
+      p.addEventListener('click', function () { var t = document.getElementById('why'); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
+    });
+
+    // section 04: click a column to focus, click again to reset
+    var svc = document.getElementById('services');
+    if (svc) {
+      var cols = svc.querySelectorAll('.tri-col');
+      cols.forEach(function (c) {
+        c.addEventListener('click', function () {
+          var on = c.classList.contains('active');
+          cols.forEach(function (x) { x.classList.remove('active'); });
+          if (on) { svc.classList.remove('focusing'); }
+          else { svc.classList.add('focusing'); c.classList.add('active'); }
+        });
+      });
+    }
+
+    // keyboard navigation (presentation feel)
+    var secs = [].slice.call(document.querySelectorAll('section[id]'));
+    function cur() { var y = window.scrollY + window.innerHeight * 0.35, b = 0; secs.forEach(function (sec, i) { if (sec.offsetTop <= y) b = i; }); return b; }
+    document.addEventListener('keydown', function (e) {
+      var ae = document.activeElement; if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return;
+      var i = cur();
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); secs[Math.min(i + 1, secs.length - 1)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); secs[Math.max(i - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
+      else if (e.key === 'Home') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      else if (e.key === 'End') { e.preventDefault(); secs[secs.length - 1].scrollIntoView({ behavior: 'smooth' }); }
+    });
+  })();
+</script>
+</body>
+</html>

@@ -117,6 +117,23 @@
   .section-header + .section-header,
   .card-grid + .section-header { margin-top: 40px; }
 
+  .sub-section-header {
+    width: 100%; max-width: 930px;
+    display: flex;
+    align-items: center;
+    margin: 8px 0 10px;
+  }
+  .sub-section-label {
+    font-size: 12px; font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.5px;
+    padding: 3px 12px 3px 10px;
+    background: rgba(255,255,255,0.1);
+    border-left: 3px solid rgba(255,255,255,0.45);
+    border-radius: 0 6px 6px 0;
+  }
+  .card-grid + .sub-section-header { margin-top: 28px; }
+
   .section-badge {
     display: inline-flex; align-items: center; gap: 7px;
     background: rgba(255,255,255,0.15);
@@ -375,6 +392,10 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   <div class="section-line"></div>
 </div>
 
+<div class="sub-section-header">
+  <span class="sub-section-label">🗂️ 경영지원</span>
+</div>
+
 <div class="card-grid">
 
   <!-- ① 지시사항 관련 -->
@@ -398,6 +419,59 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
       <span class="sep">·</span><span class="release-note">업데이트 예정</span>
     </div>
   </div>
+
+  <!-- ④ BIPA 기업관리카드 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="app-icon icon-violet">🤝</div>
+        <div class="card-body">
+          <h2>BIPA 기업관리카드</h2>
+          <p>기업 미팅 이력과 액션 아이템 기록·추적 팀 전용 CRM</p>
+        </div>
+      </div>
+      <div class="btn-group">
+        <a class="link-btn" href="https://bipa-com-info.base44.app">열기</a>
+        <a class="new-tab-btn" href="https://bipa-com-info.base44.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <span class="status-badge s-live">🟢 운영중</span>
+      <div class="stage-bars"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div></div>
+      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
+    </div>
+  </div>
+
+  <!-- ⑤ MOU 이행 성과 대시보드 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="app-icon icon-rose">📈</div>
+        <div class="card-body">
+          <h2>MOU 관리</h2>
+          <p>기관 MOU 체결 및 이행 현황 성과 집계</p>
+        </div>
+      </div>
+      <div class="btn-group">
+        <a class="link-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app">열기</a>
+        <a class="new-tab-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <span class="status-badge s-live">🟢 운영중</span>
+      <div class="stage-bars"><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div><div class="bar on"></div></div>
+      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="sub-section-header">
+  <span class="sub-section-label">📊 데이터관리</span>
+</div>
+
+<div class="card-grid">
 
   <!-- ② 일자리 실적 -->
   <div class="card">
@@ -443,68 +517,6 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
     </div>
   </div>
 
-  <!-- ④ BIPA 기업관리카드 -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="app-icon icon-violet">🤝</div>
-        <div class="card-body">
-          <h2>BIPA 기업관리카드</h2>
-          <p>기업 미팅 이력과 액션 아이템 기록·추적 팀 전용 CRM</p>
-        </div>
-      </div>
-      <div class="btn-group">
-        <a class="link-btn" href="https://bipa-com-info.base44.app">열기</a>
-        <a class="new-tab-btn" href="https://bipa-com-info.base44.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
-      </div>
-    </div>
-    <div class="card-bottom">
-      <span class="status-badge s-wip">🔧 개발중</span>
-      <div class="stage-bars"><div class="bar on"></div><div class="bar on"></div><div class="bar wip"></div><div class="bar"></div></div>
-      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
-    </div>
-  </div>
-
-  <!-- ⑤ MOU 이행 성과 대시보드 -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="app-icon icon-rose">📈</div>
-        <div class="card-body">
-          <h2>MOU 관리</h2>
-          <p>기관 MOU 체결 및 이행 현황 성과 집계</p>
-        </div>
-      </div>
-      <div class="btn-group">
-        <a class="link-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app">열기</a>
-        <a class="new-tab-btn" href="https://mou-performance-dashboard-599487465976.us-west1.run.app" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
-      </div>
-    </div>
-    <div class="card-bottom">
-      <span class="status-badge s-wip">🔧 개발중</span>
-      <div class="stage-bars"><div class="bar on"></div><div class="bar wip"></div><div class="bar"></div><div class="bar"></div></div>
-      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
-    </div>
-  </div>
-
-  <!-- ⑥ 일자리 사업 DB 관리 LLM -->
-  <div class="card">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="app-icon icon-amber">🧠</div>
-        <div class="card-body">
-          <h2>일자리 사업 DB 관리 LLM</h2>
-          <p>일자리 사업 데이터베이스 AI 기반 자동 관리</p>
-        </div>
-      </div>
-      <span class="no-link">준비중</span>
-    </div>
-    <div class="card-bottom">
-      <span class="status-badge s-wip">🔨 개발중</span>
-      <div class="stage-bars"><div class="bar wip"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
-      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
-    </div>
-  </div>
 
 </div>
 
@@ -554,8 +566,8 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
         </div>
       </div>
       <div class="btn-group">
-        <a class="wiki-btn" href="llmwiki/">열기</a>
-        <a class="new-tab-btn" href="llmwiki/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+        <a class="wiki-btn" href="https://mecagun8.github.io/bipa-wiki/">열기</a>
+        <a class="new-tab-btn" href="https://mecagun8.github.io/bipa-wiki/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
       </div>
     </div>
     <div class="wiki-tags">
@@ -570,6 +582,60 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
       <span class="sep">·</span><span class="release-note">LLM Wiki 기반 운영</span>
     </div>
   </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━ 섹션: 개발중 ━━━━━━━━━━━━━━ -->
+<div class="section-header">
+  <div class="section-badge">
+    <span class="section-badge-icon">🔧</span>
+    개발중
+  </div>
+  <div class="section-line"></div>
+</div>
+
+<div class="card-grid">
+
+  <!-- 타기관 사업공고 모음 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="app-icon icon-navy">🏛️</div>
+        <div class="card-body">
+          <h2>타기관 사업공고 모음</h2>
+          <p>BIPA 임직원용 정부기관 공고 수집 서비스</p>
+        </div>
+      </div>
+      <div class="btn-group">
+        <a class="link-btn" href="https://service-599487465976.us-west1.run.app/">열기</a>
+        <a class="new-tab-btn" href="https://service-599487465976.us-west1.run.app/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <span class="status-badge s-wip">🔧 개발중</span>
+      <div class="stage-bars"><div class="bar on"></div><div class="bar on"></div><div class="bar"></div><div class="bar"></div></div>
+      <span class="sep">·</span><span class="release-note">신규 서비스 개발중</span>
+    </div>
+  </div>
+
+  <!-- 일자리 사업 DB 관리 LLM -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="app-icon icon-amber">🧠</div>
+        <div class="card-body">
+          <h2>일자리 사업 DB 관리 LLM</h2>
+          <p>일자리 사업 데이터베이스 AI 기반 자동 관리</p>
+        </div>
+      </div>
+      <span class="no-link">준비중</span>
+    </div>
+    <div class="card-bottom">
+      <span class="status-badge s-wip">🔨 개발중</span>
+      <div class="stage-bars"><div class="bar wip"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      <span class="sep">·</span><span class="release-note">업데이트 예정</span>
+    </div>
+  </div>
+
 </div>
 
 <!-- ━━━━━━━━━━━━━━ 섹션: 종료예정 ━━━━━━━━━━━━━━ -->
