@@ -1,0 +1,47 @@
+name: Update BIPA AI Lab status
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check services and write status.json
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const services = JSON.parse(fs.readFileSync('ops/services.json','utf8'));
+          const results = [];
+          async function check(s){
+            const started = Date.now();
+            const controller = new AbortController();
+            const timer = setTimeout(()=>controller.abort(), 12000);
+            try{
+              const res = await fetch(s.url, {method:'GET', redirect:'follow', signal: controller.signal});
+              results.push({id:s.id, ok:res.status < 500, status:res.status, ms:Date.now()-started, checkedAt:new Date().toISOString()});
+            }catch(e){
+              results.push({id:s.id, ok:false, status:0, error:e.name || String(e), ms:Date.now()-started, checkedAt:new Date().toISOString()});
+            }finally{ clearTimeout(timer); }
+          }
+          (async()=>{
+            for(const s of services) await check(s);
+            fs.writeFileSync('ops/status.json', JSON.stringify({generatedAt:new Date().toISOString(), results}, null, 2));
+          })();
+          NODE
+      - name: Commit status update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ops/status.json
+          git commit -m "Update service status" || exit 0
+          git push

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIPA AI Lab 운영 상황판</title>
+  <style>
+    :root{--bg:#0f172a;--panel:#111827;--panel2:#172033;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444;--info:#38bdf8}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#0f172a,#111827 60%,#0b1120);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    header{padding:28px 24px 18px;border-bottom:1px solid var(--line)}
+    h1{margin:0;font-size:28px;letter-spacing:-.03em}.sub{margin-top:8px;color:var(--muted)}
+    main{padding:20px;max-width:1400px;margin:auto}.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(5,minmax(120px,1fr));margin-bottom:16px}.layout{grid-template-columns:1.3fr .7fr;align-items:start}
+    .card{background:rgba(17,24,39,.86);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+    .kpi b{font-size:26px;display:block}.kpi span{color:var(--muted);font-size:13px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}button,select,input,textarea{border:1px solid var(--line);background:#0b1220;color:var(--text);border-radius:10px;padding:9px 10px}button{cursor:pointer}button:hover{border-color:var(--info)}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:11px 9px;border-bottom:1px solid rgba(51,65,85,.65);vertical-align:top}th{text-align:left;color:#cbd5e1;font-size:12px}a{color:#93c5fd;text-decoration:none}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}.good .dot{background:var(--good)}.warn .dot{background:var(--warn)}.bad .dot{background:var(--bad)}.info .dot{background:var(--info)}
+    .service-name{font-weight:700}.muted{color:var(--muted);font-size:12px}.row-actions{display:flex;gap:6px;flex-wrap:wrap}.side-title{margin:0 0 10px;font-size:16px}.checklist label{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid rgba(51,65,85,.45)}.memo{width:100%;min-height:180px;margin-top:8px}.danger{color:#fecaca}.ok{color:#bbf7d0}.small{font-size:12px}.footer{color:var(--muted);font-size:12px;margin-top:14px;line-height:1.5}
+    @media(max-width:960px){.kpis,.layout{grid-template-columns:1fr}table{font-size:13px}.hide-sm{display:none}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>BIPA AI Lab 운영 상황판</h1>
+  <div class="sub">9개 솔루션의 데이터관리·유지보수·현재상황을 한 번에 복구하기 위한 AX전환팀용 페이지</div>
+</header>
+<main>
+  <section class="grid kpis" id="kpis"></section>
+  <section class="grid layout">
+    <div class="card">
+      <div class="toolbar">
+        <select id="stageFilter"><option value="all">전체 단계</option></select>
+        <select id="categoryFilter"><option value="all">전체 분류</option></select>
+        <button id="copyBrief">오늘 브리핑 복사</button>
+        <button id="resetChecks">체크리스트 초기화</button>
+      </div>
+      <table>
+        <thead><tr><th>상태</th><th>솔루션</th><th class="hide-sm">관리 포인트</th><th>다음 행동</th><th>열기</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="footer">상태값은 <code>ops/status.json</code>의 자동 점검 결과가 있으면 반영됩니다. 없으면 단계·중요도 기반으로 표시됩니다.</div>
+    </div>
+    <aside class="grid">
+      <div class="card">
+        <h2 class="side-title">오늘의 운영 루틴</h2>
+        <div class="checklist" id="checklist"></div>
+      </div>
+      <div class="card">
+        <h2 class="side-title">맥락 복구 메모</h2>
+        <div class="muted">회의 직후, 장애 직후, 데이터 갱신 직후에 한 줄만 남겨도 다음날 복구가 쉬워집니다.</div>
+        <textarea class="memo" id="memo" placeholder="예: 교육실적은 이번 주 금요일까지 6월 수료자 반영 필요. 담당자 확인 전까지 수치 확정 금지."></textarea>
+        <div class="toolbar"><button id="saveMemo">메모 저장</button><button id="clearMemo">비우기</button></div>
+      </div>
+    </aside>
+  </section>
+</main>
+<script>
+const checklistItems = [
+  '운영중 high 서비스 접속 확인',
+  '이번 주 데이터 갱신 대상 확인',
+  '오류·개선 요청 1건 이상 기록',
+  '개발중 서비스의 다음 행동 확인',
+  '종료예정 서비스의 이관 상태 확인'
+];
+let services = [], statusMap = new Map();
+const $ = id => document.getElementById(id);
+function statusOf(s){
+  const r = statusMap.get(s.id);
+  if(r){
+    if(r.ok) return {cls:'good', text:'정상'};
+    return {cls:'bad', text:'점검필요'};
+  }
+  if(s.stage === '개발중') return {cls:'info', text:'개발중'};
+  if(s.stage === '종료예정') return {cls:'warn', text:'이관'};
+  if(s.criticality === 'high') return {cls:'warn', text:'확인필요'};
+  return {cls:'good', text:'운영'};
+}
+function renderFilters(){
+  const stages = [...new Set(services.map(s=>s.stage))];
+  const cats = [...new Set(services.map(s=>s.category))];
+  $('stageFilter').innerHTML = '<option value="all">전체 단계</option>' + stages.map(v=>`<option>${v}</option>`).join('');
+  $('categoryFilter').innerHTML = '<option value="all">전체 분류</option>' + cats.map(v=>`<option>${v}</option>`).join('');
+}
+function renderKpis(list){
+  const high = list.filter(s=>s.criticality==='high').length;
+  const live = list.filter(s=>s.stage==='운영중').length;
+  const dev = list.filter(s=>s.stage==='개발중').length;
+  const end = list.filter(s=>s.stage==='종료예정').length;
+  const bad = list.filter(s=>statusOf(s).cls==='bad').length;
+  $('kpis').innerHTML = [
+    ['전체', list.length], ['운영중', live], ['개발중', dev], ['종료예정', end], ['점검필요', bad || high]
+  ].map(([k,v])=>`<div class="card kpi"><b>${v}</b><span>${k}</span></div>`).join('');
+}
+function renderTable(){
+  const sf = $('stageFilter').value, cf = $('categoryFilter').value;
+  const list = services.filter(s=>(sf==='all'||s.stage===sf)&&(cf==='all'||s.category===cf));
+  renderKpis(list);
+  $('tbody').innerHTML = list.map(s=>{
+    const st = statusOf(s);
+    return `<tr>
+      <td><span class="pill ${st.cls}"><i class="dot"></i>${st.text}</span><div class="muted">${s.stage}</div></td>
+      <td><div class="service-name">${s.name}</div><div class="muted">${s.category} · ${s.criticality}</div></td>
+      <td class="hide-sm"><div>데이터: ${s.dataType}</div><div class="muted">갱신: ${s.dataCadence} / 유지보수: ${s.maintenanceCadence}</div></td>
+      <td>${s.nextAction}<div class="muted">데이터 ${s.dataOwner} · 유지보수 ${s.maintenanceOwner}</div></td>
+      <td><div class="row-actions"><a href="${s.url}" target="_blank" rel="noreferrer">서비스</a></div></td>
+    </tr>`;
+  }).join('');
+}
+function renderChecklist(){
+  const saved = JSON.parse(localStorage.getItem('opsChecklist')||'{}');
+  $('checklist').innerHTML = checklistItems.map((item,i)=>`<label><input type="checkbox" data-check="${i}" ${saved[i]?'checked':''}/> ${item}</label>`).join('');
+  document.querySelectorAll('[data-check]').forEach(el=>el.addEventListener('change',()=>{
+    const state = {}; document.querySelectorAll('[data-check]').forEach(c=>state[c.dataset.check]=c.checked);
+    localStorage.setItem('opsChecklist', JSON.stringify(state));
+  }));
+}
+function brief(){
+  const needs = services.filter(s=>['high'].includes(s.criticality) || ['개발중','종료예정'].includes(s.stage));
+  return `BIPA AI Lab 오늘 운영 브리핑\n- 전체 ${services.length}개: 운영중 ${services.filter(s=>s.stage==='운영중').length}개, 개발중 ${services.filter(s=>s.stage==='개발중').length}개, 종료예정 ${services.filter(s=>s.stage==='종료예정').length}개\n- 우선 확인: ${needs.map(s=>s.name).join(', ')}\n- 메모: ${$('memo').value || '없음'}`;
+}
+async function init(){
+  services = await fetch('./services.json').then(r=>r.json());
+  try{
+    const status = await fetch('./status.json?ts='+Date.now()).then(r=>r.json());
+    statusMap = new Map((status.results||[]).map(r=>[r.id,r]));
+  }catch(e){}
+  renderFilters(); renderTable(); renderChecklist();
+  $('memo').value = localStorage.getItem('opsMemo') || '';
+}
+$('stageFilter').addEventListener('change',renderTable); $('categoryFilter').addEventListener('change',renderTable);
+$('copyBrief').addEventListener('click',async()=>{await navigator.clipboard.writeText(brief()); alert('브리핑을 복사했습니다.');});
+$('saveMemo').addEventListener('click',()=>{localStorage.setItem('opsMemo',$('memo').value); alert('저장했습니다.');});
+$('clearMemo').addEventListener('click',()=>{$('memo').value=''; localStorage.removeItem('opsMemo');});
+$('resetChecks').addEventListener('click',()=>{localStorage.removeItem('opsChecklist'); renderChecklist();});
+init();
+</script>
+</body>
+</html>
