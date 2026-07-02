@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-07-02T12:52:18.732Z",
+  "generatedAt": "2026-07-02T15:02:09.558Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2333,
-      "checkedAt": "2026-07-02T12:52:06.988Z"
+      "ms": 2355,
+      "checkedAt": "2026-07-02T15:01:57.151Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 236,
-      "checkedAt": "2026-07-02T12:52:07.224Z"
+      "ms": 537,
+      "checkedAt": "2026-07-02T15:01:57.688Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2281,
-      "checkedAt": "2026-07-02T12:52:09.505Z"
+      "ms": 2530,
+      "checkedAt": "2026-07-02T15:02:00.218Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 1156,
-      "checkedAt": "2026-07-02T12:52:10.661Z"
+      "ms": 1247,
+      "checkedAt": "2026-07-02T15:02:01.465Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2433,
-      "checkedAt": "2026-07-02T12:52:13.094Z"
+      "ms": 2398,
+      "checkedAt": "2026-07-02T15:02:03.863Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 75,
-      "checkedAt": "2026-07-02T12:52:13.169Z"
+      "ms": 132,
+      "checkedAt": "2026-07-02T15:02:03.995Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 48,
-      "checkedAt": "2026-07-02T12:52:13.218Z"
+      "ms": 155,
+      "checkedAt": "2026-07-02T15:02:04.150Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 4263,
-      "checkedAt": "2026-07-02T12:52:17.481Z"
+      "ms": 4215,
+      "checkedAt": "2026-07-02T15:02:08.365Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 1251,
-      "checkedAt": "2026-07-02T12:52:18.732Z"
+      "ms": 1193,
+      "checkedAt": "2026-07-02T15:02:09.558Z"
     }
   ]
 }
