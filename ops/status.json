@@ -1,68 +1,69 @@
 {
-  "generatedAt": "2026-07-03T01:27:10.637Z",
+  "generatedAt": "2026-07-03T05:08:45.499Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2335,
-      "checkedAt": "2026-07-03T01:26:58.912Z"
+      "ms": 2315,
+      "checkedAt": "2026-07-03T05:08:25.642Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 265,
-      "checkedAt": "2026-07-03T01:26:59.177Z"
+      "ms": 377,
+      "checkedAt": "2026-07-03T05:08:26.019Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2268,
-      "checkedAt": "2026-07-03T01:27:01.445Z"
+      "ms": 2603,
+      "checkedAt": "2026-07-03T05:08:28.622Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 1285,
-      "checkedAt": "2026-07-03T01:27:02.730Z"
+      "ms": 1306,
+      "checkedAt": "2026-07-03T05:08:29.928Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2361,
-      "checkedAt": "2026-07-03T01:27:05.091Z"
+      "ms": 2414,
+      "checkedAt": "2026-07-03T05:08:32.342Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 96,
-      "checkedAt": "2026-07-03T01:27:05.187Z"
+      "ms": 56,
+      "checkedAt": "2026-07-03T05:08:32.398Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 55,
-      "checkedAt": "2026-07-03T01:27:05.242Z"
+      "ms": 35,
+      "checkedAt": "2026-07-03T05:08:32.433Z"
     },
     {
       "id": "notices",
-      "ok": true,
-      "status": 200,
-      "ms": 4296,
-      "checkedAt": "2026-07-03T01:27:09.538Z"
+      "ok": false,
+      "status": 0,
+      "error": "AbortError",
+      "ms": 12001,
+      "checkedAt": "2026-07-03T05:08:44.434Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 1099,
-      "checkedAt": "2026-07-03T01:27:10.637Z"
+      "ms": 1065,
+      "checkedAt": "2026-07-03T05:08:45.499Z"
     }
   ]
 }
