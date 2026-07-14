@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-07-14T11:53:25.073Z",
+  "generatedAt": "2026-07-14T12:58:54.642Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2307,
-      "checkedAt": "2026-07-14T11:53:13.238Z"
+      "ms": 2354,
+      "checkedAt": "2026-07-14T12:58:43.644Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 356,
-      "checkedAt": "2026-07-14T11:53:13.594Z"
+      "ms": 283,
+      "checkedAt": "2026-07-14T12:58:43.927Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 4156,
-      "checkedAt": "2026-07-14T11:53:17.750Z"
+      "ms": 2287,
+      "checkedAt": "2026-07-14T12:58:46.214Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 1270,
-      "checkedAt": "2026-07-14T11:53:19.020Z"
+      "ms": 2400,
+      "checkedAt": "2026-07-14T12:58:48.615Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2389,
-      "checkedAt": "2026-07-14T11:53:21.409Z"
+      "ms": 2344,
+      "checkedAt": "2026-07-14T12:58:50.959Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 110,
-      "checkedAt": "2026-07-14T11:53:21.519Z"
+      "ms": 171,
+      "checkedAt": "2026-07-14T12:58:51.130Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 56,
-      "checkedAt": "2026-07-14T11:53:21.575Z"
+      "ms": 133,
+      "checkedAt": "2026-07-14T12:58:51.263Z"
     },
     {
       "id": "notices",
-      "ok": true,
-      "status": 200,
-      "ms": 2233,
-      "checkedAt": "2026-07-14T11:53:23.808Z"
+      "ok": false,
+      "status": 500,
+      "ms": 1190,
+      "checkedAt": "2026-07-14T12:58:52.453Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 1265,
-      "checkedAt": "2026-07-14T11:53:25.073Z"
+      "ms": 2189,
+      "checkedAt": "2026-07-14T12:58:54.642Z"
     }
   ]
 }
