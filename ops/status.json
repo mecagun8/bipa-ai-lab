@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-07-28T14:54:51.779Z",
+  "generatedAt": "2026-07-28T16:26:41.630Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
-      "status": 200,
-      "ms": 2327,
-      "checkedAt": "2026-07-28T14:54:40.473Z"
+      "status": 429,
+      "ms": 10162,
+      "checkedAt": "2026-07-28T16:26:30.372Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 229,
-      "checkedAt": "2026-07-28T14:54:40.702Z"
+      "ms": 244,
+      "checkedAt": "2026-07-28T16:26:30.616Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2426,
-      "checkedAt": "2026-07-28T14:54:43.128Z"
+      "ms": 2418,
+      "checkedAt": "2026-07-28T16:26:33.034Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 2370,
-      "checkedAt": "2026-07-28T14:54:45.498Z"
+      "ms": 1331,
+      "checkedAt": "2026-07-28T16:26:34.365Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2494,
-      "checkedAt": "2026-07-28T14:54:47.992Z"
+      "ms": 2533,
+      "checkedAt": "2026-07-28T16:26:36.898Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 131,
-      "checkedAt": "2026-07-28T14:54:48.123Z"
+      "ms": 139,
+      "checkedAt": "2026-07-28T16:26:37.037Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 146,
-      "checkedAt": "2026-07-28T14:54:48.269Z"
+      "ms": 105,
+      "checkedAt": "2026-07-28T16:26:37.142Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 1272,
-      "checkedAt": "2026-07-28T14:54:49.541Z"
+      "ms": 2254,
+      "checkedAt": "2026-07-28T16:26:39.396Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 2238,
-      "checkedAt": "2026-07-28T14:54:51.779Z"
+      "ms": 2234,
+      "checkedAt": "2026-07-28T16:26:41.630Z"
     }
   ]
 }
