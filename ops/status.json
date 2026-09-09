@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-09-09T17:34:15.064Z",
+  "generatedAt": "2026-09-09T20:06:17.692Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 7308,
-      "checkedAt": "2026-09-09T17:33:48.747Z"
+      "ms": 7348,
+      "checkedAt": "2026-09-09T20:05:48.707Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 258,
-      "checkedAt": "2026-09-09T17:33:49.005Z"
+      "ms": 257,
+      "checkedAt": "2026-09-09T20:05:48.965Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 7686,
-      "checkedAt": "2026-09-09T17:33:56.691Z"
+      "ms": 7397,
+      "checkedAt": "2026-09-09T20:05:56.362Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 1297,
-      "checkedAt": "2026-09-09T17:33:57.989Z"
+      "ms": 1281,
+      "checkedAt": "2026-09-09T20:05:57.643Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2442,
-      "checkedAt": "2026-09-09T17:34:00.431Z"
+      "ms": 2398,
+      "checkedAt": "2026-09-09T20:06:00.041Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 68,
-      "checkedAt": "2026-09-09T17:34:00.499Z"
+      "ms": 76,
+      "checkedAt": "2026-09-09T20:06:00.117Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 34,
-      "checkedAt": "2026-09-09T17:34:00.533Z"
+      "ms": 104,
+      "checkedAt": "2026-09-09T20:06:00.221Z"
     },
     {
       "id": "notices",
-      "ok": true,
-      "status": 200,
-      "ms": 7265,
-      "checkedAt": "2026-09-09T17:34:07.798Z"
+      "ok": false,
+      "status": 500,
+      "ms": 10147,
+      "checkedAt": "2026-09-09T20:06:10.368Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 7266,
-      "checkedAt": "2026-09-09T17:34:15.064Z"
+      "ms": 7324,
+      "checkedAt": "2026-09-09T20:06:17.692Z"
     }
   ]
 }
