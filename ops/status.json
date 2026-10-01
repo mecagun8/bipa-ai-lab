@@ -1,69 +1,68 @@
 {
-  "generatedAt": "2026-10-01T14:36:36.012Z",
+  "generatedAt": "2026-10-01T19:56:02.729Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2574,
-      "checkedAt": "2026-10-01T14:36:14.465Z"
+      "ms": 2370,
+      "checkedAt": "2026-10-01T19:55:49.434Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 313,
-      "checkedAt": "2026-10-01T14:36:14.778Z"
+      "ms": 372,
+      "checkedAt": "2026-10-01T19:55:49.806Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2759,
-      "checkedAt": "2026-10-01T14:36:17.537Z"
+      "ms": 2435,
+      "checkedAt": "2026-10-01T19:55:52.241Z"
     },
     {
       "id": "jobs-2026",
-      "ok": false,
-      "status": 0,
-      "error": "TypeError",
-      "ms": 10495,
-      "checkedAt": "2026-10-01T14:36:28.032Z"
+      "ok": true,
+      "status": 200,
+      "ms": 2215,
+      "checkedAt": "2026-10-01T19:55:54.456Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2493,
-      "checkedAt": "2026-10-01T14:36:30.525Z"
+      "ms": 3183,
+      "checkedAt": "2026-10-01T19:55:57.639Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 187,
-      "checkedAt": "2026-10-01T14:36:30.712Z"
+      "ms": 155,
+      "checkedAt": "2026-10-01T19:55:57.794Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 98,
-      "checkedAt": "2026-10-01T14:36:30.810Z"
+      "ms": 132,
+      "checkedAt": "2026-10-01T19:55:57.926Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 2693,
-      "checkedAt": "2026-10-01T14:36:33.503Z"
+      "ms": 2202,
+      "checkedAt": "2026-10-01T19:56:00.128Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 2509,
-      "checkedAt": "2026-10-01T14:36:36.012Z"
+      "ms": 2601,
+      "checkedAt": "2026-10-01T19:56:02.729Z"
     }
   ]
 }
