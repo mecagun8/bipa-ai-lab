@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-10-20T18:02:16.354Z",
+  "generatedAt": "2026-10-20T21:44:43.568Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2421,
-      "checkedAt": "2026-10-20T18:01:54.564Z"
+      "ms": 2398,
+      "checkedAt": "2026-10-20T21:44:25.032Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 313,
-      "checkedAt": "2026-10-20T18:01:54.877Z"
+      "ms": 215,
+      "checkedAt": "2026-10-20T21:44:25.248Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2403,
-      "checkedAt": "2026-10-20T18:01:57.280Z"
+      "ms": 4481,
+      "checkedAt": "2026-10-20T21:44:29.729Z"
     },
     {
       "id": "jobs-2026",
-      "ok": false,
-      "status": 500,
-      "ms": 10457,
-      "checkedAt": "2026-10-20T18:02:07.737Z"
+      "ok": true,
+      "status": 200,
+      "ms": 2286,
+      "checkedAt": "2026-10-20T21:44:32.015Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 3307,
-      "checkedAt": "2026-10-20T18:02:11.044Z"
+      "ms": 4519,
+      "checkedAt": "2026-10-20T21:44:36.534Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 107,
-      "checkedAt": "2026-10-20T18:02:11.151Z"
+      "ms": 137,
+      "checkedAt": "2026-10-20T21:44:36.671Z"
     },
     {
       "id": "rules",
       "ok": true,
       "status": 404,
-      "ms": 83,
-      "checkedAt": "2026-10-20T18:02:11.234Z"
+      "ms": 102,
+      "checkedAt": "2026-10-20T21:44:36.773Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 2672,
-      "checkedAt": "2026-10-20T18:02:13.906Z"
+      "ms": 4302,
+      "checkedAt": "2026-10-20T21:44:41.075Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 2448,
-      "checkedAt": "2026-10-20T18:02:16.354Z"
+      "ms": 2493,
+      "checkedAt": "2026-10-20T21:44:43.568Z"
     }
   ]
 }
