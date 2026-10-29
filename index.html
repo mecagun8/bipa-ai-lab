@@ -345,6 +345,37 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
     display: flex; align-items: flex-start; gap: 10px;
   }
   .notice-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ━━━ 완성도 향상: 접근성·반응형·모션 ━━━ */
+  .card-body h2, .card-body p {
+    overflow-wrap: anywhere;
+  }
+  .link-btn:focus-visible, .new-tab-btn:focus-visible, .wiki-btn:focus-visible {
+    outline: 2px solid #fbbf24;
+    outline-offset: 2px;
+  }
+  .card-bottom { flex-wrap: wrap; }
+  .release-note { min-width: 0; }
+  .section-header { margin-bottom: 16px; }
+  .card-grid { margin-bottom: 4px; }
+
+  @media (max-width: 767px) {
+    body { padding: 32px 14px 56px; }
+    .header { margin-bottom: 32px; }
+    .logo-badge { padding: 12px 18px; gap: 14px; }
+    .logo-badge svg { width: 120px; height: 36px; }
+    .logo-text-main { font-size: 16px; }
+    .header-status { flex-wrap: wrap; justify-content: center; gap: 8px 12px; border-radius: 16px; }
+    .header-date { margin-left: 0; width: 100%; text-align: center; }
+    .card { padding: 14px 14px 0; }
+    .card-head { gap: 10px; }
+    .app-icon { width: 44px; height: 44px; font-size: 21px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .link-btn, .new-tab-btn, .wiki-btn { transition: none; }
+    .card:hover, .link-btn:hover, .new-tab-btn:hover, .wiki-btn:hover { transform: none; }
+  }
   .notice p { font-size: 12px; color: rgba(255,255,255,0.6); font-weight: 500; line-height: 1.55; }
 </style>
 </head>
@@ -371,12 +402,12 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   <div class="header-status">
     <div class="header-status-item">
       <div class="header-status-dot dot-green"></div>
-      운영중 앱 3개
+      운영중 앱 7개
     </div>
     <span class="header-status-sep">|</span>
     <div class="header-status-item">
       <div class="header-status-dot dot-yellow"></div>
-      개발중 3개
+      개발중 2개
     </div>
     <span class="header-status-sep">|</span>
     <span class="header-date" id="today-date"></span>
