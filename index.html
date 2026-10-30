@@ -336,6 +336,19 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
     border: 1px solid rgba(52,211,153,0.25);
   }
 
+  /* RIP 이스터에그 */
+  .rip-wrap { width: 100%; max-width: 930px; display: flex; justify-content: flex-end; margin-top: 24px; }
+  .rip-btn {
+    background: transparent; border: 0; cursor: pointer;
+    font: 700 10px/1 'Pretendard', sans-serif; letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.12); padding: 6px 8px; border-radius: 6px;
+    transition: color 0.3s;
+  }
+  .rip-btn:hover, .rip-btn:focus-visible, .rip-btn[aria-expanded="true"] { color: rgba(255,255,255,0.7); }
+  .rip-zone { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .rip-zone[hidden] { display: none; }
+  .rip-zone > .section-header:first-child { margin-top: 8px; }
+
   .notice {
     width: 100%; max-width: 930px;
     background: rgba(0,0,0,0.2);
@@ -397,11 +410,6 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
     <div class="header-status-item">
       <div class="header-status-dot dot-green"></div>
       운영중 앱 7개
-    </div>
-    <span class="header-status-sep">|</span>
-    <div class="header-status-item">
-      <div class="header-status-dot dot-yellow"></div>
-      개발중 2개
     </div>
     <span class="header-status-sep">|</span>
     <span class="header-date" id="today-date"></span>
@@ -589,6 +597,9 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
 
 </div>
 
+<!-- RIP 이스터에그: 지식 허브 이하 전체 숨김 -->
+<div class="rip-wrap"><button type="button" class="rip-btn" id="rip-btn" aria-expanded="false" aria-controls="rip-zone" title="RIP">RIP</button></div>
+<div id="rip-zone" class="rip-zone" hidden>
 <!-- ━━━━━━━━━━━━━━ 섹션: 지식 허브 ━━━━━━━━━━━━━━ -->
 <div class="section-header">
   <div class="section-badge">
@@ -736,6 +747,8 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   </div>
 </div>
 
+</div>
+
 <div class="notice">
   <span class="notice-icon">⚠️</span>
   <p>각 서비스는 MVP(Minimum Viable Product) 모델이므로 실제 결과와 다를 수 있습니다. 오류 및 개선 사항은 담당자에게 알려주세요.</p>
@@ -745,6 +758,13 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   const d = new Date();
   const opts = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
   document.getElementById('today-date').textContent = d.toLocaleDateString('ko-KR', opts);
+  const ripBtn = document.getElementById('rip-btn');
+  const ripZone = document.getElementById('rip-zone');
+  ripBtn.addEventListener('click', () => {
+    const open = ripZone.hidden;
+    ripZone.hidden = !open;
+    ripBtn.setAttribute('aria-expanded', String(open));
+  });
 </script>
 </body>
 </html>
