@@ -349,6 +349,30 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
   .rip-zone[hidden] { display: none; }
   .rip-zone > .section-header:first-child { margin-top: 8px; }
 
+  /* 기억의 정원 */
+  .grave-badge { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
+  .graveyard {
+    width: 100%; max-width: 930px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;
+    padding: 28px 16px 20px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 60%), rgba(0,10,40,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+  }
+  .tomb {
+    width: 190px; padding: 26px 14px 18px;
+    text-align: center;
+    background: linear-gradient(180deg, #cfd6df 0%, #9aa5b4 100%);
+    border-radius: 95px 95px 10px 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35), inset 0 2px 0 rgba(255,255,255,0.5);
+    color: #3b4656;
+  }
+  .tomb-icon { font-size: 22px; opacity: 0.7; filter: grayscale(1); margin-bottom: 6px; }
+  .tomb h2 { font-size: 14px; font-weight: 800; color: #2b3442; line-height: 1.3; margin-bottom: 4px; }
+  .tomb-years { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #566274; margin-bottom: 10px; }
+  .tomb-epitaph { font-size: 11px; line-height: 1.5; font-style: italic; color: #3b4656; margin-bottom: 12px; }
+  .tomb-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px; background: rgba(255,255,255,0.45); color: #475569; }
+
   .notice {
     width: 100%; max-width: 930px;
     background: rgba(0,0,0,0.2);
@@ -675,25 +699,6 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
 
 <div class="card-grid">
 
-  <!-- 타기관 사업공고 모음 -->
-  <div class="card retired">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="app-icon icon-navy">🏛️</div>
-        <div class="card-body">
-          <h2>타기관 사업공고 모음</h2>
-          <p>BIPA 임직원용 정부기관 공고 수집 서비스</p>
-        </div>
-      </div>
-      <span class="no-link">재개발중</span>
-    </div>
-    <div class="card-bottom">
-      <span class="status-badge s-retired">🔨 재개발중</span>
-      <div class="stage-bars"><div class="bar off"></div><div class="bar off"></div><div class="bar off"></div><div class="bar off"></div></div>
-      <span class="sep">·</span><span class="release-note">기존 버전 사용 중단 · 재개발 예정</span>
-    </div>
-  </div>
-
   <!-- 일자리 사업 DB 관리 LLM -->
   <div class="card">
     <div class="card-head">
@@ -715,35 +720,29 @@ background: #e0effe; color: #1a56db; border: 1px solid #93c5fd;
 
 </div>
 
-<!-- ━━━━━━━━━━━━━━ 섹션: 종료예정 ━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━ 섹션: 기억의 정원 ━━━━━━━━━━━━━━ -->
 <div class="section-header">
-  <div class="section-badge" style="background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.5);">
-    <span class="section-badge-icon" style="background:rgba(255,255,255,0.1);">🗄️</span>
-    종료예정
+  <div class="section-badge grave-badge">
+    <span class="section-badge-icon">🕯️</span>
+    기억의 정원
   </div>
   <div class="section-line"></div>
 </div>
 
-<div class="card-grid">
-  <div class="card retired">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="app-icon icon-slate">🏢</div>
-        <div class="card-body">
-          <h2>부서별 담당기업</h2>
-          <p>팀별 기업 배정 현황 조회 및 관리</p>
-        </div>
-      </div>
-      <div class="btn-group">
-        <a class="link-btn" style="background:rgba(255,255,255,0.5); color:#475569;" href="https://google-sheets-viewer-599487465976.us-west1.run.app/">열기</a>
-        <a class="new-tab-btn" href="https://google-sheets-viewer-599487465976.us-west1.run.app/" target="_blank"><svg viewBox="0 0 12 12"><path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M8 1h3m0 0v3m0-3L5 7"/></svg></a>
-      </div>
-    </div>
-    <div class="card-bottom">
-      <span class="status-badge s-retired">🔴 종료예정</span>
-      <div class="stage-bars"><div class="bar off"></div><div class="bar off"></div><div class="bar off"></div><div class="bar off"></div></div>
-      <span class="sep">·</span><span class="release-note">BIPA CRM으로 대체 예정</span>
-    </div>
+<div class="graveyard">
+  <div class="tomb">
+    <div class="tomb-icon">🏢</div>
+    <h2>부서별 담당기업</h2>
+    <p class="tomb-years">2025 – 2026</p>
+    <p class="tomb-epitaph">“BIPA CRM에게 자리를 물려주다”</p>
+    <span class="tomb-tag">종료</span>
+  </div>
+  <div class="tomb">
+    <div class="tomb-icon">🏛️</div>
+    <h2>타기관 사업공고 모음</h2>
+    <p class="tomb-years">2025 – 2026</p>
+    <p class="tomb-epitaph">“더 나은 모습으로 돌아옵니다”</p>
+    <span class="tomb-tag">재개발 예정</span>
   </div>
 </div>
 
