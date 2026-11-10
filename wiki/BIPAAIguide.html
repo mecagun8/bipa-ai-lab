@@ -1,10 +1,11 @@
-<!-- readability edit v7: font sizes increased, repeated text and excess bullets reduced --><!DOCTYPE html>
+<!DOCTYPE html>
+<!-- readability edit v7 + motion layer v8 -->
 
 <html lang="ko">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>공공기관 AI 파일럿 운영 가이드</title>
+<title>공공기관 AI 도입 가이드</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
@@ -1749,6 +1750,389 @@
 
     @media(max-width:1000px) { .five { grid-template-columns: repeat(2, 1fr); } }
     @media(max-width:620px) { .five { grid-template-columns: 1fr; } section { padding: 44px 22px; } }
+
+    /* ===================================================================
+       Motion layer (v8) — Motion Prompt 라이브러리 기준 명칭 표기
+       =================================================================== */
+    :root {
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    /* #095 Animated gradient — hero 배경 광원이 천천히 떠다님 */
+    .hero-grid2 { position: relative; z-index: 2 }
+    #hero::before { animation: drift1 16s ease-in-out infinite alternate }
+    #hero::after {
+      content: ""; position: absolute; left: -160px; bottom: -200px;
+      width: 560px; height: 560px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(74, 130, 212, .14), transparent 70%);
+      animation: drift2 20s ease-in-out infinite alternate; pointer-events: none
+    }
+    @keyframes drift1 { to { translate: -90px 70px; scale: 1.15 } }
+    @keyframes drift2 { to { translate: 120px -60px; scale: .9 } }
+
+    /* #001 Pop-in — hero 배지 */
+    .hero-badge { animation: pop .6s var(--ease-back) .1s both }
+
+    /* #005 Mask reveal — hero 제목 줄 단위로 아래에서 올라옴 */
+    .hero h1 .ln, #hero h1 .ln { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em }
+    #hero h1 .ln > span { display: inline-block; transform: translateY(110%); animation: rise .9s var(--ease-out) forwards }
+    #hero h1 .ln:nth-child(1) > span { animation-delay: .25s }
+    #hero h1 .ln:nth-child(2) > span { animation-delay: .40s }
+    @keyframes rise { to { transform: none } }
+
+    /* #002 Stagger — hero 문구·버튼 순차 등장 */
+    #hero .tagline, #hero .sub, #hero .hero-cta { animation: fadeUp .7s var(--ease-out) both }
+    #hero .tagline { animation-delay: .65s }
+    #hero .sub { animation-delay: .78s }
+    #hero .hero-cta { animation-delay: .9s }
+    @keyframes fadeUp { from { opacity: 0; translate: 0 16px } to { opacity: 1; translate: 0 0 } }
+
+    /* #022 Light sweep — 주 버튼에 주기적인 빛줄기 */
+    .btn-primary { position: relative; overflow: hidden }
+    .btn-primary::after {
+      content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent);
+      transform: skewX(-20deg); animation: sweepBtn 4.5s ease-in-out 2s infinite; pointer-events: none
+    }
+    @keyframes sweepBtn { 0% { left: -60% } 30%, 100% { left: 130% } }
+    .btn-primary svg { transition: transform .25s var(--ease-out) }
+    .btn-primary:hover svg { transform: translateX(4px) }
+
+    /* hero hub: core pop + #125 Pulse rings */
+    .hub .ai-core { animation: pop .8s var(--ease-back) .5s both }
+    .ai-core::before, .ai-core::after {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid rgba(74, 130, 212, .55); animation: ring 3s ease-out 1.4s infinite; pointer-events: none
+    }
+    .ai-core::after { animation-delay: 2.9s }
+    @keyframes ring { from { scale: 1; opacity: .7 } to { scale: 1.9; opacity: 0 } }
+    @keyframes pop { 0% { opacity: 0; scale: .55 } 70% { opacity: 1; scale: 1.06 } 100% { opacity: 1; scale: 1 } }
+
+    /* #004 Line draw — 중심에서 각 기둥으로 선이 뻗어나감 */
+    .hub-lines line {
+      transform-box: view-box; transform-origin: 310px 280px; scale: 0;
+      animation: grow .7s var(--ease-out) forwards
+    }
+    .hub-lines line:nth-of-type(1) { animation-delay: 2.5s }
+    .hub-lines line:nth-of-type(2) { animation-delay: 2.58s }
+    .hub-lines line:nth-of-type(3) { animation-delay: 2.66s }
+    .hub-lines line:nth-of-type(4) { animation-delay: 2.74s }
+    .hub-lines line:nth-of-type(5) { animation-delay: 2.82s }
+    @keyframes grow { to { scale: 1 } }
+    .hub-lines .pkt { fill: var(--accent); opacity: 0; animation: pktIn .4s ease 3.4s forwards }
+    @keyframes pktIn { to { opacity: .85 } }
+    .hub .orbit { animation-name: spin; opacity: 0; transition: opacity 1s ease }
+    .hub.ready .orbit { opacity: 1 }
+
+    /* 꽃잎 전개: #121 Anticipation → #126 Motion path(원호) → #010 Overshoot → #122 Follow-through, 이후 #096 Floating
+       각 카드의 transform-origin을 JS가 허브 중심으로 맞춰, 카드가 AI 코어 뒤에 접혀 있다가 원호를 그리며 펴짐 */
+    .hub:not(.bloom) .hub-pillar { opacity: 0 }
+    .hub.bloom .hub-pillar {
+      animation: bloom 1.9s cubic-bezier(.45, 0, .2, 1) both, float 5.5s ease-in-out infinite;
+      animation-delay: var(--d, .9s), calc(var(--d, .9s) + 1.9s)
+    }
+    .hub-pillar.p1 { --d: .90s } .hub-pillar.p2 { --d: .96s } .hub-pillar.p3 { --d: 1.02s }
+    .hub-pillar.p4 { --d: 1.08s } .hub-pillar.p5 { --d: 1.14s }
+    .hub.bloom .hub-pillar.p2, .hub.bloom .hub-pillar.p4 { animation-duration: 1.9s, 6.3s }
+    @keyframes bloom {
+      0%   { opacity: 0; scale: .12; rotate: -150deg }
+      18%  { opacity: 1; scale: .34; rotate: -150deg }   /* 코어 뒤에 접힌 꽃잎 */
+      32%  { opacity: 1; scale: .32; rotate: -168deg }   /* 반대로 살짝 감았다가 */
+      82%  { scale: 1.04; rotate: 7deg }                 /* 원호를 그리며 펼쳐져 목표를 지나친 뒤 */
+      92%  { scale: .99; rotate: -2deg }
+      100% { opacity: 1; scale: 1; rotate: 0deg }        /* 제자리에 안착 */
+    }
+    @keyframes float { 0%, 100% { translate: 0 0 } 50% { translate: 0 -7px } }
+    .hub-pillar { will-change: rotate, scale }
+    @media(max-width:780px) {
+      .hub.bloom .hub-pillar { transform-origin: 50% 50% !important; animation-name: pop, float; animation-duration: .65s, 5.5s; animation-timing-function: var(--ease-back), ease-in-out }
+    }
+    .hub-pillar .ico { transition: transform .35s var(--ease-back), background .25s, color .25s }
+    .hub-pillar:hover .ico { transform: rotate(-8deg) scale(1.12); background: var(--navy); color: #fff }
+
+    /* #167 Scroll-down cue */
+    .scroll-cue {
+      position: absolute; left: 50%; bottom: 18px; translate: -50% 0; z-index: 3;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--blue);
+      text-decoration: none; opacity: 0; animation: fadeIn .8s ease 2.4s forwards; transition: opacity .4s
+    }
+    .scroll-cue .mouse { width: 22px; height: 34px; border: 2px solid currentColor; border-radius: 12px; position: relative }
+    .scroll-cue .mouse::after {
+      content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px;
+      border-radius: 2px; background: currentColor; animation: wheel 1.8s ease-in-out infinite
+    }
+    .scroll-cue.gone { opacity: 0 !important; pointer-events: none }
+    @keyframes wheel { 0% { opacity: 0; translate: 0 -3px } 30% { opacity: 1 } 100% { opacity: 0; translate: 0 10px } }
+    @keyframes fadeIn { to { opacity: .85 } }
+    @media(max-height:700px), (max-width:780px) { .scroll-cue { display: none } }
+
+    /* ---------- 섹션 공통 ---------- */
+    /* #074 Fade-in on scroll 강화: 블러 + 감속 곡선 */
+    .reveal {
+      filter: blur(4px);
+      transition: opacity .8s var(--ease-out), transform .8s var(--ease-out), filter .8s var(--ease-out)
+    }
+    .reveal.show { filter: none }
+    .card.reveal, .fcard.reveal, .tri-col.reveal {
+      transition: opacity .8s var(--ease-out), transform .8s var(--ease-out), filter .8s var(--ease-out), box-shadow .25s ease, border-color .25s ease
+    }
+    .card.reveal.show:hover, .fcard.reveal.show:hover { transition-duration: .8s, .25s, .8s, .25s, .25s }
+
+    /* #005 Mask reveal — 섹션 제목이 아래에서 드러남 */
+    h2.sec-title { clip-path: inset(0 0 100% 0); translate: 0 .35em; transition: clip-path 1s var(--ease-out) .15s, translate 1s var(--ease-out) .15s }
+    .reveal.show h2.sec-title { clip-path: inset(-5% -2% -12% -2%); translate: 0 0 }
+
+    /* #001 Pop-in — 섹션 번호·카드 번호 */
+    .eyebrow .num, .card-num, .fcard .fn { scale: .4; opacity: 0 }
+    .reveal.show .eyebrow .num, .reveal.show .card-num, .reveal.show .fcard .fn, .fcard.reveal.show .fn { animation: pop .55s var(--ease-back) .1s forwards }
+
+    /* #080 Highlighter animation — 핵심 문구에 형광펜이 그어짐 */
+    .sec-lead b, .keymsg p b {
+      background-image: linear-gradient(transparent 58%, rgba(74, 130, 212, .22) 58%);
+      background-repeat: no-repeat; background-size: 0% 100%;
+      transition: background-size 1s var(--ease-out) .7s; padding: 0 2px
+    }
+    .keymsg p b { background-image: linear-gradient(transparent 55%, rgba(156, 192, 240, .38) 55%) }
+    .reveal.show .sec-lead b, .reveal.show.keymsg p b, .reveal.show .keymsg p b { background-size: 100% 100% }
+
+    /* #002 Stagger — 카드 내부 항목 순차 등장 (JS가 --i 부여) */
+    .stg {
+      opacity: 0; translate: 0 14px;
+      transition: opacity .55s var(--ease-out) calc(var(--i, 0) * 70ms + 180ms),
+                  translate .55s var(--ease-out) calc(var(--i, 0) * 70ms + 180ms),
+                  transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease
+    }
+    .reveal.show .stg { opacity: 1; translate: 0 0 }
+
+    /* #022 Light sweep — 핵심 메시지 배너에 빛줄기 한 번 */
+    .keymsg, .core-strip { position: relative; overflow: hidden }
+    .keymsg::after, .core-strip::after {
+      content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .16), transparent);
+      transform: skewX(-18deg); pointer-events: none; opacity: 0
+    }
+    .reveal.show.keymsg::after, .reveal.show.core-strip::after { animation: sweepOnce 1.6s ease-in-out .5s 1 }
+    @keyframes sweepOnce { 0% { left: -40%; opacity: 1 } 100% { left: 120%; opacity: 1 } }
+    .keymsg .ki svg { transform-origin: 50% 40% }
+    .reveal.show.keymsg .ki svg { animation: bulb 2.8s ease-in-out 1.2s infinite }
+    @keyframes bulb { 0%, 100% { filter: none } 50% { filter: drop-shadow(0 0 6px rgba(255, 240, 180, .9)) } }
+
+    /* #126 Motion path 느낌 — 흐름 화살표가 진행 방향으로 살짝 움직임 */
+    .flow-arrow, .cy-arr, .chain .ca { animation: nudgeX 1.8s ease-in-out infinite }
+    .expand .arr { animation: nudgeY 1.8s ease-in-out infinite }
+    @keyframes nudgeX { 0%, 100% { translate: 0 0 } 50% { translate: 4px 0 } }
+    @keyframes nudgeY { 0%, 100% { translate: 0 0 } 50% { translate: 0 4px } }
+    @media(max-width:880px) { .flow-arrow { animation-name: nudgeY } }
+    @media(max-width:760px) { .cy-arr { animation-name: nudgeY } }
+
+    /* 흐름 단계 아이콘: hover 시 살짝 회전 */
+    .flow-step .fi, .tag .ti, .tri-item .tii, .core-grid .item .ci { transition: transform .35s var(--ease-back) }
+    .flow-step:hover .fi, .tag:hover .ti, .tri-item:hover .tii { transform: scale(1.12) rotate(-6deg) }
+    .tag:hover { transform: translateY(-3px) }
+
+    /* #024 Impact shake — '접근 불가' 노드 경고 */
+    .reveal.show .node.shake { animation: shake .55s ease 1.5s 1 }
+    .reveal.show .node.shake .ni { animation: redGlow 2.4s ease-in-out 2.1s infinite }
+    @keyframes shake { 0%, 100% { translate: 0 0 } 20% { translate: -5px 0 } 40% { translate: 5px 0 } 60% { translate: -3px 0 } 80% { translate: 3px 0 } }
+    @keyframes redGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0) } 50% { box-shadow: 0 0 0 6px rgba(192, 57, 43, .15) } }
+    .warn { opacity: 0; transition: opacity .6s ease 1.3s }
+    .reveal.show .warn { opacity: 1 }
+
+    /* #154 Spotlight hover — 카드 위 마우스 위치를 따라 은은한 광원 */
+    .card, .fcard {
+      background-image: radial-gradient(420px circle at var(--mx, -500px) var(--my, -500px), rgba(74, 130, 212, .09), transparent 45%)
+    }
+
+    /* 서비스 3열: 헤더 그라데이션이 천천히 흐름 (#095) */
+    .tri-head { background-size: 200% 200% !important; animation: hueFlow 8s ease-in-out infinite alternate }
+    @keyframes hueFlow { from { background-position: 0% 50% } to { background-position: 100% 50% } }
+
+    /* footer 로고 부유 (#096) */
+    footer .logo { animation: float 5s ease-in-out infinite }
+
+    /* 핵심 카드 → 관련 내용 링크 */
+    .hub-pillar { cursor: pointer; padding-bottom: 22px }
+    .hub-pillar::after {
+      content: attr(data-sec) " →"; position: absolute; left: 0; right: 0; bottom: 7px;
+      font-size: 11px; font-weight: 700; color: var(--blue); opacity: .55; transition: opacity .2s, letter-spacing .2s
+    }
+    .hub-pillar:hover::after, .hub-pillar:focus-visible::after { opacity: 1; letter-spacing: .02em }
+    @media(max-width:780px) { .hub-pillar { position: relative; left: auto !important; top: auto !important } }
+    .hub-pillar:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px }
+    #start-small, #safe-ops, #verify, #use-types, #expand-path, section .wrap > .reveal:first-child { scroll-margin-top: 84px; border-radius: 18px }
+    section .wrap > .reveal:first-child.jump-hl { outline-offset: 10px }
+    .jump-hl { animation: jumpHl 2.4s ease-out 1 !important }
+    @keyframes jumpHl {
+      0% { outline: 3px solid rgba(74, 130, 212, 0); outline-offset: 14px }
+      20% { outline: 3px solid rgba(74, 130, 212, .85); outline-offset: 6px }
+      70% { outline: 3px solid rgba(74, 130, 212, .6); outline-offset: 6px }
+      100% { outline: 3px solid rgba(74, 130, 212, 0); outline-offset: 6px }
+    }
+
+    /* 섹션 분할(v9): 한 화면에 한 묶음 */
+    section { padding: 44px 44px }
+    .eyebrow .pg { margin-left: 6px; font-size: 11px; letter-spacing: .06em; color: var(--gray); font-weight: 600; opacity: .8 }
+    .sub-eyebrow { margin-bottom: 14px }
+    .sub-eyebrow .eyebrow { margin-bottom: 0; opacity: .75 }
+    .sub-eyebrow .eyebrow .num { width: 26px; height: 26px; font-size: 12px }
+    section.sub .wrap > .cards:first-of-type, section.sub .wrap > .five { margin-top: 0 }
+    .five.two { grid-template-columns: 1fr 1fr }
+    #services > .wrap > .flow .flow-step { padding: 11px 14px } #services > .wrap > .flow .fi { width: 36px; height: 36px; margin-bottom: 6px }
+    @media(max-width:620px) { .five.two { grid-template-columns: 1fr } section { padding: 40px 22px } }
+
+    /* 용어 풀이 (점선 밑줄 + 말풍선) */
+    .term { border-bottom: 1.5px dotted currentColor; cursor: help; outline: none }
+    .term:focus-visible { background: rgba(74, 130, 212, .15); border-radius: 3px }
+    #termTip {
+      position: fixed; z-index: 400; max-width: 300px; padding: 10px 13px; border-radius: 10px;
+      background: var(--navy-deep); color: #eaf1fc; font-size: 13px; line-height: 1.55; font-weight: 400;
+      box-shadow: 0 12px 30px rgba(15, 44, 82, .3); pointer-events: none;
+      opacity: 0; translate: 0 4px; transition: opacity .15s, translate .15s
+    }
+    #termTip.on { opacity: 1; translate: 0 0 }
+    #termTip b { display: block; color: #fff; font-size: 13.5px; margin-bottom: 3px }
+    .tip-hint { font-size: 12.5px; color: var(--gray); margin-top: 8px }
+    /* 03 해결책 박스 */
+    .sol-box {
+      position: relative; margin-top: 0; padding: 14px 22px 14px 24px; border-radius: 16px;
+      background: linear-gradient(120deg, var(--blue-light), #fff 75%); border: 1px solid #cddcf2; border-left: 5px solid var(--blue)
+    }
+    .sol-box::before { display: none; content: "↓"; position: absolute; left: 50%; top: -22px; translate: -50% 0; color: var(--accent); font-weight: 700; font-size: 16px; animation: nudgeY 1.8s ease-in-out infinite }
+    .sol-tag { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--blue); border-radius: 20px; padding: 3px 11px }
+    .sol-name { margin-top: 8px; font-size: 22px; font-weight: 900; color: var(--navy); letter-spacing: -.01em }
+    .sol-name .sol-sub { font-size: 16px; font-weight: 700; color: var(--blue) }
+    .sol-box p { margin-top: 5px; font-size: 15px; color: var(--ink); line-height: 1.6 }
+    .sol-box p b { color: var(--blue); background-image: linear-gradient(transparent 58%, rgba(74,130,212,.22) 58%); background-repeat: no-repeat; background-size: 0% 100%; transition: background-size 1s var(--ease-out) .6s }
+    .reveal.show .sol-box p b { background-size: 100% 100% }
+    .reveal.show .sol-box { animation: solIn .8s var(--ease-back) .15s both }
+    @keyframes solIn { from { opacity: 0; scale: .96 } to { opacity: 1; scale: 1 } }
+    .kind-legend { display: inline-flex; gap: 6px; margin-left: 10px; vertical-align: middle }
+    .kd { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 20px; padding: 2px 8px; line-height: 1.5 }
+    .kd.ans { background: var(--blue-light); color: var(--blue) }
+    .kd.adv { background: var(--green-light); color: var(--green) }
+    #solution .tag-grid .tag { padding: 10px 8px; gap: 6px }
+    #solution .tag-grid .tag .kd { margin-top: 2px; font-weight: 600 }
+    .callout.callout-4 { grid-template-columns: repeat(4, 1fr) }
+    @media(max-width:1000px) { .callout.callout-4 { grid-template-columns: 1fr 1fr } }
+    @media(max-width:620px) { .callout.callout-4 { grid-template-columns: 1fr } }
+    /* 02 한 화면 압축 */
+    #risks { padding-top: 30px; padding-bottom: 30px }
+    #risks .cards { gap: 10px; margin-top: 10px }
+    #risks .card { padding: 12px 18px }
+    #risks .card-head { margin-bottom: 4px }
+    #risks .card-num { width: 32px; height: 32px; font-size: 15px }
+    #risks .card-head h3 { font-size: 18px }
+    #risks .card p.desc { font-size: 14px; margin-bottom: 8px }
+    #risks .subbox { padding: 9px 12px }
+    #risks .subbox h5 { font-size: 14px; margin-bottom: 6px }
+    #risks .list { gap: 5px }
+    #risks .list li { font-size: 14px; line-height: 1.4 }
+    #risks .list li .dot { width: 20px; height: 20px }
+    #risks .chain { margin: 2px 0 6px }
+    #risks .chain .node { padding: 7px 8px; font-size: 11.5px }
+    #risks .chain .node .ni { width: 30px; height: 30px; margin-bottom: 4px }
+    #risks .chain .node .ni svg { width: 16px; height: 16px }
+    #risks .warn { font-size: 12px; margin-top: 2px }
+    #risks .keymsg { margin-top: 10px; padding: 14px 22px }
+    #risks .keymsg h4 { font-size: 16.5px; margin-bottom: 3px }
+    #risks .keymsg p { font-size: 14.5px; line-height: 1.55 }
+    #risks .keymsg .ki { width: 40px; height: 40px }
+    #risks h2.sec-title { font-size: clamp(26px, 2.6vw, 34px) }
+    #risks .sec-lead { margin-top: 4px }
+    #risks .rk2grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px }
+    #risks .rk2grid .stack { display: flex; flex-direction: column; gap: 8px }
+    #risks .rk2grid .stack > .subbox:first-child .list { flex-direction: row; flex-wrap: wrap; gap: 5px 28px }
+    #risks .rk2grid .stack .chain { margin: 0 0 4px }
+    #risks .rk2grid .stack .chain .node { display: flex; align-items: center; gap: 8px; text-align: left; padding: 6px 12px }
+    #risks .rk2grid .stack .chain .node .ni { margin: 0; flex: none }
+    #risks .rk2grid .stack .chain .node br { display: none }
+    #risks .rk2grid .stack > .subbox { display: flex; align-items: center; gap: 18px; flex-wrap: wrap }
+    #risks .rk2grid .stack > .subbox > h5 { margin: 0; flex: none; width: 150px; white-space: nowrap }
+    #risks .rk2grid .stack > .subbox .chain { flex: 1; justify-content: flex-start; margin: 0 }
+    #risks .rk2grid .stack > .subbox .warn { width: 100%; text-align: left; margin: -10px 0 0 168px }
+    @media(max-width:880px) { #risks .rk2grid { grid-template-columns: 1fr } }
+    @media(max-width:880px) { #risks .rk2grid .stack > .subbox { display: block } #risks .rk2grid .stack > .subbox > h5 { width: auto; margin-bottom: 8px } #risks .rk2grid .stack > .subbox .warn { margin: 4px 0 0 } #risks .rk2grid .stack .chain { justify-content: center } }
+    #risks .card-head { flex-wrap: wrap; column-gap: 12px; row-gap: 2px }
+    #risks .card-head .head-desc { margin: 0; font-size: 14px; color: var(--gray); flex: 1; min-width: 260px }
+    /* 04 업무별 도입 (v10) */
+    .h3s { font-size: 18px; color: var(--navy); margin-bottom: 6px }
+    .h3n { font-size: 14px; font-weight: 400; color: var(--gray); margin-left: 8px }
+    .q3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px }
+    .q3 .q { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 13px 16px; display: flex; flex-direction: column; gap: 3px; opacity: .8 }
+    .q3 .q.on { border-color: var(--accent); box-shadow: 0 8px 20px rgba(44, 90, 160, .12); opacity: 1 }
+    .q3 .qn { font-size: 12px; font-weight: 700; color: var(--blue) }
+    .q3 .q b { font-size: 16px; color: var(--navy) }
+    .q3 .q span:last-child { font-size: 13px; color: var(--gray) }
+    @media(max-width:820px) { .q3 { grid-template-columns: 1fr } }
+    .tri-head .hd-sub { float: right; font-size: 12px; font-weight: 600; background: rgba(255, 255, 255, .2); border-radius: 20px; padding: 3px 10px; margin-top: 1px }
+    .ladder .fi { color: #fff; font-weight: 900; font-size: 14px }
+    .ladder .flow-step { padding: 12px 14px }
+    .ladder .flow-step p { font-size: 13px }
+    .ex-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 14px; margin-top: 8px }
+    .ex-table th { background: var(--navy); color: #fff; font-weight: 700; text-align: left; padding: 7px 14px; font-size: 13px }
+    .ex-table td { padding: 6px 14px; border-top: 1px solid var(--line); color: var(--ink) }
+    .ex-table td:first-child { font-weight: 700; color: var(--navy) }
+    .ex-table tbody tr:hover { background: var(--blue-pale) }
+    .ev { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 1px 7px }
+    .ev.a { background: var(--green-light); color: var(--green) } .ev.b { background: var(--blue-light); color: var(--blue) } .ev.c { background: var(--purple-light); color: var(--purple) }
+    #services-3 .callout .co { padding: 10px 14px } #services-3 .callout .co p { font-size: 13.5px }
+    /* 05 한 화면 (v11) */
+    #review .five { grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 14px }
+    #review .fcard { padding: 16px 14px }
+    #review .fcard .fhead { margin-bottom: 10px }
+    #review .fcard h3 { font-size: 16.5px }
+    #review .fcard ul { gap: 8px }
+    #review .fcard ul li { font-size: 13.5px; align-items: flex-start }
+    #review .expand { gap: 3px }
+    #review .expand .ex { padding: 7px 11px }
+    #review .expand .ex h5 { font-size: 13.5px }
+    #review .expand .ex p { font-size: 12px; margin-top: 0 }
+    #review .expand .arr { font-size: 12px }
+    #review .core-strip { margin-top: 14px; padding: 18px 24px }
+    #review .core-strip .ch { margin-bottom: 12px }
+    @media(max-width:1100px) { #review .five { grid-template-columns: repeat(2, 1fr) } }
+    @media(max-width:620px) { #review .five { grid-template-columns: 1fr } }
+    /* 03 사용 예시 */
+    .usage-ex {
+      margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--blue-pale); border: 1px dashed var(--accent); border-radius: 14px; padding: 12px 16px; font-size: 14px
+    }
+    .ux-tag { flex: none; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent); border-radius: 20px; padding: 3px 10px }
+    .ux-q { font-weight: 700; color: var(--navy) }
+    .ux-arr { color: var(--accent); font-weight: 700 }
+    .ux-a { color: var(--ink); flex: 1; min-width: 260px }
+
+    /* ▶ 모션 재생 버튼: hero 하단 오른쪽에 작게 */
+    #playMotion {
+      position: absolute; right: 28px; bottom: 20px; z-index: 6;
+      display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 11px 0 9px;
+      border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, .8); color: var(--blue);
+      font: 700 11.5px 'Noto Sans KR', sans-serif; cursor: pointer; opacity: .75;
+      transition: opacity .2s, background .2s, color .2s
+    }
+    #playMotion:hover { opacity: 1; background: var(--navy); color: #fff; border-color: var(--navy) }
+    #playMotion:active { transform: scale(.95) }
+    @media(max-width:520px) { #playMotion { right: 14px; bottom: 12px } }
+    @media print { #playMotion { display: none } }
+
+    /* 접근성: 움직임 최소화 설정 시 모든 모션 해제 */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important }
+      .reveal, .stg, .warn, .eyebrow .num, .card-num, .fcard .fn, .hub-pillar, .hub .ai-core, .hub .orbit, .hero-badge, #hero .tagline, #hero .sub, #hero .hero-cta { opacity: 1 !important; translate: none !important; scale: 1 !important; rotate: none !important; filter: none !important; transform: none }
+      .hub .ai-core { transform: translate(-50%, -50%) } .hub-pillar { transform: translate(-50%, -50%) }
+      #hero h1 .ln > span { transform: none }
+      h2.sec-title { clip-path: none; translate: none }
+      .hub-lines line { scale: 1 }
+      .sec-lead b, .keymsg p b { background-size: 100% 100% }
+    }
+    @media(max-width:780px) and (prefers-reduced-motion: reduce) { .hub .ai-core, .hub-pillar { transform: none } }
+    @media print {
+      .reveal, .stg, .warn, .eyebrow .num, .card-num, .fcard .fn { opacity: 1 !important; translate: none !important; scale: 1 !important; filter: none !important; transform: none !important }
+      h2.sec-title { clip-path: none !important; translate: none !important }
+      .scroll-cue { display: none }
+    }
 </style>
 </head>
 <body>
@@ -1761,7 +2145,7 @@
 <a href="#why">필요성</a>
 <a href="#risks">고려사항</a>
 <a href="#solution">해결책</a>
-<a href="#services">서비스 구성</a>
+<a href="#services">업무별 도입</a>
 <a href="#review">종합 검토</a>
 </div>
 </div>
@@ -1774,7 +2158,7 @@
 <svg fill="none" height="15" stroke="#2c5aa0" stroke-width="2" viewbox="0 0 24 24" width="15"><path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6"></path></svg>
           AI for Public Sector
         </span>
-<h1>AI 파일럿<span class="light">운영 가이드</span></h1>
+<h1><span class="ln"><span>공공기관</span></span><span class="light ln"><span>AI 도입 가이드</span></span></h1>
 <p class="tagline">작게 시작하고, 안전하게 검증하고, 실질적으로 활용하기</p>
 <p class="sub">공공기관의 AI 도입을 위한 실무 중심 안내서</p>
 <div class="hero-cta">
@@ -1795,40 +2179,41 @@
 <div class="orbit o1"></div>
 <div class="orbit o2"></div>
 <div class="ai-core">AI</div>
-<div class="pillar hub-pillar p1">
+<div class="pillar hub-pillar p1" data-target="why" data-sec="01 필요성" role="link" tabindex="0" title="01 필요성 섹션으로 이동" aria-label="작은 시작: 01 필요성 섹션으로 이동">
 <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 22V4l11 4-11 4M4 13h7"></path></svg></div>
 <h4>작은 시작</h4>
-<p>핵심 업무에 집중한 파일럿 선택</p>
+<p>핵심 업무부터 시범 적용</p>
 </div>
-<div class="pillar hub-pillar p2">
+<div class="pillar hub-pillar p2" data-target="risks" data-sec="02 고려사항" role="link" tabindex="0" title="02 고려사항 섹션으로 이동" aria-label="안전한 운영: 02 고려사항 섹션으로 이동">
 <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
 <h4>안전한 운영</h4>
 <p>보안과 개인정보를 고려한 환경 구성</p>
 </div>
-<div class="pillar hub-pillar p3">
+<div class="pillar hub-pillar p4" data-target="services" data-sec="04 업무별 도입" role="link" tabindex="0" title="04 업무별 도입 섹션으로 이동" aria-label="검증과 학습: 04 업무별 도입 섹션으로 이동">
 <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></div>
 <h4>검증과 학습</h4>
 <p>효과 측정과 지속적인 개선</p>
 </div>
-<div class="pillar hub-pillar p4">
+<div class="pillar hub-pillar p3" data-target="solution" data-sec="03 해결책" role="link" tabindex="0" title="03 해결책 섹션으로 이동" aria-label="실질적 활용: 03 해결책 섹션으로 이동">
 <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.81 1.18V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 7.51 19l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 13.4 1.65 1.65 0 0 0 3.18 13H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 5 7.51l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 11 4.6V4a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 2.49 1.42l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 20.4 11H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></div>
 <h4>실질적 활용</h4>
 <p>업무 효율과 서비스 품질 향상</p>
 </div>
-<div class="pillar hub-pillar p5">
+<div class="pillar hub-pillar p5" data-target="review" data-sec="05 종합 검토" role="link" tabindex="0" title="05 종합 검토 섹션으로 이동" aria-label="단계적 확장: 05 종합 검토 섹션으로 이동">
 <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path></svg></div>
 <h4>단계적 확장</h4>
 <p>성공 경험을 바탕으로 확대 적용</p>
 </div>
 </div>
 </div>
+<a class="scroll-cue" href="#why" aria-label="아래로 스크롤"><span class="mouse"></span>SCROLL</a>
 </section>
 <!-- ============ 01 WHY ============ -->
 <section class="alt" id="why">
 <div class="wrap">
 <div class="reveal">
 <span class="eyebrow"><span class="num">01</span> Why Now</span>
-<h2 class="sec-title">왜 지금 공공기관에 AI 파일럿이 필요한가</h2>
+<h2 class="sec-title">왜 지금 공공기관에 AI 도입이 필요한가</h2>
 <p class="sec-lead">AI를 작게 도입하고 데이터를 축적해 행정부담과 업무 단절을 줄입니다.</p>
 </div>
 <div class="cards cols-2">
@@ -1921,7 +2306,7 @@
 <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
 <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path>
 </svg></div>
-<strong>AI 기반<br/>통합 검색/분석<br/>(RAG)</strong>
+<strong>AI 기반<br/>통합 검색/분석<br/>(<span class="term" tabindex="0" data-tip="검색 증강 생성. AI가 답하기 전에 관련 문서를 먼저 찾아 읽고, 그 내용을 근거로 답하게 하는 방식입니다.">RAG</span>)</strong>
 </div>
 <div class="cy-arr">→</div>
 <div class="cy-box">
@@ -1962,9 +2347,9 @@
 <div class="card reveal rk1">
 <div class="card-head">
 <div class="card-num">1</div>
-<h3>망분리에 의한 내·외부 접근 문제</h3>
+<h3><span class="term" tabindex="0" data-tip="업무용 내부망과 인터넷망을 나누어, 내부 자료가 외부와 직접 연결되지 않게 하는 보안 방식입니다.">망분리</span>에 의한 내·외부 접근 문제</h3>
+<p class="desc head-desc">망분리 환경에서는 외부 AI 접근과 내부 데이터 활용에 제약이 발생합니다.</p>
 </div>
-<p class="desc">망분리 환경에서는 외부 AI 접근과 내부 데이터 활용에 제약이 발생합니다.</p>
 <div class="cards cols-2" style="margin-top:6px">
 <div>
 <div class="subbox" style="margin-top:0;height:100%">
@@ -2003,10 +2388,11 @@
 <div class="card reveal rk2">
 <div class="card-head">
 <div class="card-num">2</div>
-<h3>랩핑 서비스의 락인(Lock-in) 효과</h3>
+<h3><span class="term" tabindex="0" data-tip="다른 회사의 AI 모델 위에 화면과 기능만 덧씌워 제공하는 서비스입니다.">랩핑 서비스</span>의 <span class="term" tabindex="0" data-tip="특정 업체 서비스에 묶여 다른 서비스로 옮기기 어려워지는 현상입니다.">락인(Lock-in)</span> 효과</h3>
+<p class="desc head-desc">특정 랩핑 서비스에 의존하면 전환 비용과 운영 제약이 커질 수 있습니다.</p>
 </div>
-<p class="desc">특정 랩핑 서비스에 의존하면 전환 비용과 운영 제약이 커질 수 있습니다.</p>
-<div class="cards cols-3" style="margin-top:6px;gap:18px">
+<div class="cards rk2grid" style="margin-top:6px">
+<div class="stack">
 <div class="subbox" style="margin-top:0">
 <h5>주요 문제점</h5>
 <ul class="list">
@@ -2025,24 +2411,25 @@
 <div class="node">
 <div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5"></path>
-</svg></div>우리 기관<br/>업무/데이터
+</svg></div>우리 기관 업무/데이터
                 </div>
 <span class="ca">→</span>
 <div class="node">
 <div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <rect height="11" rx="2" width="18" x="3" y="11"></rect>
 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-</svg></div>특정 랩핑<br/>서비스
+</svg></div>특정 랩핑 서비스
                 </div>
 <span class="ca">→</span>
 <div class="node">
 <div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <circle cx="12" cy="12" r="3"></circle>
 <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"></path>
-</svg></div>AI 모델/<br/>인프라
+</svg></div>AI 모델/인프라
                 </div>
 </div>
 <p class="warn">구조적 종속으로 인한 전환 어려움 및 비용 증가</p>
+</div>
 </div>
 <div class="subbox" style="margin-top:0">
 <h5>고려 사항</h5>
@@ -2066,8 +2453,8 @@
 <div class="card-head">
 <div class="card-num">3</div>
 <h3>서비스 종료/중단에 의한 데이터 분리 문제</h3>
+<p class="desc head-desc">외부 서비스 중단 시 데이터 접근과 업무 연속성이 흔들릴 수 있습니다.</p>
 </div>
-<p class="desc">외부 서비스 중단 시 데이터 접근과 업무 연속성이 흔들릴 수 있습니다.</p>
 <div class="cards risk3cols" style="margin-top:6px;gap:16px">
 <div class="subbox" style="margin-top:0">
 <h5>주요 문제점</h5>
@@ -2144,52 +2531,59 @@
             AI 활용의 기반이 됩니다.</p>
 </div>
 </div>
+
 </div>
 </section>
 <!-- ============ 03 SOLUTION ============ -->
 <section class="alt" id="solution">
 <div class="wrap">
 <div class="reveal">
-<span class="eyebrow"><span class="num">03</span> Solution</span>
-<h2 class="sec-title">공공기관 AI 도입의 현실적 해결책<br/><span style="color:var(--blue)">내부 문서 기반 AI (LLM Wiki)</span></h2>
-<p class="sec-lead">복잡한 RAG 인프라나 외부 SaaS 의존 없이, 내부 데이터를 안전하게 활용하는 <b>경량형 LLM Wiki 구조</b>로 작게 시작하고, 점진적으로 확장할 수
-          있습니다.</p>
+<span class="eyebrow"><span class="num">03</span> Solution <span class="pg">1 / 2</span></span>
+<h2 class="sec-title">공공기관 AI 도입의 현실적 해결책</h2>
+<p class="sec-lead">02에서 살펴본 문제를 피하면서, <b>작게 시작할 수 있는 방법</b>을 제안합니다.</p>
+<p class="tip-hint">점선 밑줄이 있는 <span class="term" style="cursor:default">용어</span>에 마우스를 올리거나 누르면 뜻이 나옵니다.</p>
+</div>
+<div class="reveal" style="margin-top:16px">
+<div class="sol-box">
+<span class="sol-tag">제안하는 해결책</span>
+<div class="sol-name">내부 문서 기반 AI <span class="sol-sub">(<span class="term" tabindex="0" data-tip="AI가 읽기 좋게 정리해 둔 기관 내부 문서 모음. 사내 자료실처럼 주제별로 정리해 두면 AI가 그 안에서 찾아 답합니다.">LLM Wiki</span>)</span></div>
+<p>기관 문서를 모아 둔 <b>사내 전용 자료실</b>에, 질문하면 찾아서 요약해 주는 <b>AI 비서</b>를 붙이는 방식입니다. 큰 시스템이나 외부 유료 서비스 없이 작게 시작해, 필요한 만큼 넓혀 갑니다.</p>
+</div>
 </div>
 <!-- requirements -->
 <div class="reveal" style="margin-top:14px">
-<h3 style="font-size:18px;color:var(--navy);margin-bottom:18px">현실적인 접근 방향 (요구사항)</h3>
+<h3 style="font-size:18px;color:var(--navy);margin-bottom:18px">이 방식의 강점 5가지 <span class="kind-legend"><span class="kd ans">고려사항에 대한 답</span><span class="kd adv">도입 장점</span></span></h3>
 <div class="tag-grid" style="grid-template-columns:repeat(5,1fr)">
 <div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
 <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
-</svg></span>내부 데이터<br/>주권 확보</div>
+</svg></span>우리 자료는<br/>기관 안에 보관<span class="kd ans">02-②·③ 락인·서비스 종료 대응</span></div>
 <div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-</svg></span>망분리 환경<br/>운영 가능</div>
+</svg></span>인터넷이 막힌<br/>내부망에서도 사용<span class="kd ans">02-① 망분리 대응</span></div>
 <div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path>
-</svg></span>작게 시작하고<br/>단계적 확장</div>
+</svg></span>작게 시작해<br/>조금씩 확대<span class="kd adv">적은 비용으로 시험</span></div>
 <div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
-</svg></span>사용자 접근<br/>용이성 확보</div>
+</svg></span>누구나<br/>쉽게 사용<span class="kd adv">설치·교육 부담 적음</span></div>
 <div class="tag"><span class="ti"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <circle cx="12" cy="12" r="3"></circle>
 <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
-</svg></span>운영·유지보수<br/>부담 최소화</div>
+</svg></span>관리 부담은<br/>최소로<span class="kd adv">서버 한 대로 운영</span></div>
 </div>
 </div>
 <!-- architecture flow -->
 <div class="reveal" style="margin-top:14px">
-<h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">해결책: 내부 문서 기반 AI (LLM Wiki) 구조</h3>
-<p class="desc" style="color:var(--gray);font-size:14.5px">내부 문서를 중심으로 검색·요약·생성 기능을 제공하는 경량형 AI 시스템을 구축하여, 폐쇄망
-          환경에서도 안전하고 효율적으로 활용할 수 있습니다.</p>
+<h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">어떻게 동작하나요?</h3>
+<p class="desc" style="color:var(--gray);font-size:14.5px">기관 문서를 한곳에 모아 정리해 두면, AI가 <b style="color:var(--navy)">그 안에서만</b> 찾아 답합니다. 인터넷이 막힌 내부망에서도 쓸 수 있습니다.</p>
 <div class="flow">
 <div class="flow-step">
 <div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
 </svg></div>
-<h4>① 내부 데이터<br/>수집·정리</h4>
-<p>사업보고서 · 회의록 · 공고문 · 성과/통계 · 매뉴얼</p>
+<h4>① 문서 모으기</h4>
+<p>사업보고서 · 회의록 · 공고문 · 통계 · 매뉴얼</p>
 </div>
 <div class="flow-arrow">→</div>
 <div class="flow-step">
@@ -2197,8 +2591,8 @@
 <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
 <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path>
 </svg></div>
-<h4>② LLM Wiki<br/>(내부 문서 DB)</h4>
-<p>문서 변환 → 색인/구조화 → 내부 지식 DB</p>
+<h4>② 찾기 쉽게 정리하기</h4>
+<p>AI가 읽기 좋은 형태로 바꾸고 주제별로 분류</p>
 </div>
 <div class="flow-arrow">→</div>
 <div class="flow-step">
@@ -2206,8 +2600,8 @@
 <circle cx="12" cy="12" r="3"></circle>
 <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3"></path>
 </svg></div>
-<h4>③ LLM 연동<br/>(경량 AI)</h4>
-<p>자연어 질문 → 검색/요약/생성 → 답변 제공</p>
+<h4>③ AI가 읽고 답하기</h4>
+<p>평소 말투로 질문하면 관련 문서를 찾아 요약·초안 작성 <span style="white-space:nowrap">(<span class="term" tabindex="0" data-tip="고가 장비 없이 일반 PC나 소형 서버에서도 돌아가는 작은 AI 모델입니다.">경량 AI</span>)</span></p>
 </div>
 <div class="flow-arrow">→</div>
 <div class="flow-step">
@@ -2215,161 +2609,156 @@
 <rect height="14" rx="2" width="20" x="2" y="3"></rect>
 <path d="M8 21h8M12 17v4"></path>
 </svg></div>
-<h4>④ 사용자 접근<br/>(내부망 웹)</h4>
-<p>HTML 기반 웹 UI → 검색/요약/초안 → 업무 활용</p>
+<h4>④ 인터넷 창으로 사용</h4>
+<p>프로그램 설치 없이 내부망 웹페이지에서 이용</p>
+</div>
+</div>
+<div class="usage-ex">
+<span class="ux-tag">이렇게 씁니다</span>
+<span class="ux-q">“작년 ○○사업 결과보고서에서 성과 지표만 정리해 줘”</span>
+<span class="ux-arr">→</span>
+<span class="ux-a">AI가 내부 문서에서 해당 보고서를 찾아 성과 지표를 정리하고, 참고한 문서를 함께 보여 줍니다. 최종 확인은 담당자가 합니다.</span>
 </div>
 </div>
 </div>
+</section>
+<section class="alt sub" id="solution-2" data-nav="solution">
+<div class="wrap">
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">03</span> Solution <span class="pg">2 / 2</span></span></div>
 <!-- operation + why + effect -->
-<div class="cards cols-3" style="margin-top:14px">
+<div class="cards cols-3" style="margin-top:0">
 <div class="card reveal">
 <div class="card-head">
-<div class="card-num" style="font-size:14px">04</div>
-<h3 style="font-size:17px">운영 구조<br/>(소규모 서버+웹)</h3>
+<div class="card-num">1</div>
+<h3 style="font-size:17px">무엇이 필요한가요?<br/><span style="font-size:13px;font-weight:500;color:var(--gray)">운영 구조</span></h3>
 </div>
 <ul class="list">
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <rect height="8" rx="2" width="20" x="2" y="2"></rect>
 <rect height="8" rx="2" width="20" x="2" y="14"></rect>
 <path d="M6 6h.01M6 18h.01"></path>
-</svg></span>일반 PC 또는 소형 서버 1대</li>
+</svg></span>일반 PC 또는 소형 서버 1대면 시작 가능</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <rect height="8" rx="2" width="20" x="2" y="2"></rect>
-</svg></span>Linux / Windows 기반 운영</li>
+</svg></span>기관에서 쓰는 운영체제(Windows·Linux) 그대로 사용</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
 <path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
-</svg></span>문서 저장 + 경량 DB + LLM 실행</li>
+</svg></span>문서 보관과 AI 실행을 한 대에서 처리</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>GPU 없이도 경량 모델 운영 가능</li>
+</svg></span><span>고가 그래픽 장비(<span class="term" tabindex="0" data-tip="그래픽 처리 장치. 큰 AI 모델을 빠르게 돌릴 때 쓰는 고가 장비입니다.">GPU</span>) 없이 가벼운 AI로 운영</span></li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20"></path>
-</svg></span>HTML/CSS/JS, 브라우저만으로 접근</li>
+</svg></span>별도 설치 없이 인터넷 창(브라우저)으로 접속</li>
 
 </ul>
 </div>
 <div class="card reveal">
 <div class="card-head">
-<div class="card-num" style="font-size:14px">05</div>
-<h3 style="font-size:17px">왜 이 접근이<br/>현실적인가?</h3>
+<div class="card-num">2</div>
+<h3 style="font-size:17px">왜 이 방법이<br/>현실적인가요?</h3>
 </div>
 <ul class="list">
 <li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>RAG 같은 복잡한 인프라 없이 시작 가능</li>
+</svg></span><span>대규모 검색 시스템(<span class="term" tabindex="0" data-tip="검색 증강 생성. AI가 답하기 전에 관련 문서를 먼저 찾아 읽고, 그 내용을 근거로 답하게 하는 방식입니다.">RAG</span>)을 처음부터 구축하지 않고도 시작 가능</span></li>
 <li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>기존 문서 자산을 그대로 활용</li>
+</svg></span>이미 가진 문서를 그대로 활용</li>
 <li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>소규모 서버 추가만으로 운영 가능</li>
+</svg></span>서버 한 대만 추가하면 운영 가능</li>
 <li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>보안·망분리 환경에서도 안전하게 사용</li>
+</svg></span>인터넷이 막힌 내부망에서도 안전하게 사용</li>
 <li><span class="dot" style="background:var(--green-light);color:var(--green)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg></span>단계적 확장으로 위험과 비용 최소화</li>
+</svg></span>조금씩 넓혀 가므로 실패 부담과 비용이 적음</li>
 </ul>
 </div>
 <div class="card reveal">
 <div class="card-head">
-<div class="card-num" style="font-size:14px">06</div>
+<div class="card-num">3</div>
 <h3 style="font-size:17px">기대 효과</h3>
 </div>
 <ul class="list">
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <circle cx="11" cy="11" r="7"></circle>
 <path d="m21 21-4.3-4.3"></path>
-</svg></span>자료 검색 시간 대폭 단축</li>
+</svg></span>자료 찾는 시간 대폭 단축</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-</svg></span>보고서 재활용 및 업무 생산성 향상</li>
+</svg></span>예전 보고서를 재활용해 작성 시간 절약</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
-</svg></span>업무 연속성 및 신규 담당자 적응 지원</li>
+</svg></span>담당자가 바뀌어도 업무 내용이 이어짐</li>
 <li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-</svg></span>내부 데이터 주권 및 보안 강화</li>
+</svg></span>중요 자료가 기관 밖으로 나가지 않음</li>
 </ul>
 </div>
 </div>
 <!-- recommended start -->
-<div class="callout reveal">
+<div class="callout reveal" id="start-small">
 <div class="co">
 <h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
 </svg>시작은 작게, 효과는 크게</h5>
-<p>내부 문서 검색 → 요약 → 초안 보조 순으로 확장합니다.</p>
+<p>문서 찾기 → 요약 → 초안 작성 순서로 넓혀 갑니다.</p>
 </div>
 <div class="co">
 <h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
 <path d="M5 12h14M13 6l6 6-6 6"></path>
 </svg>권장 시작 영역</h5>
-<p>종료사업 검색, 결과보고서 검색, 공고문 초안, 회의록 요약부터 시작합니다.</p>
+<p>끝난 사업 자료 찾기, 결과보고서 찾기, 공고문 초안, 회의록 요약부터 시작합니다.</p>
 </div>
 <div class="co">
 <h5><svg fill="none" height="18" stroke="var(--blue)" stroke-width="2" viewbox="0 0 24 24" width="18">
 <circle cx="12" cy="12" r="3"></circle>
 <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
 </svg>핵심 원칙</h5>
-<p>데이터는 내부에, 시스템은 단순하게, 사용은 쉽게 유지합니다.</p>
+<p>자료는 기관 안에, 시스템은 단순하게, 사용은 쉽게.</p>
 </div>
 </div>
 </div>
 </section>
-<!-- ============ 04 SERVICES ============ -->
+<!-- ============ 04 업무별 도입 ============ -->
 <section class="tint" id="services">
 <div class="wrap">
 <div class="reveal">
-<span class="eyebrow"><span class="num">04</span> Service Design</span>
-<h2 class="sec-title">AI와 데이터 기반의 업무 서비스 구성과 적용 방안</h2>
-<p class="sec-lead">내부 문서·데이터 자산과 AI 기능을 활용하여 업무 성격과 운영 환경에 따라 <b>3가지 영역으로 구분</b>하여 서비스화하고, 필요한 경우 외부 서비스와 연계하여
-          활용할 수 있습니다.</p>
+<span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">1 / 3</span></span>
+<h2 class="sec-title">업무를 어떻게 구분하고, 어떻게 도입할 것인가</h2>
+<p class="sec-lead">모든 업무에 한꺼번에 AI를 넣지 않습니다. <b>업무를 세 가지 기준으로 구분</b>하고, 기준에 맞는 환경에서 낮은 단계부터 도입합니다.</p>
 </div>
-<!-- linkage flow -->
-<div class="flow reveal" style="margin-top:12px">
-<div class="flow-step">
-<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
-<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
-</svg></div>
-<h4>내부 문서 DB</h4>
-<p>LLM Wiki</p>
+<div class="q3 reveal">
+<div class="q on"><span class="qn">기준 ①</span><b>무슨 일을 하는가</b><span>업무 유형 6가지 · 이 화면</span></div>
+<div class="q"><span class="qn">기준 ②</span><b>어떤 자료를 쓰고, 외부 연결이 필요한가</b><span>운영 환경 A·B·C · 다음 화면</span></div>
+<div class="q"><span class="qn">기준 ③</span><b>AI에게 어디까지 맡기는가</b><span>도입 단계 L1~L4 · 마지막 화면</span></div>
 </div>
-<div class="flow-arrow">→</div>
-<div class="flow-step">
-<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<circle cx="11" cy="11" r="7"></circle>
-<path d="m21 21-4.3-4.3"></path>
-</svg></div>
-<h4>검색·요약·연결</h4>
-<p>데이터 활용</p>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-step">
-<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<circle cx="12" cy="12" r="3"></circle>
-<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
-</svg></div>
-<h4>AI 처리</h4>
-<p>온프레미스 경량AI</p>
-</div>
-<div class="flow-arrow">→</div>
-<div class="flow-step">
-<div class="fi"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<rect height="14" rx="2" width="20" x="2" y="3"></rect>
-<path d="M8 21h8M12 17v4"></path>
-</svg></div>
-<h4>업무 서비스 활용</h4>
-<p>내부/외부 연계</p>
+<div class="reveal" id="use-types" style="margin-top:18px">
+<h3 class="h3s">기준 ① 업무 유형 6가지 <span class="h3n">하나의 서비스에 여러 유형을 함께 적용할 수 있습니다.</span></h3>
+<div class="cards cols-3">
+    <div class="card"><div class="card-head"><div class="card-num">1</div><h3>생성형</h3></div><p class="desc">보고서·공고문·홍보자료·코드 초안 작성. 사실 확인과 최종 검토는 담당자가 수행합니다.</p></div>
+    <div class="card"><div class="card-head"><div class="card-num">2</div><h3>지식검색형</h3></div><p class="desc">규정·보고서·매뉴얼 검색과 원문 기반 질의응답. 출처·작성일·접근권한을 확인합니다.</p></div>
+    <div class="card"><div class="card-head"><div class="card-num">3</div><h3>분석·판단지원형</h3></div><p class="desc">사업실적·예산·성과 비교와 통계 분석. 수치 계산은 원본 데이터로 검증합니다.</p></div>
+    <div class="card"><div class="card-head"><div class="card-num">4</div><h3>업무처리형</h3></div><p class="desc">서류 분류·형식 점검·문서 변환 등 반복 업무 보조. 예외 사항은 담당자가 확인합니다.</p></div>
+    <div class="card"><div class="card-head"><div class="card-num">5</div><h3>에이전트형</h3></div><p class="desc">조회·분석·문서 작성 등 여러 단계를 도구로 연결. 변경·전송에는 권한 제한과 승인 절차를 둡니다.</p></div>
+    <div class="card"><div class="card-head"><div class="card-num">6</div><h3>서비스제공형</h3></div><p class="desc">민원·사업 안내, 교육·취업 정보 제공 등 대외 서비스. 응답 품질과 개인정보 보호를 점검합니다.</p></div>
+  </div>
 </div>
 </div>
-<!-- three columns -->
-<div class="cards cols-3" style="margin-top:14px">
+</section>
+<section class="tint sub" id="services-2" data-nav="services">
+<div class="wrap">
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / 3</span></span></div>
+<div class="reveal">
+<h3 class="h3s">기준 ② 운영 환경 A·B·C <span class="h3n">AI를 쓰기 위해 모든 업무망을 연결할 필요는 없습니다. 자료의 민감도와 외부 연결 필요 여부로 환경을 고릅니다.</span></h3>
+</div>
+<div class="cards cols-3" style="margin-top:12px">
 <!-- A -->
 <div class="tri-col col-a reveal">
-<div class="tri-head">A. 단순 웹서비스로 가능한 것</div>
+<div class="tri-head">A. 단순 웹서비스 <span class="hd-sub">AI 없이도 시작</span></div>
 <div class="tri-body">
 <div class="tri-feat">내부 데이터의 체계적 관리·검색·활용을 지원하는 영역</div>
 <div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
@@ -2417,11 +2806,14 @@
 <div class="tt"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
 </svg>별도 AI 모델 없이도 즉시 운영 가능</div>
+<div class="tt"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>AI로 만든 도구는 공개·가상 데이터로 시험하고, 보안 검증 후 내부망에 반입</div>
 </div>
 </div>
 <!-- B -->
 <div class="tri-col col-b reveal">
-<div class="tri-head">B. 온프레미스(경량 AI) 내부망 가능</div>
+<div class="tri-head">B. <span class="term" tabindex="0" data-tip="외부 클라우드가 아니라 기관 내부 서버에 직접 설치해 운영하는 방식입니다.">온프레미스</span> 경량 AI <span class="hd-sub">내부 자료 + AI</span></div>
 <div class="tri-body">
 <div class="tri-feat">내부 데이터를 기반으로 AI가 단순 업무를 보조하는 영역</div>
 <div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
@@ -2462,18 +2854,21 @@
 <div class="tri-tech">
 <div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg>온프레미스 경량 AI 모델(예: LLM) 사용</div>
+</svg><span>온프레미스 경량 AI 모델(예: <span class="term" tabindex="0" data-tip="대규모 언어 모델. 사람의 말을 이해하고 글을 써 주는 AI 엔진입니다(예: ChatGPT의 엔진).">LLM</span>) 사용</span></div>
 <div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
 </svg>내부망 서버에 설치하여 데이터 외부 반출 없음</div>
 <div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
 </svg>서류 작성·정리 등 단순 반복 업무 효율화</div>
+<div class="tt" style="color:var(--blue)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg>개인정보 원본·중요 자료는 분리된 내부 환경에서만 처리</div>
 </div>
 </div>
 <!-- C -->
 <div class="tri-col col-c reveal">
-<div class="tri-head">C. 외부 연결이 반드시 필요한 업무</div>
+<div class="tri-head">C. 외부 연결 <span class="hd-sub">공개 자료·대외 업무</span></div>
 <div class="tri-body">
 <div class="tri-feat">공공기관 특성상 외부 서비스·플랫폼 연계가 필요한 영역</div>
 <div class="tri-item"><span class="tii"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
@@ -2514,99 +2909,51 @@
 </svg>보안 구간 분리(망분리 환경) 고려</div>
 <div class="tt" style="color:var(--purple)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
 <path d="M20 6 9 17l-5-5"></path>
-</svg>필요한 데이터만 안전하게 연계·활용</div>
-</div>
-</div>
-</div>
-<!-- apply flow + strategy -->
-<div class="cards cols-2" style="margin-top:14px">
-<div class="card reveal">
-<div class="card-head">
-<div class="card-num" style="font-size:14px">04</div>
-<h3 style="font-size:17px">서비스 구성 및 적용 흐름</h3>
-</div>
-<div class="flow" style="margin-top:6px">
-<div class="flow-step" style="min-width:0;padding:14px 8px">
-<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
-<path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
-</svg></div>
-<h4 style="font-size:12.5px">① 데이터 자산 구축</h4>
-</div>
-<div class="flow-arrow" style="font-size:18px">→</div>
-<div class="flow-step" style="min-width:0;padding:14px 8px">
-<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<circle cx="12" cy="12" r="3"></circle>
-<path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
-</svg></div>
-<h4 style="font-size:12.5px">② 서비스 구성</h4>
-</div>
-<div class="flow-arrow" style="font-size:18px">→</div>
-<div class="flow-step" style="min-width:0;padding:14px 8px">
-<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
-</svg></div>
-<h4 style="font-size:12.5px">③ 내부 서비스 적용</h4>
-</div>
-<div class="flow-arrow" style="font-size:18px">→</div>
-<div class="flow-step" style="min-width:0;padding:14px 8px">
-<div class="fi" style="width:38px;height:38px"><svg fill="none" stroke="#fff" stroke-width="2" viewbox="0 0 24 24">
-<path d="M3 17l6-6 4 4 8-8M21 3h-5M21 3v5"></path>
-</svg></div>
-<h4 style="font-size:12.5px">④ 지속적 개선</h4>
-</div>
-</div>
-<p class="desc" style="margin-top:16px;font-size:13px">데이터를 지속적으로 축적·관리하고, 서비스를 단계적으로 확장하여 업무 효율성과 데이터 가치를
-            높입니다.</p>
-</div>
-<div class="card reveal">
-<div class="card-head">
-<div class="card-num" style="font-size:14px">05</div>
-<h3 style="font-size:17px">적용 전략 (소규모 조직 대응)</h3>
-</div>
-<div class="tag-grid" style="grid-template-columns:repeat(2,1fr);text-align:left">
-<div class="subbox" style="margin-top:0;padding:14px">
-<h5 style="margin-bottom:8px">단계적 도입</h5>
-<p style="font-size:12.5px;color:var(--gray)">작은 범위 테스트 후 성공 경험 기반으로 확대합니다.</p>
-</div>
-<div class="subbox" style="margin-top:0;padding:14px">
-<h5 style="margin-bottom:8px">역할 분담 운영</h5>
-<p style="font-size:12.5px;color:var(--gray)">데이터·서비스 운영 담당과 권한을 명확히 합니다.</p>
-</div>
-<div class="subbox" style="margin-top:0;padding:14px">
-<h5 style="margin-bottom:8px">보안 및 안정성 확보</h5>
-<p style="font-size:12.5px;color:var(--gray)">내부 데이터 보호 · 접근 권한 관리 · 백업/복구 체계</p>
-</div>
-<div class="subbox" style="margin-top:0;padding:14px">
-<h5 style="margin-bottom:8px">성과 측정 및 개선</h5>
-<p style="font-size:12.5px;color:var(--gray)">업무 시간 절감 측정 · 데이터 활용도 분석 · 지속 개선</p>
+</svg>공개 가능한 자료부터 시작, 내부 원본은 외부 AI에 전송하지 않음</div>
+<div class="tt" style="color:var(--purple)"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M20 6 9 17l-5-5"></path>
+</svg><span>연결 전 정보등급·최소 권한·승인·로그 체계 확인 (<span class="term" tabindex="0" data-tip="국가망보안체계. 국가정보원이 기존 망분리를 개선해 마련한 보안 기준으로, 업무 정보를 기밀·민감·공개(C·S·O) 등급으로 나누고 등급별로 보안 통제를 다르게 적용합니다.">N2SF</span> 기준 검토)</span></div>
 </div>
 </div>
 </div>
 </div>
-<!-- expected effects -->
+</section>
+<section class="tint sub" id="services-3" data-nav="services">
+<div class="wrap">
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">3 / 3</span></span></div>
+<div class="reveal">
+<h3 class="h3s">기준 ③ 도입 단계 L1~L4 <span class="h3n">AI에게 맡기는 범위를 한 단계씩 넓힙니다.</span></h3>
+<div class="flow ladder" style="margin-top:10px">
+<div class="flow-step"><div class="fi">L1</div><h4>독립 활용</h4><p>사용자가 제공한 공개·허용 자료만 처리하며 내부 업무시스템과 연결하지 않습니다.</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="fi">L2</div><h4>내부자료 참조</h4><p>승인된 문서와 데이터를 읽기 전용으로 조회합니다. 자료별 열람 권한을 유지합니다.</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="fi">L3</div><h4>업무시스템 연계</h4><p>여러 시스템의 정보를 조회하고 결과물을 생성합니다. 연결 범위와 도구 권한을 제한합니다.</p></div>
+<div class="flow-arrow">→</div>
+<div class="flow-step"><div class="fi">L4</div><h4>업무 실행</h4><p>데이터 수정·전송·시스템 처리를 수행합니다. 담당자 승인, 이력 기록, 복구 수단을 갖춥니다.</p></div>
+</div>
+</div>
+<div class="reveal" id="verify" style="margin-top:14px">
+<h3 class="h3s">다음 단계로 넘어가기 전 확인</h3>
+<div class="callout" style="margin-top:8px">
+<div class="co"><h5>성과 측정 및 개선</h5><p>업무 시간 절감을 측정하고 데이터 활용도를 분석해, 효과가 확인된 업무부터 넓힙니다.</p></div>
+<div class="co"><h5>역할 분담 운영</h5><p>데이터·서비스 운영 담당과 권한을 명확히 합니다.</p></div>
+<div class="co"><h5>보안 및 안정성 확보</h5><p>내부 데이터 보호, 접근 권한 관리, 백업/복구 체계를 갖춥니다.</p></div>
+</div>
+</div>
 <div class="reveal" style="margin-top:14px">
-<h3 style="font-size:18px;color:var(--navy);margin-bottom:6px">기대 효과</h3>
-<div class="bene">
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>내부 데이터 체계화 및 자산화</div>
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>업무 시간 절감 및 생산성 향상</div>
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>반복 업무 자동화 및 오류 감소</div>
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>문서 작성 품질 및 일관성 향상</div>
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>업무 연속성 및 지식 자산 확보</div>
-<div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
-<path d="M20 6 9 17l-5-5"></path>
-</svg>대외 서비스 연계로 공공 가치 확대</div>
-</div>
+<h3 class="h3s">업무별 적용 예시 <span class="h3n">예시이며, 기관 상황에 맞게 조정합니다.</span></h3>
+<table class="ex-table">
+<thead><tr><th>업무</th><th>① 유형</th><th>② 자료 · 환경</th><th>③ 시작 단계</th></tr></thead>
+<tbody>
+<tr><td>공개 공고문·홍보자료 초안</td><td>생성형</td><td>공개 자료 · <span class="ev c">C 외부 연결</span></td><td>L1 독립 활용</td></tr>
+<tr><td>종료사업·결과보고서 검색</td><td>지식검색형</td><td>내부 문서 · <span class="ev a">A 웹서비스</span> → <span class="ev b">B 경량 AI</span></td><td>L2 내부자료 참조</td></tr>
+<tr><td>회의록 요약·보고서 초안</td><td>생성형</td><td>내부 문서 · <span class="ev b">B 경량 AI</span></td><td>L2 내부자료 참조</td></tr>
+<tr><td>사업실적·통계 분석</td><td>분석·판단지원형</td><td>내부 데이터 · <span class="ev b">B 경량 AI</span></td><td>L2 → L3</td></tr>
+<tr><td>민원·사업 안내 응대</td><td>서비스제공형</td><td>공개 안내자료 · <span class="ev c">C 외부 연결</span></td><td>L3, 승인 절차 마련 후</td></tr>
+</tbody>
+</table>
+<div class="subbox" style="margin-top:10px"><h5>실무 적용 순서</h5><p style="font-size:13px;color:var(--ink);line-height:1.7">업무 유형 분류 → 데이터 공개·민감도 확인 → 운영 환경 선정 → L1~L4 권한 결정 → 보안·품질 검증 → 담당자 확인 후 활용. <span class="term" tabindex="0" data-tip="국가망보안체계. 국가정보원이 기존 망분리를 개선해 마련한 보안 기준으로, 업무 정보를 기밀·민감·공개(C·S·O) 등급으로 나누고 등급별로 보안 통제를 다르게 적용합니다.">N2SF</span>를 포함한 관련 기준의 실제 적용 여부는 기관 보안담당자와 협의합니다.</p></div>
 </div>
 </div>
 </section>
@@ -2702,7 +3049,7 @@
 </svg></span>AI 활용 가이드 및 운영 체계 마련</li>
 </ul>
 </div>
-<div class="fcard t5 reveal">
+<div class="fcard t5 reveal" id="expand-path">
 <div class="fhead"><span class="fn">5</span>
 <h3>향후 확장 방향</h3>
 </div>
@@ -2771,7 +3118,7 @@
 <path d="M3 21h18M5 21V10M19 21V10M3 10l9-6 9 6M9 21v-5h6v5"></path>
 </svg>
 <p>경량형 AI 구조는 한 번에 완성되는 것이 아니라,<br/>지속적인 개선과 축적을 통해 기관의 업무 환경에 최적화되어 나갑니다.</p>
-<p class="small">공공기관 AI 파일럿 운영 가이드 · AI for Public Sector</p>
+<p class="small">공공기관 AI 도입 가이드 · AI for Public Sector</p>
 </footer>
 <script>
     // progress bar
@@ -2796,7 +3143,7 @@
     const sections = [...document.querySelectorAll('section[id]')];
     const links = [...document.querySelectorAll('.nav-links a')];
     const navObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)); } });
+      entries.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + (e.target.dataset.nav || e.target.id))); } });
     }, { rootMargin: '-45% 0px -50% 0px' });
     sections.forEach(s => navObs.observe(s));
     window.addEventListener('load', () => { setTimeout(() => { document.querySelectorAll('.reveal:not(.show)').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('show'); }); }, 300); });
@@ -2813,8 +3160,21 @@
     window.addEventListener('scroll', function () { btn.classList.toggle('show', window.scrollY > window.innerHeight * 0.8); });
 
     // pillars -> jump to first content section
-    document.querySelectorAll('.pillar').forEach(function (p) {
-      p.addEventListener('click', function () { var t = document.getElementById('why'); if (t) t.scrollIntoView({ behavior: 'smooth' }); });
+    var html = document.documentElement;
+    function jumpTo(id) {
+      var t = document.getElementById(id); if (!t) return;
+      if (t.tagName === 'SECTION') t = t.querySelector('.wrap > .reveal') || t;
+      html.style.scrollSnapType = 'none'; // 섹션 스냅이 목적지를 섹션 시작으로 끌어당기지 않도록
+      var restore = function () { html.style.scrollSnapType = ''; ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.removeEventListener(ev, restore) }); };
+      ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, restore, { passive: true }) });
+      t.classList.add('show'); t.querySelectorAll('.reveal').forEach(function (r) { r.classList.add('show') });
+      t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      t.classList.remove('jump-hl'); void t.offsetWidth; t.classList.add('jump-hl');
+      setTimeout(function () { t.classList.remove('jump-hl') }, 2600);
+    }
+    document.querySelectorAll('.hub-pillar[data-target]').forEach(function (p) {
+      p.addEventListener('click', function () { jumpTo(p.dataset.target) });
+      p.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); jumpTo(p.dataset.target) } });
     });
 
     // section 04: click a column to focus, click again to reset
@@ -2841,6 +3201,155 @@
       else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); secs[Math.max(i - 1, 0)].scrollIntoView({ behavior: 'smooth' }); }
       else if (e.key === 'Home') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
       else if (e.key === 'End') { e.preventDefault(); secs[secs.length - 1].scrollIntoView({ behavior: 'smooth' }); }
+    });
+  })();
+</script>
+<script>
+  /* Motion layer (v8) */
+  (function () {
+    var forced = false; try { forced = localStorage.getItem('bipaMotion') === 'on' } catch (e) {}
+    // OS '애니메이션 효과 끄기' 설정을 무시하고 모션을 켬 (재생 버튼 또는 이전 선택)
+    function forceMotion() {
+      [].forEach.call(document.styleSheets, function (sh) {
+        var rules; try { rules = sh.cssRules } catch (e) { return }
+        for (var i = rules.length - 1; i >= 0; i--) {
+          if (rules[i].media && /prefers-reduced-motion/.test(rules[i].media.mediaText)) sh.deleteRule(i);
+        }
+      });
+      forced = true; try { localStorage.setItem('bipaMotion', 'on') } catch (e) {}
+    }
+    if (forced) forceMotion();
+    var reduce = !forced && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // #002 Stagger: 각 .reveal 블록 안의 항목에 순번 부여
+    var SEL = '.list li, .tag, .tri-feat, .tri-item, .tri-tech .tt, .fcard li, .bene > div, .flow-step, .flow-arrow, .cy-box, .cy-arr, .chain .node, .chain .ca, .callout .co, .core-grid .item, .expand > *, .card:not(.reveal), .subbox';
+    document.querySelectorAll('.reveal').forEach(function (r) {
+      var n = 0;
+      r.querySelectorAll(SEL).forEach(function (el) {
+        if (el.closest('.reveal') !== r) return;
+        if (el.classList.contains('subbox') && el.querySelector('.tag-grid, .cycle, .chain')) return; // 내부 항목이 이미 순차 등장
+        el.classList.add('stg');
+        el.style.setProperty('--i', Math.min(n++, 12));
+      });
+    });
+
+    // #024 Impact shake 대상: 데이터 위험 체인의 마지막 노드
+    document.querySelectorAll('.rk3 .chain').forEach(function (c) {
+      var nodes = c.querySelectorAll('.node'); if (nodes.length) nodes[nodes.length - 1].classList.add('shake');
+    });
+
+    // 새로 붙인 .stg 중 이미 화면 안에 있는 블록은 기존 관찰자가 처리. 누락 방지용 재확인
+    setTimeout(function () {
+      document.querySelectorAll('.reveal:not(.show)').forEach(function (el) {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.92) el.classList.add('show');
+      });
+    }, 700);
+
+    // hub: 궤도는 기둥 등장 뒤 서서히
+    var hub = document.querySelector('.hub');
+    if (hub) {
+      setTimeout(function () { hub.classList.add('ready') }, reduce ? 0 : 2900);
+      var pills = hub.querySelectorAll('.hub-pillar');
+      // 각 카드의 회전 중심을 허브 중앙(AI 코어)으로 지정
+      var setOrigins = function () {
+        var cx = hub.clientWidth / 2, cy = hub.clientHeight / 2;
+        pills.forEach(function (p) { p.style.transformOrigin = (cx - p.offsetLeft) + 'px ' + (cy - p.offsetTop) + 'px'; });
+      };
+      setOrigins(); hub.classList.add('bloom');
+      window.addEventListener('resize', setOrigins);
+      // AI 코어를 누르면 다시 접혔다가 펴짐
+      var core = hub.querySelector('.ai-core');
+      if (core) {
+        core.style.cursor = 'pointer'; core.title = '눌러서 다시 보기';
+        core.addEventListener('click', function () {
+          pills.forEach(function (p, i) { p.style.setProperty('--d', (0.05 + i * 0.06) + 's'); });
+          hub.classList.remove('bloom'); void hub.offsetWidth; setOrigins(); hub.classList.add('bloom');
+        });
+      }
+    }
+
+    // #126 Motion path + #015 Particles: 기둥 → AI 코어로 흐르는 데이터 점
+    var svg = document.querySelector('.hub-lines');
+    if (svg) {
+      var NS = 'http://www.w3.org/2000/svg';
+      svg.querySelectorAll('line').forEach(function (ln, i) {
+        var x1 = ln.getAttribute('x2'), y1 = ln.getAttribute('y2'), x2 = ln.getAttribute('x1'), y2 = ln.getAttribute('y1');
+        for (var k = 0; k < 2; k++) {
+          var c = document.createElementNS(NS, 'circle');
+          c.setAttribute('r', k ? '2.4' : '3.4'); c.setAttribute('class', 'pkt'); c.setAttribute('visibility', 'hidden');
+          var am = document.createElementNS(NS, 'animateMotion');
+          am.setAttribute('path', 'M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2);
+          am.setAttribute('dur', (2.6 + i * 0.35) + 's');
+          am.setAttribute('begin', (3.4 + i * 0.3 + k * 1.4) + 's');
+          am.setAttribute('repeatCount', 'indefinite');
+          am.setAttribute('keyPoints', '0;1'); am.setAttribute('keyTimes', '0;1'); am.setAttribute('calcMode', 'spline');
+          am.setAttribute('keySplines', '.45 0 .55 1');
+          var st = document.createElementNS(NS, 'set'); st.setAttribute('attributeName', 'visibility'); st.setAttribute('to', 'visible'); st.setAttribute('begin', am.getAttribute('begin')); st.setAttribute('fill', 'freeze');
+          c.appendChild(am); c.appendChild(st); svg.appendChild(c);
+        }
+      });
+    }
+
+    // #167 Scroll-down cue: 스크롤 시작하면 숨김
+    var cue = document.querySelector('.scroll-cue');
+    if (cue) window.addEventListener('scroll', function () { cue.classList.toggle('gone', window.scrollY > 60) }, { passive: true });
+
+    // #154 Spotlight hover
+    if (!reduce) {
+      document.addEventListener('pointermove', function (e) {
+        var c = e.target.closest && e.target.closest('.card, .fcard');
+        if (!c) return;
+        var r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      }, { passive: true });
+      document.addEventListener('pointerout', function (e) {
+        var c = e.target.closest && e.target.closest('.card, .fcard');
+        if (c && !c.contains(e.relatedTarget)) { c.style.removeProperty('--mx'); c.style.removeProperty('--my'); }
+      });
+    }
+
+    // 용어 풀이 말풍선
+    var tip = document.createElement('div'); tip.id = 'termTip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip);
+    var tipFor = null;
+    function showTip(t) {
+      tipFor = t; tip.innerHTML = '<b></b><span></span>';
+      tip.firstChild.textContent = t.textContent; tip.lastChild.textContent = t.dataset.tip;
+      var r = t.getBoundingClientRect(); tip.style.left = '0px'; tip.style.top = '0px'; tip.classList.add('on');
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var x = Math.max(10, Math.min(window.innerWidth - w - 10, r.left + r.width / 2 - w / 2));
+      var y = r.top - h - 10; if (y < 10) y = r.bottom + 10;
+      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+    }
+    function hideTip() { tip.classList.remove('on'); tipFor = null; }
+    document.querySelectorAll('.term[data-tip]').forEach(function (t) {
+      t.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') showTip(t) });
+      t.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hideTip() });
+      t.addEventListener('focus', function () { showTip(t) });
+      t.addEventListener('blur', hideTip);
+      t.addEventListener('click', function (e) { e.stopPropagation(); if (tipFor === t && e.pointerType !== 'mouse') hideTip(); else showTip(t) });
+    });
+    document.addEventListener('click', function () { if (tipFor) hideTip() });
+    window.addEventListener('scroll', function () { if (tipFor) hideTip() }, { passive: true });
+
+    // ▶ 모션 재생 버튼: hero 인트로(제목·카드 전개·연결선·데이터 점)를 처음부터 다시 재생
+    var hero = document.getElementById('hero');
+    function replayHero() {
+      if (!forced) forceMotion();
+      var pills = hub ? hub.querySelectorAll('.hub-pillar') : [];
+      pills.forEach(function (p) { p.style.removeProperty('--d'); });
+      if (hub) { hub.classList.remove('bloom', 'ready'); void hub.offsetWidth; hub.classList.add('bloom'); setTimeout(function () { hub.classList.add('ready') }, 2900); }
+      if (hero && hero.getAnimations) hero.getAnimations({ subtree: true }).forEach(function (a) { try { a.cancel(); a.play(); } catch (e) {} });
+      if (svg && svg.setCurrentTime) svg.setCurrentTime(0);
+    }
+    var play = document.createElement('button');
+    play.id = 'playMotion'; play.type = 'button'; play.setAttribute('aria-label', '모션 재생');
+    play.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg><span>모션 재생</span>';
+    (hero || document.body).appendChild(play);
+    play.addEventListener('click', function () {
+      var atTop = window.scrollY < 40;
+      if (!atTop) window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(replayHero, atTop ? 0 : 650);
     });
   })();
 </script>
