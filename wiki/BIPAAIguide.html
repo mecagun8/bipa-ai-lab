@@ -2124,6 +2124,18 @@
     #solution .list li .dot { width: 20px; height: 20px }
     .start-seq { margin-top: 10px; background: var(--blue-pale); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 13.5px; color: var(--ink) }
     .start-seq b { color: var(--blue); margin-right: 8px }
+    .bydata { margin-top: 8px; display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 8px; align-items: stretch }
+    .bydata .bd-h { align-self: center; font-size: 13.5px; font-weight: 700; color: var(--navy); padding-right: 6px; max-width: 150px; line-height: 1.35 }
+    .bydata .bd { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; display: grid; grid-template-columns: auto 1fr; column-gap: 8px; align-items: baseline }
+    .bydata .bd b { font-size: 13.5px; color: var(--navy) }
+    .bydata .bd small { font-size: 12px; color: var(--gray) }
+    .bydata .bd .bd-to { grid-column: 1 / -1; font-size: 13px; font-weight: 700; color: var(--blue) }
+    .bydata .bd .bd-to::before { content: "→ "; color: var(--accent) }
+    @media(max-width:880px) { .bydata { grid-template-columns: 1fr } .bydata .bd-h { max-width: none } }
+    .mix-rule { margin-top: 6px; font-size: 14px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 8px 14px }
+    .mix-rule b { color: var(--blue) }
+    #solution { padding-top: 16px; padding-bottom: 16px }
+    #solution .cards.cols-3 { margin-top: 8px !important }
     /* 03 사용 예시 */
     .usage-ex {
       margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
@@ -2639,6 +2651,12 @@
 <div class="start-seq"><b>넓히는 순서</b> 문서 찾기 → 요약 → 초안 작성</div>
 </div>
 </div>
+<div class="bydata reveal">
+<span class="bd-h">자료 성격에 따라 방식을 더합니다</span>
+<div class="bd"><b>정리된 문서</b><small>보고서·회의록·매뉴얼</small><span class="bd-to">LLM Wiki로 시작</span></div>
+<div class="bd"><b>많고 자주 바뀌는 문서</b><small>정리 부담이 커질 때</small><span class="bd-to">원문 검색(<span class="term" tabindex="0" data-tip="검색 증강 생성. AI가 답하기 전에 관련 문서를 먼저 찾아 읽고, 그 내용을 근거로 답하게 하는 방식입니다.">RAG</span>) 추가</span></div>
+<div class="bd"><b>엑셀 등 수치 데이터</b><small>예산·실적·통계</small><span class="bd-to">별도 데이터로 두고 표 그대로 조회</span></div>
+</div>
 </div>
 </section>
 <!-- ============ 04 업무별 도입 ============ -->
@@ -2672,6 +2690,7 @@
 <div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / 3</span></span></div>
 <div class="reveal">
 <h3 class="h3s">기준 ② 운영 환경 A·B·C <span class="h3n">AI를 쓰기 위해 모든 업무망을 연결할 필요는 없습니다. 자료의 민감도와 외부 연결 필요 여부로 환경을 고릅니다.</span></h3>
+<p class="mix-rule"><b>여러 자료가 섞인 업무</b>는 그중 더 민감한 자료의 기준을 따릅니다. 예: 공개 통계와 내부 자료를 함께 쓰는 보고서는 내부 자료 기준(B)으로 처리합니다.</p>
 </div>
 <div class="cards cols-3" style="margin-top:12px">
 <!-- A -->
@@ -2871,7 +2890,7 @@
 <tr><td>민원·사업 안내 응대</td><td>서비스제공형</td><td>공개 안내자료 · <span class="ev c">C 외부 연결</span></td><td>L3, 승인 절차 마련 후</td></tr>
 </tbody>
 </table>
-<div class="subbox" style="margin-top:10px"><h5>실무 적용 순서</h5><p style="font-size:13px;color:var(--ink);line-height:1.7">업무 유형 분류 → 데이터 공개·민감도 확인 → 운영 환경 선정 → L1~L4 권한 결정 → 보안·품질 검증 → 담당자 확인 후 활용. <span class="term" tabindex="0" data-tip="국가망보안체계. 국가정보원이 기존 망분리를 개선해 마련한 보안 기준으로, 업무 정보를 기밀·민감·공개(C·S·O) 등급으로 나누고 등급별로 보안 통제를 다르게 적용합니다.">N2SF</span>를 포함한 관련 기준의 실제 적용 여부는 기관 보안담당자와 협의합니다.</p></div>
+<div class="subbox" style="margin-top:10px"><h5>실무 적용 순서</h5><p style="font-size:13px;color:var(--ink);line-height:1.7">업무 유형 분류 → 데이터 공개·민감도 확인(섞여 있으면 더 민감한 쪽 기준) → 운영 환경 선정 → L1~L4 권한 결정 → 보안·품질 검증 → 담당자 확인 후 활용. <span class="term" tabindex="0" data-tip="국가망보안체계. 국가정보원이 기존 망분리를 개선해 마련한 보안 기준으로, 업무 정보를 기밀·민감·공개(C·S·O) 등급으로 나누고 등급별로 보안 통제를 다르게 적용합니다.">N2SF</span>를 포함한 관련 기준의 실제 적용 여부는 기관 보안담당자와 협의합니다.</p></div>
 </div>
 </div>
 </section>
