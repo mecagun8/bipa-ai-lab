@@ -2018,9 +2018,9 @@
     @media(max-width:1000px) { .callout.callout-4 { grid-template-columns: 1fr 1fr } }
     @media(max-width:620px) { .callout.callout-4 { grid-template-columns: 1fr } }
     /* 02 한 화면 압축 */
-    #risks { padding-top: 30px; padding-bottom: 30px }
-    #risks .cards { gap: 10px; margin-top: 10px }
-    #risks .card { padding: 12px 18px }
+    #risks { padding-top: 22px; padding-bottom: 22px }
+    #risks .cards { gap: 8px; margin-top: 8px }
+    #risks .card { padding: 10px 18px }
     #risks .card-head { margin-bottom: 4px }
     #risks .card-num { width: 32px; height: 32px; font-size: 15px }
     #risks .card-head h3 { font-size: 18px }
@@ -2035,7 +2035,7 @@
     #risks .chain .node .ni { width: 30px; height: 30px; margin-bottom: 4px }
     #risks .chain .node .ni svg { width: 16px; height: 16px }
     #risks .warn { font-size: 12px; margin-top: 2px }
-    #risks .keymsg { margin-top: 10px; padding: 14px 22px }
+    #risks .keymsg { margin-top: 8px; padding: 11px 22px }
     #risks .keymsg h4 { font-size: 16.5px; margin-bottom: 3px }
     #risks .keymsg p { font-size: 14.5px; line-height: 1.55 }
     #risks .keymsg .ki { width: 40px; height: 40px }
@@ -2052,7 +2052,13 @@
     #risks .rk2grid .stack > .subbox > h5 { margin: 0; flex: none; width: 150px; white-space: nowrap }
     #risks .rk2grid .stack > .subbox .chain { flex: 1; justify-content: flex-start; margin: 0 }
     #risks .rk2grid .stack > .subbox .warn { width: 100%; text-align: left; margin: -10px 0 0 168px }
-    @media(max-width:880px) { #risks .rk2grid { grid-template-columns: 1fr } }
+    #risks .rk2grid { grid-template-columns: 1.75fr 1fr }
+    #risks .rk2grid .stack > .subbox:first-child .list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; flex: 1 }
+    #risks .rk2grid .stack .chain .node b { display: block; font-size: 12.5px; color: var(--navy) }
+    #risks .rk2grid .stack .chain .node small { display: block; font-size: 11px; font-weight: 500; color: var(--gray) }
+    #risks .rk2grid .stack .chain .node.out { border-style: dashed; border-color: #e3b4ae; background: var(--red-light) }
+    #risks .rk2grid .stack .chain .node.out .ni { background: #fff; color: var(--red) }
+    @media(max-width:880px) { #risks .rk2grid { grid-template-columns: 1fr } #risks .rk2grid .stack > .subbox:first-child .list { grid-template-columns: 1fr } }
     @media(max-width:880px) { #risks .rk2grid .stack > .subbox { display: block } #risks .rk2grid .stack > .subbox > h5 { width: auto; margin-bottom: 8px } #risks .rk2grid .stack > .subbox .warn { margin: 4px 0 0 } #risks .rk2grid .stack .chain { justify-content: center } }
     #risks .card-head { flex-wrap: wrap; column-gap: 12px; row-gap: 2px }
     #risks .card-head .head-desc { margin: 0; font-size: 14px; color: var(--gray); flex: 1; min-width: 260px }
@@ -2412,61 +2418,46 @@
 <div class="card-head">
 <div class="card-num">2</div>
 <h3><span class="term" tabindex="0" data-tip="다른 회사의 AI 모델 위에 화면과 기능만 덧씌워 제공하는 서비스입니다.">랩핑 서비스</span>의 <span class="term" tabindex="0" data-tip="특정 업체 서비스에 묶여 다른 서비스로 옮기기 어려워지는 현상입니다.">락인(Lock-in)</span> 효과</h3>
-<p class="desc head-desc">특정 랩핑 서비스에 의존하면 전환 비용과 운영 제약이 커질 수 있습니다.</p>
+<p class="desc head-desc">다른 회사의 AI에 화면만 씌운 납품형 서비스는 납품 이후에 문제가 드러납니다.</p>
 </div>
 <div class="cards rk2grid" style="margin-top:6px">
 <div class="stack">
 <div class="subbox" style="margin-top:0">
 <h5>주요 문제점</h5>
 <ul class="list">
-<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>특정 서비스·플랫폼 종속
-                </li>
-<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>전환 시 비용 및 시간 손실
-                </li>
-
-
-
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>업체가 만든 것은 화면뿐, 핵심 AI는 외부 회사 것</li>
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>납품 후 개선·유지보수 공백</li>
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>외부 AI의 가격·정책 변경이 그대로 전가</li>
+<li><span class="dot" style="background:var(--purple-light);color:var(--purple)">•</span>입력 자료의 전송·저장 위치 불명확</li>
 </ul>
 </div>
 <div class="subbox" style="margin-top:0">
 <h5>랩핑 서비스 종속 구조</h5>
 <div class="chain">
-<div class="node">
-<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<div class="node"><div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5"></path>
-</svg></div>우리 기관 업무/데이터
-                </div>
+</svg></div><div><b>우리 기관</b><small>업무·데이터</small></div></div>
 <span class="ca">→</span>
-<div class="node">
-<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<div class="node"><div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <rect height="11" rx="2" width="18" x="3" y="11"></rect>
 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-</svg></div>특정 랩핑 서비스
-                </div>
+</svg></div><div><b>납품 업체</b><small>화면·기능만 제작</small></div></div>
 <span class="ca">→</span>
-<div class="node">
-<div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<div class="node out"><div class="ni"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <circle cx="12" cy="12" r="3"></circle>
 <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"></path>
-</svg></div>AI 모델/인프라
-                </div>
+</svg></div><div><b>외부 AI 회사</b><small>모델·인프라 보유</small></div></div>
 </div>
-<p class="warn">구조적 종속으로 인한 전환 어려움 및 비용 증가</p>
+<p class="warn">업체가 가진 것은 화면뿐, 핵심은 기관도 업체도 통제할 수 없음</p>
 </div>
 </div>
 <div class="subbox" style="margin-top:0">
-<h5>고려 사항</h5>
+<h5>도입 전 확인할 질문</h5>
 <ul class="list">
-<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-<path d="M14 2v6h6"></path>
-</svg></span>표준 기술 및 개방형 구조 우선 검토</li>
-<li><span class="dot"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M21 12a9 9 0 1 1-6.2-8.6"></path>
-<path d="M22 4 12 14.01l-3-3"></path>
-</svg></span>데이터 반출/이관 가능성 확인</li>
-
-
+<li><span class="dot" style="font-weight:700">?</span>어떤 AI 모델을 쓰고, 다른 모델로 교체할 수 있는가</li>
+<li><span class="dot" style="font-weight:700">?</span>입력한 자료가 어디로 전송되고 어디에 저장되는가</li>
+<li><span class="dot" style="font-weight:700">?</span>계약이 끝나면 데이터와 설정을 가져올 수 있는가</li>
+<li><span class="dot" style="font-weight:700">?</span>납품 후 유지보수와 개선 범위는 어디까지인가</li>
 </ul>
 </div>
 </div>
