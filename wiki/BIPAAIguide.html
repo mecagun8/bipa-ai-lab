@@ -2143,6 +2143,24 @@
     .hw b { color: var(--navy) } .hw span { color: var(--ink) } .hw em { font-style: normal; font-weight: 700; color: var(--blue); white-space: nowrap }
     .hw.hi { background: #fbfcfe } .hw.hi span, .hw.hi b { color: var(--gray) } .hw.hi em { color: var(--gray) }
     @media(min-width:881px) { #solution .cards.cols-3 { grid-template-columns: 1fr 1.12fr .88fr } }
+    /* 04-4 장비 단계 표 전환 (Motion Prompt #021 Flip) */
+    .tg-bar { display: flex; align-items: center; gap: 6px; margin-top: 12px }
+    .tg-btn { border: 1px solid var(--line); background: #fff; color: var(--gray); font: 700 13.5px 'Noto Sans KR', sans-serif; padding: 7px 16px; border-radius: 20px; cursor: pointer; transition: .2s }
+    .tg-btn.on { background: var(--navy); border-color: var(--navy); color: #fff }
+    .tg-hint { font-size: 12.5px; color: var(--gray); margin-left: 8px }
+    .tg { position: relative; margin-top: 10px; cursor: pointer; perspective: 1600px; outline: none }
+    .tg:focus-visible { box-shadow: 0 0 0 3px rgba(74, 130, 212, .35); border-radius: 12px }
+    .tg table { margin-top: 0; font-size: 15px; transition: transform .45s var(--ease-out), opacity .3s ease; backface-visibility: hidden }
+    .tg table td, .tg table th { padding: 11px 16px; vertical-align: top; line-height: 1.5 }
+    .tg table td small { font-size: 12.5px; color: var(--gray); font-weight: 500 }
+    .tg .tg-b { position: absolute; inset: 0 0 auto 0; transform: rotateX(-90deg); opacity: 0; pointer-events: none }
+    .tg.alt .tg-a { transform: rotateX(90deg); opacity: 0; pointer-events: none }
+    .tg.alt .tg-b { transform: none; opacity: 1; pointer-events: auto }
+    .tg:hover table { box-shadow: 0 10px 26px rgba(23, 59, 108, .1) }
+    .tg-note { margin-top: 10px; font-size: 14px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 9px 14px; line-height: 1.6 }
+    .tg-nb { display: none } .tg-wrap-alt .tg-na { display: none } .tg-wrap-alt .tg-nb { display: block }
+    .star { color: var(--red) }
+    @media(max-width:880px) { .tg table { font-size: 13px } .tg table td, .tg table th { padding: 8px 10px } }
     /* 03 사용 예시 */
     .usage-ex {
       margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
@@ -2674,14 +2692,14 @@
 <section class="tint" id="services">
 <div class="wrap">
 <div class="reveal">
-<span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">1 / 3</span></span>
+<span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">1 / 4</span></span>
 <h2 class="sec-title">업무를 어떻게 구분하고, 어떻게 도입할 것인가</h2>
 <p class="sec-lead">모든 업무에 한꺼번에 AI를 넣지 않습니다. <b>업무를 세 가지 기준으로 구분</b>하고, 기준에 맞는 환경에서 낮은 단계부터 도입합니다.</p>
 </div>
 <div class="q3 reveal">
 <div class="q on"><span class="qn">기준 ①</span><b>무슨 일을 하는가</b><span>업무 유형 6가지 · 이 화면</span></div>
 <div class="q"><span class="qn">기준 ②</span><b>어떤 자료를 쓰고, 외부 연결이 필요한가</b><span>운영 환경 A·B·C · 다음 화면</span></div>
-<div class="q"><span class="qn">기준 ③</span><b>AI에게 어디까지 맡기는가</b><span>도입 단계 L1~L4 · 마지막 화면</span></div>
+<div class="q"><span class="qn">기준 ③</span><b>AI에게 어디까지 맡기는가</b><span>도입 단계 L1~L4 · 세 번째 화면</span></div>
 </div>
 <div class="reveal" id="use-types" style="margin-top:18px">
 <h3 class="h3s">기준 ① 업무 유형 6가지 <span class="h3n">하나의 서비스에 여러 유형을 함께 적용할 수 있습니다.</span></h3>
@@ -2698,7 +2716,7 @@
 </section>
 <section class="tint sub" id="services-2" data-nav="services">
 <div class="wrap">
-<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / 3</span></span></div>
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / 4</span></span></div>
 <div class="reveal">
 <h3 class="h3s">기준 ② 운영 환경 A·B·C <span class="h3n">AI를 쓰기 위해 모든 업무망을 연결할 필요는 없습니다. 자료의 민감도와 외부 연결 필요 여부로 환경을 고릅니다.</span></h3>
 <p class="mix-rule"><b>여러 자료가 섞인 업무</b>는 그중 더 민감한 자료의 기준을 따릅니다. 예: 공개 통계와 내부 자료를 함께 쓰는 보고서는 내부 자료 기준(B)으로 처리합니다.</p>
@@ -2868,7 +2886,7 @@
 </section>
 <section class="tint sub" id="services-3" data-nav="services">
 <div class="wrap">
-<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">3 / 3</span></span></div>
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">3 / 4</span></span></div>
 <div class="reveal">
 <h3 class="h3s">기준 ③ 도입 단계 L1~L4 <span class="h3n">AI에게 맡기는 범위를 한 단계씩 넓힙니다.</span></h3>
 <div class="flow ladder" style="margin-top:10px">
@@ -2902,6 +2920,39 @@
 </tbody>
 </table>
 <div class="subbox" style="margin-top:10px"><h5>실무 적용 순서</h5><p style="font-size:13px;color:var(--ink);line-height:1.7">업무 유형 분류 → 데이터 공개·민감도 확인(섞여 있으면 더 민감한 쪽 기준) → 운영 환경 선정 → L1~L4 권한 결정 → 보안·품질 검증 → 담당자 확인 후 활용. <span class="term" tabindex="0" data-tip="국가망보안체계. 국가정보원이 기존 망분리를 개선해 마련한 보안 기준으로, 업무 정보를 기밀·민감·공개(C·S·O) 등급으로 나누고 등급별로 보안 통제를 다르게 적용합니다.">N2SF</span>를 포함한 관련 기준의 실제 적용 여부는 기관 보안담당자와 협의합니다.</p></div>
+</div>
+</div>
+</section>
+<section class="tint sub" id="services-4" data-nav="services">
+<div class="wrap">
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">4 / 4</span></span></div>
+<div class="reveal">
+<h3 class="h3s">장비 단계별로 맡길 업무 <span class="h3n">03의 장비 수준(시범·팀 단위·부서 상시)과 위의 세 기준을 이어 봅니다.</span></h3>
+<div class="tg-bar">
+<button type="button" class="tg-btn on" data-v="task">맡길 업무</button>
+<button type="button" class="tg-btn" data-v="cap">처리할 수 있는 양</button>
+<span class="tg-hint">표를 누르면 바뀝니다</span>
+</div>
+<div class="tg" id="tierToggle" role="button" tabindex="0" aria-label="표 바꾸기">
+<table class="ex-table tg-a">
+<thead><tr><th>장비 단계</th><th>맡길 업무 종류</th><th>AI에게 맡기는 범위</th><th>업무 예시</th></tr></thead>
+<tbody>
+<tr><td>시범<br/><small>그래픽 메모리 32GB</small></td><td>생성형, 지식검색형</td><td>L1~L2<br/><small>자료를 읽는 데까지</small></td><td>회의록 요약, 공고문·보도자료 초안, 끝난 사업·결과보고서 찾기</td></tr>
+<tr><td>팀 단위<br/><small>64GB</small></td><td>+ 분석·판단지원형, 업무처리형</td><td>L2~L3<br/><small>여러 시스템을 조회하는 데까지</small></td><td>위 업무를 팀 전체가 매일 사용, 원문 검색 상시 운영, 여러 보고서 비교, 서류 분류·형식 점검</td></tr>
+<tr><td>부서 상시<br/><small>64~128GB 이상</small></td><td>+ 에이전트형</td><td>L3~L4<br/><small>승인을 거쳐 실행까지</small></td><td>여러 단계를 잇는 자동 처리, 긴 정책 문서 분석</td></tr>
+</tbody>
+</table>
+<table class="ex-table tg-b">
+<thead><tr><th>장비 단계</th><th>쓸 수 있는 AI 크기</th><th>한 번에 읽는 분량</th><th>동시에 쓸 수 있는 사람</th><th>10쪽 보고서 요약</th></tr></thead>
+<tbody>
+<tr><td>시범<br/><small>32GB</small></td><td>중간 크기는 여유,<br/>큰 크기는 짧은 문서만</td><td>A4 10~40쪽</td><td>1명씩 차례로</td><td>15초~1분</td></tr>
+<tr><td>팀 단위<br/><small>64GB</small></td><td>큰 크기 여유,<br/>아주 큰 크기는 1~2명만</td><td>A4 40~60쪽</td><td>5~10명 <b class="star">※</b></td><td>15~30초</td></tr>
+<tr><td>부서 상시<br/><small>64~128GB 이상</small></td><td>아주 큰 크기</td><td>A4 60쪽 이상</td><td>약 10명</td><td>15~30초</td></tr>
+</tbody>
+</table>
+</div>
+<p class="tg-note tg-na">대외 업무(민원·사업 안내 같은 서비스제공형)는 장비 단계와 따로, 공개 자료만 쓰는 외부 연결 환경(C)에서 운영합니다.</p>
+<p class="tg-note tg-nb"><b class="star">※</b> 여러 명이 동시에 쓰려면 지금 쓰는 기본 프로그램 대신 <b>동시 처리용 서버 프로그램</b>으로 바꿔야 합니다. 바꾸지 않으면 장비가 커져도 한 번에 한 명씩 처리합니다.<br/>숫자는 외부 공개 시험 결과를 바탕으로 한 대략값이며, 실제 장비에서 몇 건 재 보고 고칩니다.</p>
 </div>
 </div>
 </section>
@@ -3279,6 +3330,21 @@
     });
     document.addEventListener('click', function () { if (tipFor) hideTip() });
     window.addEventListener('scroll', function () { if (tipFor) hideTip() }, { passive: true });
+
+    // 04-4 장비 단계 표 전환
+    var tg = document.getElementById('tierToggle');
+    if (tg) {
+      var box = tg.parentNode, btns = box.querySelectorAll('.tg-btn');
+      var fit = function () { var a = tg.querySelector('.tg-a'), b = tg.querySelector('.tg-b'); tg.style.minHeight = Math.max(a.offsetHeight, b.offsetHeight) + 'px'; };
+      var setV = function (alt) {
+        tg.classList.toggle('alt', alt); box.classList.toggle('tg-wrap-alt', alt);
+        btns.forEach(function (b) { b.classList.toggle('on', (b.dataset.v === 'cap') === alt) });
+      };
+      tg.addEventListener('click', function () { setV(!tg.classList.contains('alt')) });
+      tg.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setV(!tg.classList.contains('alt')) } });
+      btns.forEach(function (b) { b.addEventListener('click', function () { setV(b.dataset.v === 'cap') }) });
+      fit(); window.addEventListener('resize', fit); window.addEventListener('load', fit);
+    }
 
     // ▶ 모션 재생 버튼: hero 인트로(제목·카드 전개·연결선·데이터 점)를 처음부터 다시 재생
     var hero = document.getElementById('hero');
