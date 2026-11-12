@@ -2161,6 +2161,11 @@
     .tg-nb { display: none } .tg-wrap-alt .tg-na { display: none } .tg-wrap-alt .tg-nb { display: block }
     .star { color: var(--red) }
     @media(max-width:880px) { .tg table { font-size: 13px } .tg table td, .tg table th { padding: 8px 10px } }
+    /* 해상도 대응 */
+    body { zoom: var(--z, 1) }
+    section, #hero { min-height: calc(100vh / var(--z, 1)) }
+    html, body { overflow-x: clip }
+    @media(max-width:880px) { .flow-arrow { width: 100%; justify-content: center } }
     /* 03 사용 예시 */
     .usage-ex {
       margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
@@ -2203,6 +2208,17 @@
 </style>
 </head>
 <body>
+<script>
+  /* 해상도 대응: 1440x900 기준으로 화면 크기에 맞춰 전체를 같은 비율로 확대·축소 (폭 1100px 미만은 원래 크기) */
+  (function () {
+    function fitZoom() {
+      var w = window.innerWidth, h = window.innerHeight, z = 1;
+      if (w >= 1100) z = Math.max(0.72, Math.min(2.2, Math.min(w / 1440, h / 900)));
+      window.__z = z; document.documentElement.style.setProperty('--z', z);
+    }
+    fitZoom(); window.addEventListener('resize', fitZoom);
+  })();
+</script>
 <div id="progress"></div>
 <nav id="topnav">
 <div class="nav-inner">
@@ -3192,7 +3208,7 @@
 
     // keyboard navigation (presentation feel)
     var secs = [].slice.call(document.querySelectorAll('section[id]'));
-    function cur() { var y = window.scrollY + window.innerHeight * 0.35, b = 0; secs.forEach(function (sec, i) { if (sec.offsetTop <= y) b = i; }); return b; }
+    function cur() { var y = window.scrollY + window.innerHeight * 0.35, b = 0, zz = window.__z || 1; secs.forEach(function (sec, i) { if (sec.offsetTop * zz <= y) b = i; }); return b; }
     document.addEventListener('keydown', function (e) {
       var ae = document.activeElement; if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return;
       var i = cur();
@@ -3299,8 +3315,9 @@
         var c = e.target.closest && e.target.closest('.card, .fcard');
         if (!c) return;
         var r = c.getBoundingClientRect();
-        c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        var zz = window.__z || 1;
+        c.style.setProperty('--mx', (e.clientX - r.left) / zz + 'px');
+        c.style.setProperty('--my', (e.clientY - r.top) / zz + 'px');
       }, { passive: true });
       document.addEventListener('pointerout', function (e) {
         var c = e.target.closest && e.target.closest('.card, .fcard');
@@ -3315,10 +3332,10 @@
       tipFor = t; tip.innerHTML = '<b></b><span></span>';
       tip.firstChild.textContent = t.textContent; tip.lastChild.textContent = t.dataset.tip;
       var r = t.getBoundingClientRect(); tip.style.left = '0px'; tip.style.top = '0px'; tip.classList.add('on');
-      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var zw = window.__z || 1, w = tip.offsetWidth * zw, h = tip.offsetHeight * zw;
       var x = Math.max(10, Math.min(window.innerWidth - w - 10, r.left + r.width / 2 - w / 2));
       var y = r.top - h - 10; if (y < 10) y = r.bottom + 10;
-      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+      var zz = window.__z || 1; tip.style.left = x / zz + 'px'; tip.style.top = y / zz + 'px';
     }
     function hideTip() { tip.classList.remove('on'); tipFor = null; }
     document.querySelectorAll('.term[data-tip]').forEach(function (t) {
