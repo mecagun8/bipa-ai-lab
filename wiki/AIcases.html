@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>공공기관 AI 도입 사례집</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #173b6c; --navy-deep: #0f2c52; --blue: #2c5aa0; --blue-light: #e8f0fb; --blue-pale: #f3f7fd; --accent: #4a82d4;
+    --green: #2f7d52; --green-light: #e9f4ed; --teal: #1f9d8f; --teal-light: #e3f5f2; --purple: #5b4a9e; --purple-light: #efecf8;
+    --red: #c0392b; --ink: #1f2a3a; --gray: #5d6b80; --line: #dde6f2; --bg: #eef3fa;
+    --ease-out: cubic-bezier(.22, 1, .36, 1); --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box }
+  html { scroll-behavior: smooth; overflow-x: clip }
+  body { font-family: 'Noto Sans KR', sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; zoom: var(--z, 1); overflow-x: clip }
+  a { color: var(--blue) }
+
+  /* nav */
+  #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; background: linear-gradient(90deg, var(--accent), var(--blue)); z-index: 200 }
+  nav { position: sticky; top: 0; z-index: 150; background: rgba(255, 255, 255, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line) }
+  .nav-in { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 11px 28px; flex-wrap: wrap }
+  .brand { font-weight: 700; color: var(--navy); font-size: 15px; margin-right: auto }
+  .brand small { font-weight: 500; color: var(--gray); margin-left: 6px }
+  .nav-in a.nl { font-size: 13px; color: var(--gray); text-decoration: none; padding: 6px 11px; border-radius: 20px; font-weight: 500; transition: .2s }
+  .nav-in a.nl:hover { background: var(--blue-light); color: var(--blue) }
+  .nav-in a.nl.active { background: var(--navy); color: #fff }
+  .back { font-size: 13px; font-weight: 700; color: var(--navy); text-decoration: none; border: 1px solid var(--line); border-radius: 20px; padding: 6px 13px; background: #fff }
+  .back:hover { border-color: var(--blue); color: var(--blue) }
+  @media(max-width:820px) { .nav-in a.nl { display: none } }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px }
+
+  /* hero */
+  header.hero { padding: 56px 0 40px; background: radial-gradient(circle at 80% 20%, rgba(74, 130, 212, .18), transparent 45%), linear-gradient(160deg, #f7faff, #dfeaf8) }
+  .badge { display: inline-flex; gap: 8px; align-items: center; background: #fff; border: 1px solid var(--line); color: var(--navy); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 30px }
+  .hero h1 { font-size: clamp(32px, 4vw, 48px); font-weight: 900; color: var(--navy); letter-spacing: -.03em; line-height: 1.15; margin: 14px 0 10px }
+  .hero h1 span { color: var(--blue) }
+  .hero p.lead { font-size: 17px; color: var(--ink); max-width: 900px }
+  .hero p.lead b { color: var(--blue) }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 26px }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; box-shadow: 0 6px 20px rgba(23, 59, 108, .06) }
+  .stat .n { font-size: 34px; font-weight: 900; color: var(--navy); letter-spacing: -.02em; line-height: 1.1 }
+  .stat .n small { font-size: 18px; font-weight: 700; margin-left: 2px }
+  .stat .l { font-size: 13.5px; color: var(--gray); margin-top: 4px; line-height: 1.45 }
+  .stat .w { font-size: 12px; font-weight: 700; color: var(--blue); margin-top: 6px }
+  @media(max-width:900px) { .stats { grid-template-columns: 1fr 1fr } }
+
+  /* type legend */
+  .types { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px }
+  .ty { display: flex; gap: 10px; align-items: flex-start; background: rgba(255, 255, 255, .75); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; text-decoration: none; color: inherit; transition: .2s }
+  .ty:hover { background: #fff; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(23, 59, 108, .1) }
+  .ty i { flex: none; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-style: normal; font-weight: 900; color: #fff; font-size: 15px }
+  .ty b { display: block; font-size: 15px; color: var(--navy) }
+  .ty span { font-size: 12.5px; color: var(--gray); line-height: 1.45 }
+  @media(max-width:900px) { .types { grid-template-columns: 1fr 1fr } }
+  .t1 { --c: var(--navy); --cl: var(--blue-light) } .t2 { --c: var(--blue); --cl: var(--blue-pale) }
+  .t3 { --c: var(--purple); --cl: var(--purple-light) } .t4 { --c: var(--teal); --cl: var(--teal-light) }
+  .ty i, .sec-h .num { background: var(--c) }
+
+  /* filter (Motion Prompt #061 Filter chips) */
+  .filter { position: sticky; top: 49px; z-index: 120; background: rgba(238, 243, 250, .94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line) }
+  .filter .wrap { display: flex; gap: 8px; align-items: center; padding-top: 10px; padding-bottom: 10px }
+  .chip { border: 1px solid var(--line); background: #fff; color: var(--gray); font: 700 13.5px 'Noto Sans KR', sans-serif; padding: 6px 15px; border-radius: 20px; cursor: pointer; transition: .2s }
+  .chip.on { background: var(--navy); border-color: var(--navy); color: #fff }
+  .filter .cnt { font-size: 13px; color: var(--gray); margin-left: 6px }
+
+  /* sections */
+  section.grp { padding: 34px 0 10px; scroll-margin-top: 100px }
+  .sec-h { display: flex; gap: 12px; align-items: center }
+  .sec-h .num { width: 36px; height: 36px; border-radius: 10px; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px }
+  .sec-h h2 { font-size: clamp(22px, 2.2vw, 28px); color: var(--navy); font-weight: 900; letter-spacing: -.02em }
+  .sec-d { margin: 6px 0 0 48px; font-size: 15px; color: var(--gray); max-width: 960px }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px }
+  @media(max-width:900px) { .grid { grid-template-columns: 1fr } .sec-d { margin-left: 0 } }
+
+  .case { background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; transition: transform .25s, box-shadow .25s, opacity .35s, scale .35s }
+  .case:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(23, 59, 108, .1) }
+  .case.hide { display: none }
+  .c-top { display: flex; align-items: flex-start; gap: 10px }
+  .c-top h3 { font-size: 18px; color: var(--navy); font-weight: 900; line-height: 1.3; flex: 1 }
+  .c-top h3 small { display: block; font-size: 13px; font-weight: 500; color: var(--gray); margin-top: 3px }
+  .rg { flex: none; font-size: 11.5px; font-weight: 700; border-radius: 6px; padding: 2px 8px; background: var(--cl); color: var(--c) }
+  .rg.kr { background: #fff1e6; color: #b5561a }
+  .when { flex: none; font-size: 12px; color: var(--gray); background: var(--blue-pale); border-radius: 6px; padding: 2px 8px }
+  .row { display: grid; grid-template-columns: 58px 1fr; gap: 8px; font-size: 14px; line-height: 1.55 }
+  .row > b { color: var(--c); font-size: 13px; padding-top: 1px }
+  .row ul { list-style: none; display: flex; flex-direction: column; gap: 3px }
+  .row ul li { padding-left: 12px; position: relative }
+  .row ul li::before { content: "•"; position: absolute; left: 0; color: var(--c) }
+  .kpi { display: inline-block; background: var(--cl); color: var(--c); font-weight: 900; border-radius: 6px; padding: 0 6px; margin-right: 2px }
+  .take { background: var(--blue-pale); border-radius: 10px; padding: 9px 12px; font-size: 13.5px; color: var(--ink) }
+  .take b { color: var(--blue) }
+  .src { font-size: 12px; color: var(--gray) }
+  .src a { color: var(--gray); text-decoration: underline dotted; margin-right: 8px }
+  .src a:hover { color: var(--blue) }
+
+  /* lessons */
+  .lessons { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 34px; padding: 40px 0 }
+  .ls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px }
+  @media(max-width:900px) { .ls-grid { grid-template-columns: 1fr } }
+  .ls { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; padding: 14px 16px; background: var(--blue-pale) }
+  .ls h4 { font-size: 16px; color: var(--navy); margin-bottom: 6px }
+  .ls p { font-size: 14px; color: var(--ink); line-height: 1.6 }
+  .ls .g { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--blue); background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px }
+  .note { margin-top: 16px; font-size: 13px; color: var(--gray) }
+
+  /* sources */
+  .sources { padding: 34px 0 50px }
+  .sources ol { margin: 12px 0 0 20px; font-size: 13px; color: var(--gray); columns: 2; column-gap: 34px }
+  .sources li { margin-bottom: 5px; break-inside: avoid }
+  @media(max-width:900px) { .sources ol { columns: 1 } }
+  footer { background: var(--navy-deep); color: #c7d6ee; text-align: center; padding: 34px 20px; font-size: 14px }
+  footer a { color: #fff }
+
+  /* motion: #074 Fade-in on scroll + #002 Stagger + #007 Count-up */
+  .rv { opacity: 0; translate: 0 22px; transition: opacity .7s var(--ease-out), translate .7s var(--ease-out) }
+  .rv.show { opacity: 1; translate: 0 0 }
+  .grid .case.rv { transition-delay: calc(var(--i, 0) * 70ms) }
+  .hero .badge { animation: pop .6s var(--ease-back) both }
+  .hero h1, .hero p.lead { animation: up .8s var(--ease-out) both } .hero p.lead { animation-delay: .12s }
+  @keyframes pop { from { opacity: 0; scale: .7 } to { opacity: 1; scale: 1 } }
+  @keyframes up { from { opacity: 0; translate: 0 16px } to { opacity: 1; translate: 0 0 } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important } .rv { opacity: 1; translate: none } }
+  @media print { nav, .filter, #progress { display: none } .rv { opacity: 1 !important; translate: none !important } body { zoom: 1 } }
+</style>
+</head>
+<body>
+<script>
+  (function () {
+    function fit() { var w = innerWidth, h = innerHeight, z = 1; if (w >= 1100) z = Math.max(.8, Math.min(1.8, w / 1440)); window.__z = z; document.documentElement.style.setProperty('--z', z); }
+    fit(); addEventListener('resize', fit);
+  })();
+</script>
+<div id="progress"></div>
+<nav>
+<div class="nav-in">
+<div class="brand">공공기관 AI 도입 사례집<small>(재)부산정보산업진흥원</small></div>
+<a class="nl" href="#g1">자체 구축</a>
+<a class="nl" href="#g2">외부 서비스</a>
+<a class="nl" href="#g3">공동 기반</a>
+<a class="nl" href="#g4">현장 주도</a>
+<a class="nl" href="#lessons">공통점</a>
+<a class="back" href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html">← AI 도입 가이드</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="wrap">
+<span class="badge">Case Studies · 국내·해외 공공부문</span>
+<h1>다른 기관은 <span>어떻게 도입했나</span></h1>
+<p class="lead">국내 공공기관·지자체와 해외 정부의 AI 도입 사례 17건을 <b>도입 방식</b>에 따라 네 가지로 나눴습니다. 각 사례마다 무엇을, 어떻게, 어떤 성과를 냈는지와 우리 기관이 참고할 점을 정리했습니다.</p>
+<div class="stats">
+<div class="stat rv"><div class="n"><span class="cu" data-to="63">0</span><small>%</small></div><div class="l">서울시 본청 직원 중 생성형 AI를 쓰는 비율</div><div class="w">서울AI챗 · 2025.12</div></div>
+<div class="stat rv"><div class="n"><span class="cu" data-to="26">0</span><small>분</small></div><div class="l">영국 공무원 2만 명이 하루 평균 줄인 시간</div><div class="w">영국 정부 실험 · 2024</div></div>
+<div class="stat rv"><div class="n"><span class="cu" data-to="87">0</span><small>%</small></div><div class="l">안양시 업무 1건당 처리 시간 단축 (113분 → 13분)</div><div class="w">안양시 · 2026.4</div></div>
+<div class="stat rv"><div class="n"><span class="cu" data-to="80">0</span><small>%</small></div><div class="l">싱가포르 공무원 15만 명 중 정부 전용 AI를 써 본 비율</div><div class="w">싱가포르 Pair</div></div>
+</div>
+<div class="types">
+<a class="ty t1 rv" href="#g1"><i>1</i><div><b>자체 구축</b><span>기관 내부 서버에 AI를 직접 설치</span></div></a>
+<a class="ty t2 rv" href="#g2"><i>2</i><div><b>외부 서비스</b><span>상용 AI 서비스를 구독·사용량만큼 이용</span></div></a>
+<a class="ty t3 rv" href="#g3"><i>3</i><div><b>공동 기반</b><span>정부가 만든 공용 AI 환경을 여러 기관이 함께 이용</span></div></a>
+<a class="ty t4 rv" href="#g4"><i>4</i><div><b>현장 주도</b><span>교육을 받은 직원이 직접 쓰고 업무 도구를 만듦</span></div></a>
+</div>
+</div>
+</header>
+
+<div class="filter">
+<div class="wrap">
+<button class="chip on" data-f="all">전체</button>
+<button class="chip" data-f="kr">국내</button>
+<button class="chip" data-f="ov">해외</button>
+<span class="cnt" id="cnt">17건</span>
+</div>
+</div>
+
+<main class="wrap">
+
+<!-- 1 자체 구축 -->
+<section class="grp t1" id="g1">
+<div class="sec-h rv"><span class="num">1</span><h2>자체 구축 — 기관 안에 AI를 직접 설치</h2></div>
+<p class="sec-d rv">민감한 내부 자료를 외부로 보내지 않기 위해 업무망 안에 AI를 둔 사례입니다. 대부분 <b>규정·매뉴얼·보고서 검색</b>부터 시작했습니다.</p>
+<div class="grid">
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>서울특별시<small>내부망 자체 AI + 업무 처리 AI</small></h3><span class="rg kr">국내</span><span class="when">2025~2026</span></div>
+<div class="row"><b>무엇을</b><ul><li>내부 문서 작성, 질의응답, 규정 조회</li><li>2026년 9월부터 문서 요약, 회의실 예약, 제안서 평가위원 선정 3개 업무를 AI가 처리</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>내부망에 서울시 자체 AI 도입, 2026년 2월 시범 운영</li><li>행정 업무매뉴얼 270종을 근거로 답하고 출처를 함께 표시</li><li>GPU·운영 서버를 늘리고 이용 기록을 관리. 외부 서비스(서울AI챗)와 병행</li></ul></div>
+<div class="row"><b>성과</b><ul><li>업무 처리 AI는 3개 업무 성과를 확인한 뒤 단계적으로 넓힐 계획 (수치 미공개)</li></ul></div>
+<div class="take"><b>참고할 점</b> 외부 서비스로 쓰는 습관을 먼저 만들고, 민감한 업무는 내부 AI로 나눠 단계적으로 넓혔습니다.</div>
+<div class="src">출처: <a href="https://news.seoul.go.kr/gov/archives/569818">서울시(2025)</a><a href="https://news.seoul.go.kr/gov/archives/574496">서울시(2026.1)</a><a href="https://www.seoul.go.kr/news/news_report.do?nttNo=467325">서울시(2026.9)</a><a href="https://www.digitaltoday.co.kr/en/view/110195/douzone-biz-on-to-supply-one-ai-pe-for-seouls-administrative-support-ai-agent-project">디지털투데이</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>한국철도공사<small>사내 문서 검색 AI '에어파인더'</small></h3><span class="rg kr">국내</span><span class="when">2026.2</span></div>
+<div class="row"><b>무엇을</b><ul><li>부서별 업무지침·규정·매뉴얼·보고서 검색과 요약</li><li>예: 승차권 반환 위약금 계산식, 전동차 비상제동 절차 찾기</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>인터넷과 분리된 업무망에서 동작</li><li>직원이 업무 목적에 따라 답변 방식을 직접 선택</li><li>답변마다 참고한 출처를 함께 보여 줘 직접 확인 가능</li></ul></div>
+<div class="take"><b>참고할 점</b> 가이드 03의 '내부 문서 기반 AI'와 가장 가까운 사례입니다. 규정·매뉴얼 검색에서는 출처 표시가 핵심입니다.</div>
+<div class="src">출처: <a href="https://www.fnnews.com/news/202602201209104294">파이낸셜뉴스</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>강원 정선군<small>기초지자체 첫 자체 GPU 서버</small></h3><span class="rg kr">국내</span><span class="when">2025 착수</span></div>
+<div class="row"><b>무엇을</b><ul><li>행정문서 검색·요약·질의응답, 민원 응대 지원</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>자체 GPU 서버에 AI를 직접 설치, 내부 문서 검색 방식 적용</li><li>지자체 행정시스템(새올)과 한 번 로그인으로 연결</li><li>사업비 <span class="kpi">2억 2,500만 원</span></li></ul></div>
+<div class="take"><b>참고할 점</b> 작은 지자체도 수억 원 규모로 자체 구축을 시작했습니다. 예산을 잡을 때 참고할 만한 규모입니다.</div>
+<div class="src">출처: <a href="https://bizhankook.com/articles/30634.html">비즈한국</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>제주국제자유도시개발센터<small>내부 서버 AI + 업무별 챗봇</small></h3><span class="rg kr">국내</span><span class="when">2026.10~</span></div>
+<div class="row"><b>무엇을</b><ul><li>개발·면세·예산·안전·계약·인사 업무별 챗봇</li><li>문서 검색, 연결된 시스템을 통한 업무 실행</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>외부망과 분리된 내부 서버에 6개월간 구축</li><li>일상 질문은 중형(30B급 이상), 긴 추론은 대형(120B급 이상) 모델로 나눠 사용</li><li>내부 문서 약 <span class="kpi">3.8TB</span>를 검색용으로 정리</li></ul></div>
+<div class="take"><b>참고할 점</b> 공공기관 규모의 자체 구축 사양(모델 크기, 문서량)을 가늠할 수 있는 사례입니다.</div>
+<div class="src">출처: <a href="https://www.ziksir.com/news/articleView.html?idxno=150122">직썰</a><a href="https://zdnet.co.kr/view/?no=20261021170509">ZDNet Korea</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>프랑스 정부<small>국가 자체 AI 'Albert' → 'Assistant IA'</small></h3><span class="rg">해외</span><span class="when">2024~2026</span></div>
+<div class="row"><b>무엇을</b><ul><li>공공 상담 창구(France Services) 답변 보조로 시작</li><li>이후 공무원 전체용 업무 비서로 방향 전환</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>공개 모델(Llama, Mistral)을 바탕으로 정부 디지털국이 직접 개발, 코드도 공개</li><li>프랑스 내 보안 인증 클라우드에서 운영</li></ul></div>
+<div class="row"><b>성과</b><ul><li>창구용 버전은 48곳 시험 후 <b>지금 형태로는 확대하지 않기로</b> 결정</li><li>후속 Assistant IA는 Mistral 모델로 바꿔 공무원 <span class="kpi">1만 명</span>이 시험 (2025.10)</li></ul></div>
+<div class="take"><b>참고할 점</b> 첫 모델 성능이 부족하자 모델을 바꿔 다시 시작했습니다. 모델을 교체할 수 있는 구조가 중요합니다 (가이드 02 락인 대응).</div>
+<div class="src">출처: <a href="https://www.info.gouv.fr/index.php/actualite/ia-connaissez-vous-albert">프랑스 정부</a><a href="https://next.ink/brief-article/albert-lia-souveraine-de-la-dinum-ne-sera-pas-generalisee-dans-sa-forme-actuelle/">Next</a><a href="https://acteurspublics.fr/articles/letat-ouvre-lexperimentation-de-son-assistant-ia-a-10-000-agents-publics/">Acteurs publics</a></div>
+</article>
+
+</div>
+</section>
+
+<!-- 2 외부 서비스 -->
+<section class="grp t2" id="g2">
+<div class="sec-h rv"><span class="num">2</span><h2>외부 서비스 — 상용 AI를 빌려 쓰기</h2></div>
+<p class="sec-d rv">빠르게 시작할 수 있고 최신 모델을 쓸 수 있지만, <b>입력 자료 통제와 비용 구조</b>를 함께 설계해야 합니다. 효과 수치가 가장 많이 공개된 방식이기도 합니다.</p>
+<div class="grid">
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>서울특별시<small>직원용 '서울AI챗'</small></h3><span class="rg kr">국내</span><span class="when">2025.9~</span></div>
+<div class="row"><b>무엇을</b><ul><li>보고서 작성·기획, 자료조사, 법령 검토, 민원 대응, 홍보자료 제작</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>생성형 AI 29종을 쓴 만큼만 비용을 내는 방식(용량제)으로 제공</li><li>입력 단계에서 개인정보·민감정보를 찾아 막는 장치 도입</li></ul></div>
+<div class="row"><b>성과</b><ul><li><span class="kpi">6,318명</span> 이용 (본청 직원 63%), 만족도 89%</li><li>보고서 3~4시간 → 1시간 안팎, 자료조사 1~3시간 → 30분 (최대 80% 단축)</li><li>비용 약 5,500만 원 (같은 인원을 구독제로 지원했다면 약 7억 6천만 원)</li></ul></div>
+<div class="take"><b>참고할 점</b> 외부 서비스는 '쓴 만큼 내는' 비용 구조와 입력 차단 장치를 함께 갖추는 것이 핵심입니다.</div>
+<div class="src">출처: <a href="https://news.seoul.go.kr/gov/archives/574496">서울시</a><a href="https://www.segye.com/newsView/20260115519594">세계일보</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>영국 정부<small>공무원 2만 명 업무용 AI 실험</small></h3><span class="rg">해외</span><span class="when">2024.9~12</span></div>
+<div class="row"><b>무엇을</b><ul><li>문서 초안, 긴 메일 요약, 회의 준비, 자료 찾기</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>12개 기관 공무원 2만 명에게 사무용 AI(Microsoft 365 Copilot)를 3개월간 제공</li></ul></div>
+<div class="row"><b>성과</b><ul><li>하루 평균 <span class="kpi">26분</span> 절감 (연간 약 2주)</li><li>응답자 17%는 절감 효과가 없었고, 14%는 하루 1시간 이상 절감</li></ul></div>
+<div class="take"><b>참고할 점</b> 평균 뒤에 큰 편차가 있습니다. 업무에 따라 효과가 달라서, 업무를 구분해 도입해야 합니다 (가이드 04).</div>
+<div class="src">출처: <a href="https://www.gov.uk/government/news/landmark-government-trial-shows-ai-could-save-civil-servants-nearly-2-weeks-a-year">영국 정부</a><a href="https://questions-statements.parliament.uk/written-statements/1807718">영국 의회</a><a href="https://www.geekwire.com/2025/microsoft-ai-tools-saved-british-government-workers-26-minutes-a-day-new-study-shows/">GeekWire</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>호주 정부<small>60여 개 기관 6개월 시범</small></h3><span class="rg">해외</span><span class="when">2024 상반기</span></div>
+<div class="row"><b>무엇을</b><ul><li>정보 요약, 문서 작성, 회의록 작성</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>7,600여 명에게 사무용 AI(Microsoft 365 Copilot)를 6개월간 제공하고 외부 기관이 평가</li></ul></div>
+<div class="row"><b>성과</b><ul><li>참여자 스스로 평가한 절감 시간은 하루 최대 약 <span class="kpi">1시간</span> (요약·문서 작성이 가장 큼)</li><li>결과물은 사람이 다시 확인해야 했고, 재무부 자체 평가는 절감 시간을 수치로 확인하지 못함</li><li>기대에 못 미쳐 사용을 그만둔 직원도 있었음</li></ul></div>
+<div class="take"><b>참고할 점</b> 직원 응답으로 잰 수치는 '최대치'에 가깝습니다. 우리 기관에서는 실제 업무 시간을 직접 재는 것이 좋습니다.</div>
+<div class="src">출처: <a href="https://digital.gov.au/initiatives/copilot-trial/microsoft-365-copilot-evaluation-report-full/productivity">호주 디지털전환청</a><a href="https://www.itnews.com.au/news/treasury-m365-copilot-review-estimates-13-minute-efficiency-gain-needed-to-justify-licence-cost-614905">iTnews</a></div>
+</article>
+
+</div>
+</section>
+
+<!-- 3 공동 기반 -->
+<section class="grp t3" id="g3">
+<div class="sec-h rv"><span class="num">3</span><h2>공동 기반 — 정부가 만든 공용 AI 환경</h2></div>
+<p class="sec-d rv">각 기관이 따로 구축하지 않도록 정부가 보안 환경과 여러 모델을 한곳에 모아 제공하는 방식입니다. 최근 국내외에서 가장 빠르게 늘고 있습니다.</p>
+<div class="grid">
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>행정안전부·과기정통부<small>범정부 AI 공통기반</small></h3><span class="rg kr">국내</span><span class="when">2025.11~</span></div>
+<div class="row"><b>무엇을</b><ul><li>중앙부처·지자체 공무원이 업무망(내부망)에서 민간 AI를 사용</li><li>메일·메신저·영상회의를 잇는 업무관리 플랫폼 시범 적용</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>국가정보자원관리원 대구센터의 민관협력 클라우드에 구축</li><li>대형 언어모델 등 약 <span class="kpi">30종</span>의 AI 모델 제공</li><li>2026년 2차 사업(66억 원)으로 업무 처리 AI와 외부망 연계 확대</li></ul></div>
+<div class="take"><b>참고할 점</b> 기관이 직접 구축하지 않고 쓸 수 있는 선택지입니다. 우리 기관 같은 공공기관도 이용할 수 있는지 확인이 필요합니다.</div>
+<div class="src">출처: <a href="https://www.etnews.com/20251119000275">전자신문</a><a href="https://v.daum.net/v/4A6NYGjJgD">조선비즈</a><a href="https://zdnet.co.kr/view/?no=20260810101425">ZDNet Korea</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>일본 디지털청<small>정부 AI 환경 '겐나이(源内)'</small></h3><span class="rg">해외</span><span class="when">2025.5~</span></div>
+<div class="row"><b>무엇을</b><ul><li>법제도 조사, 국회 답변 검색 등 행정 업무용 AI 앱 약 30종</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>디지털청이 직접 개발해 자기 직원부터 사용, 중요도 2등급 정보까지 입력 가능(디지털청 기준)</li><li>2026년 5월부터 전 부처 약 <span class="kpi">18만 명</span> 대상 대규모 실증</li><li>소스 일부를 공개해 지자체도 같은 환경을 만들 수 있게 함</li></ul></div>
+<div class="row"><b>성과</b><ul><li>디지털청 직원 약 1,200명 중 약 80%가 사용, 1인 평균 약 70회</li><li>2026년 5월 말 약 10만 명이 사용 가능</li></ul></div>
+<div class="take"><b>참고할 점</b> 한 조직에서 먼저 써 보고 검증한 뒤 전체로 넓혔습니다. 범용 대화보다 행정 업무 전용 앱이 중심입니다.</div>
+<div class="src">출처: <a href="https://www.digital.go.jp/policies/genai">디지털청</a><a href="https://www.digital.go.jp/news/907c8e5d-2f4f-4bd7-9400-37c9f4221d7d">디지털청(OSS)</a><a href="https://aismiley.co.jp/ai_news/government-ai-gennai-2026/">AIsmiley</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>싱가포르 정부<small>공무원 전용 AI 'Pair'</small></h3><span class="rg">해외</span><span class="when">2023~</span></div>
+<div class="row"><b>무엇을</b><ul><li>글쓰기, 자료조사, 데이터 분석, 회의록 작성</li><li>반복 업무용 AI 비서를 직원이 직접 만들어 팀과 공유</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>정부 기술팀이 상용 모델 위에 정부 전용 화면·보안을 직접 만듦</li><li>대화 내용을 모델 회사에 넘기지 않고, 일정 등급 이하 기밀 자료까지 사용 승인</li></ul></div>
+<div class="row"><b>성과</b><ul><li>공무원 15만 명 중 약 <span class="kpi">80%</span>가 사용 경험, 절반 이상이 정기 사용</li><li>운영비 1달러당 약 45분의 업무 시간 절감 추정</li></ul></div>
+<div class="take"><b>참고할 점</b> 모델은 빌려 쓰되, 보안과 권한은 정부가 직접 관리하는 혼합형입니다.</div>
+<div class="src">출처: <a href="https://www.mddi.gov.sg/newsroom/mddi-s-response-to-pq-on-progress-of-adopting-ai-tools-within-public-service/">싱가포르 디지털정보부</a><a href="https://reports.open.gov.sg/pair/overview">OGP</a><a href="https://www.developer.tech.gov.sg/products/categories/productivity-tools/pair/overview">GovTech</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>영국 정부<small>공무원용 도구 묶음 'Humphrey'</small></h3><span class="rg">해외</span><span class="when">2025.1~</span></div>
+<div class="row"><b>무엇을</b><ul><li>국민 의견수렴 분석(Consult), 회의록(Minute), 문서 요약·브리핑(Redbox), 법령 조사(Lex), 의회 기록 검색(Parlex)</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>정부 AI 전담팀이 반복 업무별 전용 도구를 직접 개발</li></ul></div>
+<div class="row"><b>성과</b><ul><li>의견수렴 분석 도구는 첫 실전에서 사람 분석팀과 거의 같은 결과</li><li>같은 일을 외부 용역에 맡기면 1건에 약 10만 파운드가 들었던 업무</li></ul></div>
+<div class="take"><b>참고할 점</b> 범용 대화 AI와 별도로, 자주 반복되는 업무는 전용 도구로 만들면 효과가 큽니다.</div>
+<div class="src">출처: <a href="https://www.civilserviceworld.com/professions/article/civil-service-ai-tool-for-consultation-analysis-passes-first-test">Civil Service World</a><a href="https://www.globalgovernmentforum.com/uk-governments-ai-system-humphrey-set-to-review-thousands-of-public-consultations-to-improve-civil-service-efficiency/">Global Government Forum</a><a href="https://www.thinkdigitalpartners.com/news/2025/01/21/government-to-overhaul-public-sector-tech-usage-introduce-ai-to-fix-public-services/">Think Digital Partners</a></div>
+</article>
+
+<article class="case rv" data-r="ov">
+<div class="c-top"><h3>미국 연방조달청(GSA)<small>연방기관 공동 AI 플랫폼 'USAi'</small></h3><span class="rg">해외</span><span class="when">2025.8~</span></div>
+<div class="row"><b>무엇을</b><ul><li>대화형 AI, 코딩 보조, 문서 요약을 연방 공무원이 안전하게 시험·사용</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>여러 회사의 상용 모델을 한 화면에서 제공, 기관별 사용 현황 확인</li><li>처음엔 무료였으나 2026년 9월부터 기관이 비용을 내는 방식으로 전환</li></ul></div>
+<div class="row"><b>성과</b><ul><li>2026년 6월 기준 <span class="kpi">25개</span> 이상 기관 참여</li></ul></div>
+<div class="take"><b>참고할 점</b> 공동 기반도 결국 사용량에 따라 비용을 나누는 구조로 갑니다. 장기 운영비를 처음부터 계산해야 합니다.</div>
+<div class="src">출처: <a href="https://www.meritalk.com/?p=207921">MeriTalk</a><a href="https://fedscoop.com/usai-is-no-longer-free-for-federal-agencies/">FedScoop</a><a href="https://digitalcorps.gsa.gov/projects/gsa-accelerating-government-ai-adoption-with-usai/">GSA</a></div>
+</article>
+
+</div>
+</section>
+
+<!-- 4 현장 주도 -->
+<section class="grp t4" id="g4">
+<div class="sec-h rv"><span class="num">4</span><h2>현장 주도 — 직원이 직접 쓰고 만들기</h2></div>
+<p class="sec-d rv">시스템을 크게 짓기보다 <b>교육과 직접 개발</b>로 효과를 낸 사례입니다. 업무를 가장 잘 아는 직원이 반복 업무를 골라 자동화했습니다.</p>
+<div class="grid">
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>경기도경제과학진흥원<small>지역 진흥원의 AI 행정혁신</small></h3><span class="rg kr">국내</span><span class="when">2026</span></div>
+<div class="row"><b>무엇을</b><ul><li>문서 작성, 정보 검색, 회의록 요약, 아이디어 도출</li><li>기업지원사업 제출서류 대조·평가점수 산출을 자동화하는 도구 개발</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>하반기 직원 347명 교육, 사내 AI 해커톤(14개 팀 42명)</li></ul></div>
+<div class="row"><b>성과</b><ul><li>설문 응답자 125명 중 <span class="kpi">93%</span>가 업무에 활용, 51%는 매일 사용</li><li>60%가 업무 시간이 30% 이상 줄었다고 응답 (28.8%는 절반 이상)</li><li>아낀 시간은 자료 검증·품질관리(61.6%), 신규 사업 개발 등에 사용</li></ul></div>
+<div class="take"><b>참고할 점</b> 우리 기관과 같은 지역 산업진흥기관입니다. 교육 → 활용 → 직접 개발 순서가 가장 현실적인 출발점입니다.</div>
+<div class="src">출처: <a href="https://www.insightkorea.co.kr/news/articleView.html?idxno=257874">인사이트코리아</a><a href="https://weekly.hankooki.com/news/articleView.html?idxno=7191882">주간한국</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>경기 안양시<small>전 부서 참여형 AI 업무혁신</small></h3><span class="rg kr">국내</span><span class="when">2026.4</span></div>
+<div class="row"><b>무엇을</b><ul><li>데이터 분석·자동화, 법령·자료 검색, 홍보 콘텐츠 제작</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>도입 한 달 뒤 부서별 활용 사례를 모아 전후 처리 시간을 비교</li></ul></div>
+<div class="row"><b>성과</b><ul><li>업무 1건당 평균 113분 → 13분 (<span class="kpi">약 87%</span> 단축)</li><li>분야별 단축률: 데이터 분석·자동화 97%, 법령·자료 검색 89%, 홍보 80%</li><li>노후 PC 교체 우선순위 분석 5시간 → 5분</li></ul></div>
+<div class="take"><b>참고할 점</b> 업무 종류별로 전후 시간을 따로 재서, 어떤 업무에 효과가 큰지 보여 줬습니다.</div>
+<div class="src">출처: <a href="https://www.hkbs.co.kr/news/articleView.html?idxno=822369">환경일보</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>성남시·한국환경공단·한국석유관리원<small>'AI 챔피언' 직원들의 업무 도구</small></h3><span class="rg kr">국내</span><span class="when">2026</span></div>
+<div class="row"><b>무엇을</b><ul><li>성남시: 공사 후 필요한 공문 5건을 한 번에 만드는 도구</li><li>환경공단·석유관리원: 수질 업무, 부서별 예산 취합, 비교견적 선별 자동화</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>개발 비전공 직원이 AI로 대화하며 직접 프로그램을 만듦</li></ul></div>
+<div class="row"><b>성과</b><ul><li>월간 SNS 게시물 취합 30분 → <span class="kpi">3분</span> (성남시)</li></ul></div>
+<div class="take"><b>참고할 점</b> 양식은 같고 내용만 바뀌는 반복 문서가 가장 먼저 자동화하기 좋은 업무입니다.</div>
+<div class="src">출처: <a href="https://zdnet.co.kr/view/?no=20260904110842">ZDNet Korea</a></div>
+</article>
+
+<article class="case rv" data-r="kr">
+<div class="c-top"><h3>행정안전부<small>공무원 직접 개발 공간 'AI 정부 실험실'</small></h3><span class="rg kr">국내</span><span class="when">2026.7~</span></div>
+<div class="row"><b>무엇을</b><ul><li>공무원이 AI로 업무 도구를 직접 만들고 범정부 저장소에서 공유</li></ul></div>
+<div class="row"><b>어떻게</b><ul><li>AI 코딩 도구와 개발 환경 제공, 우수 도구는 기관 운영·범정부 서비스로 확산</li><li>동시 이용 200명 → 2027년 6,000명으로 확대, 업무망으로도 넓힐 계획</li></ul></div>
+<div class="row"><b>성과</b><ul><li>2026년 10월 기준 과제 <span class="kpi">1,086개</span>, 약 2,700명 참여</li></ul></div>
+<div class="take"><b>참고할 점</b> 개인 실험은 자유롭게 하되, 실제 업무에 쓸 때는 기관이 보안·품질을 책임지는 구조입니다.</div>
+<div class="src">출처: <a href="https://www.etoday.co.kr/news/view/2638265">이투데이</a><a href="https://www.public25.com/news/articleView.html?idxno=54304">퍼블릭타임스</a></div>
+</article>
+
+</div>
+</section>
+</main>
+
+<section class="lessons" id="lessons">
+<div class="wrap">
+<div class="sec-h rv" style="--c:var(--accent)"><span class="num" style="background:var(--accent)">★</span><h2>사례에서 보이는 공통점</h2></div>
+<p class="sec-d rv">17건을 비교해 정리한 내용입니다. 각 항목이 가이드의 어느 부분과 이어지는지 함께 표시했습니다.</p>
+<div class="ls-grid">
+<div class="ls rv"><h4>① 한 가지 방식만 쓰지 않는다</h4><p>서울시는 외부 서비스와 내부 AI를 함께 쓰고, 한국가스공사는 내부 자료는 전용 모델, 외부 자료는 상용 모델로 나눠 쓸 계획입니다. 우체국물류지원단도 상용 → 내부 구축 → 전사 확대의 3단계로 갑니다.</p><span class="g">가이드 04 · 운영 환경 A·B·C</span></div>
+<div class="ls rv"><h4>② 첫 자체 구축은 '규정·매뉴얼 검색'</h4><p>서울시(매뉴얼 270종), 코레일, 정선군, 제주국제자유도시개발센터 모두 내부 문서를 찾아 출처와 함께 답하는 기능부터 만들었습니다.</p><span class="g">가이드 03 · 내부 문서 기반 AI</span></div>
+<div class="ls rv"><h4>③ 효과 수치는 직접 재야 한다</h4><p>공개된 수치 대부분은 직원 설문입니다. 영국에서는 17%가 효과가 없었고, 호주 재무부는 절감 시간을 확인하지 못했습니다. 안양시처럼 업무별 전후 시간을 재는 것이 설득력이 큽니다.</p><span class="g">가이드 04 · 다음 단계로 넘어가기 전 확인</span></div>
+<div class="ls rv"><h4>④ 모델은 바꿀 수 있게</h4><p>프랑스는 첫 모델의 성능이 부족하자 모델을 바꿨고, 일본과 우리 정부 공통기반은 여러 모델을 골라 쓰게 했습니다. 특정 업체에 묶이지 않는 구조가 오래 갑니다.</p><span class="g">가이드 02 · 랩핑 서비스 락인</span></div>
+<div class="ls rv"><h4>⑤ 교육과 현장 개발이 확산의 열쇠</h4><p>경기도경제과학진흥원, 안양시, 싱가포르 모두 교육과 직원 스스로의 도구 개발로 사용률을 끌어올렸습니다. 시스템보다 사람이 먼저입니다.</p><span class="g">가이드 01 · 작은 시작</span></div>
+<div class="ls rv"><h4>⑥ 비용은 '쓴 만큼' 구조로</h4><p>서울시는 용량제로 구독제 대비 약 7억 원을 아꼈고, 미국 공동 플랫폼도 무료에서 사용량 기반 유료로 바뀌었습니다. 처음부터 장기 운영비를 계산해야 합니다.</p><span class="g">가이드 03 · 장비 수준 기준</span></div>
+</div>
+<p class="note">※ 공통점 정리와 '참고할 점'은 사례를 비교한 이 문서의 해석입니다. 수치는 각 출처가 밝힌 값이며, 상당수는 직원 설문 기반입니다. 한국가스공사·우체국물류지원단 사례는 <a href="https://news.nate.com/view/20260203n26799">아주경제</a>, <a href="https://www.fnnews.com/news/202607131447199698">파이낸셜뉴스</a> 보도를 참고했습니다.</p>
+</div>
+</section>
+
+<section class="sources">
+<div class="wrap">
+<div class="sec-h"><h2 style="font-size:20px">출처</h2></div>
+<ol>
+<li><a href="https://news.seoul.go.kr/gov/archives/569818">서울시, 챗봇 2.0 자체 LLM 도입 (2025)</a></li>
+<li><a href="https://news.seoul.go.kr/gov/archives/574496">서울시, 직원 63% 생성형 AI 활용 (2026.1)</a></li>
+<li><a href="https://www.seoul.go.kr/news/news_report.do?nttNo=467325">서울시, '일하는 AI' 행정 도입 (2026.9)</a></li>
+<li><a href="https://www.digitaltoday.co.kr/en/view/110195/douzone-biz-on-to-supply-one-ai-pe-for-seouls-administrative-support-ai-agent-project">디지털투데이, 서울시 행정지원 AI (업무매뉴얼 270종)</a></li>
+<li><a href="https://www.segye.com/newsView/20260115519594">세계일보, 서울시 공무원 63% 업무에 AI 활용</a></li>
+<li><a href="https://www.fnnews.com/news/202602201209104294">파이낸셜뉴스, 코레일 사내 AI 검색 '에어파인더'</a></li>
+<li><a href="https://bizhankook.com/articles/30634.html">비즈한국, 정선군 AI 행정 서버 구축</a></li>
+<li><a href="https://www.ziksir.com/news/articleView.html?idxno=150122">직썰, JDC 사내 생성형 AI 구축</a></li>
+<li><a href="https://zdnet.co.kr/view/?no=20261021170509">ZDNet Korea, JDC 내부망 AI 구축</a></li>
+<li><a href="https://news.nate.com/view/20260203n26799">아주경제, 공공 생성형 AI '구독'에서 '구축'으로</a></li>
+<li><a href="https://www.fnnews.com/news/202607131447199698">파이낸셜뉴스, 우체국물류지원단 생성형 AI 도입</a></li>
+<li><a href="https://www.etnews.com/20251119000275">전자신문, 범정부 초거대AI 공통기반 가동</a></li>
+<li><a href="https://v.daum.net/v/4A6NYGjJgD">조선비즈, 범정부 AI 공통기반 서비스 개시</a></li>
+<li><a href="https://zdnet.co.kr/view/?no=20260810101425">ZDNet Korea, 범정부 AI 공통기반 2차 사업</a></li>
+<li><a href="https://www.insightkorea.co.kr/news/articleView.html?idxno=257874">인사이트코리아, 경과원 직원 93% AI 활용</a></li>
+<li><a href="https://weekly.hankooki.com/news/articleView.html?idxno=7191882">주간한국, 경과원 직원들이 AI로 바꾼 행정</a></li>
+<li><a href="https://www.hkbs.co.kr/news/articleView.html?idxno=822369">환경일보, 안양시 업무 소요 시간 87% 단축</a></li>
+<li><a href="https://zdnet.co.kr/view/?no=20260904110842">ZDNet Korea, AI로 일하는 공무원들</a></li>
+<li><a href="https://www.etoday.co.kr/news/view/2638265">이투데이, 공공 AI 대전환 챌린지</a></li>
+<li><a href="https://www.public25.com/news/articleView.html?idxno=54304">퍼블릭타임스, AI 활용 직접개발 확산 방안</a></li>
+<li><a href="https://www.gov.uk/government/news/landmark-government-trial-shows-ai-could-save-civil-servants-nearly-2-weeks-a-year">GOV.UK, Landmark government trial</a></li>
+<li><a href="https://questions-statements.parliament.uk/written-statements/1807718">UK Parliament, AI in Government statement</a></li>
+<li><a href="https://www.geekwire.com/2025/microsoft-ai-tools-saved-british-government-workers-26-minutes-a-day-new-study-shows/">GeekWire, UK 26 minutes a day</a></li>
+<li><a href="https://www.civilserviceworld.com/professions/article/civil-service-ai-tool-for-consultation-analysis-passes-first-test">Civil Service World, Consult first test</a></li>
+<li><a href="https://www.globalgovernmentforum.com/uk-governments-ai-system-humphrey-set-to-review-thousands-of-public-consultations-to-improve-civil-service-efficiency/">Global Government Forum, Humphrey</a></li>
+<li><a href="https://www.thinkdigitalpartners.com/news/2025/01/21/government-to-overhaul-public-sector-tech-usage-introduce-ai-to-fix-public-services/">Think Digital Partners, Humphrey tools</a></li>
+<li><a href="https://digital.gov.au/initiatives/copilot-trial/microsoft-365-copilot-evaluation-report-full/productivity">Australian DTA, Copilot evaluation</a></li>
+<li><a href="https://www.itnews.com.au/news/treasury-m365-copilot-review-estimates-13-minute-efficiency-gain-needed-to-justify-licence-cost-614905">iTnews, Treasury Copilot review</a></li>
+<li><a href="https://www.digital.go.jp/policies/genai">デジタル庁, ガバメントAI「源内」</a></li>
+<li><a href="https://www.digital.go.jp/news/907c8e5d-2f4f-4bd7-9400-37c9f4221d7d">デジタル庁, 源内 OSS 公開</a></li>
+<li><a href="https://aismiley.co.jp/ai_news/government-ai-gennai-2026/">AIsmiley, ガバメントAI「源内」とは</a></li>
+<li><a href="https://www.mddi.gov.sg/newsroom/mddi-s-response-to-pq-on-progress-of-adopting-ai-tools-within-public-service/">Singapore MDDI, AI tools in public service</a></li>
+<li><a href="https://reports.open.gov.sg/pair/overview">OGP, Pair overview</a></li>
+<li><a href="https://www.developer.tech.gov.sg/products/categories/productivity-tools/pair/overview">GovTech, Pair</a></li>
+<li><a href="https://www.meritalk.com/?p=207921">MeriTalk, GSA USAi expansion</a></li>
+<li><a href="https://fedscoop.com/usai-is-no-longer-free-for-federal-agencies/">FedScoop, USAi no longer free</a></li>
+<li><a href="https://digitalcorps.gsa.gov/projects/gsa-accelerating-government-ai-adoption-with-usai/">GSA, USAi</a></li>
+<li><a href="https://www.info.gouv.fr/index.php/actualite/ia-connaissez-vous-albert">info.gouv.fr, Albert</a></li>
+<li><a href="https://next.ink/brief-article/albert-lia-souveraine-de-la-dinum-ne-sera-pas-generalisee-dans-sa-forme-actuelle/">Next, Albert non généralisé</a></li>
+<li><a href="https://acteurspublics.fr/articles/letat-ouvre-lexperimentation-de-son-assistant-ia-a-10-000-agents-publics/">Acteurs publics, Assistant IA 10 000 agents</a></li>
+</ol>
+</div>
+</section>
+
+<footer>
+공공기관 AI 도입 사례집 · 2026년 11월 정리 · <a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html">공공기관 AI 도입 가이드로 돌아가기</a>
+</footer>
+
+<script>
+  (function () {
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // 스크롤 진행 바
+    var bar = document.getElementById('progress');
+    addEventListener('scroll', function () { var h = document.documentElement.scrollHeight - innerHeight; bar.style.width = (scrollY / h * 100) + '%'; }, { passive: true });
+    // 등장 효과 + 순차 지연
+    document.querySelectorAll('.grid').forEach(function (g) { g.querySelectorAll('.case').forEach(function (c, i) { c.style.setProperty('--i', i % 4) }) });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); if (e.target.querySelector('.cu')) count(e.target.querySelector('.cu')); } }) }, { threshold: .1 });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el) });
+    // 숫자 카운트업 (Motion Prompt #007)
+    function count(el) {
+      var to = +el.dataset.to; if (reduce) { el.textContent = to; return; }
+      var t0 = null; function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 1200); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+    // 국내/해외 필터 (Motion Prompt #061)
+    var chips = document.querySelectorAll('.chip'), cnt = document.getElementById('cnt');
+    chips.forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        chips.forEach(function (c) { c.classList.toggle('on', c === ch) });
+        var f = ch.dataset.f, n = 0;
+        document.querySelectorAll('.case').forEach(function (c) { var ok = f === 'all' || c.dataset.r === f; c.classList.toggle('hide', !ok); if (ok) { n++; c.classList.add('show'); } });
+        document.querySelectorAll('section.grp').forEach(function (s) { s.style.display = s.querySelector('.case:not(.hide)') ? '' : 'none' });
+        cnt.textContent = n + '건';
+      });
+    });
+    // 메뉴 활성 표시
+    var links = document.querySelectorAll('.nl');
+    var so = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (l) { l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id) }) }) }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('section[id]').forEach(function (s) { so.observe(s) });
+  })();
+</script>
+</body>
+</html>
