@@ -1953,12 +1953,13 @@
     footer .logo { animation: float 5s ease-in-out infinite }
 
     /* 핵심 카드 → 관련 내용 링크 */
-    .hub-pillar { cursor: pointer; padding-bottom: 22px }
+    .hub-pillar { cursor: pointer; padding-bottom: 34px }
     .hub-pillar::after {
-      content: attr(data-sec) " →"; position: absolute; left: 0; right: 0; bottom: 7px;
-      font-size: 11px; font-weight: 700; color: var(--blue); opacity: .55; transition: opacity .2s, letter-spacing .2s
+      content: attr(data-sec) " →"; position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 6px 0 7px; border-top: 1px solid #dbe7f7; border-radius: 0 0 15px 15px; background: #eef4fd;
+      font-size: 11px; font-weight: 700; color: var(--blue); opacity: .85; transition: opacity .2s, letter-spacing .2s, background .2s, color .2s
     }
-    .hub-pillar:hover::after, .hub-pillar:focus-visible::after { opacity: 1; letter-spacing: .02em }
+    .hub-pillar:hover::after, .hub-pillar:focus-visible::after { opacity: 1; letter-spacing: .02em; background: var(--navy); color: #fff; border-top-color: var(--navy) }
     @media(max-width:780px) { .hub-pillar { position: relative; left: auto !important; top: auto !important } }
     .hub-pillar:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px }
     #start-small, #safe-ops, #verify, #use-types, #expand-path, section .wrap > .reveal:first-child { scroll-margin-top: 84px; border-radius: 18px }
