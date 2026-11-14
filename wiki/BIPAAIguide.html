@@ -2297,6 +2297,47 @@ section#services-3{padding-top:26px;padding-bottom:26px}
 #knowledge-roadmap .kr-foot{font-size:12px;color:#667689;line-height:1.8;margin-top:18px}
 @media(max-width:900px){#knowledge-roadmap .kr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#knowledge-roadmap .kr-journey{flex-direction:column}#knowledge-roadmap .kr-arrow{transform:rotate(90deg)}}
 @media(max-width:600px){#knowledge-roadmap .kr-grid,#knowledge-roadmap .kr-bottom{grid-template-columns:1fr}#knowledge-roadmap .kr-use{min-height:0}}
+
+/* 05 재구성: STEP 1(위 4개 업무)에서 시작해 STEP 2·3으로 확장 */
+section#knowledge-roadmap{padding-top:34px;padding-bottom:34px}
+#knowledge-roadmap .sec-lead{margin-top:6px}
+#knowledge-roadmap .kr-map{display:grid;grid-template-columns:minmax(0,1.75fr) 74px minmax(0,1fr);gap:0;align-items:stretch;margin-top:18px}
+#knowledge-roadmap .kr-step1{position:relative;background:linear-gradient(160deg,#f3faf6,#fff 55%);border:2px solid var(--green);border-radius:18px;padding:18px 20px 20px;box-shadow:0 12px 30px rgba(47,125,82,.12)}
+#knowledge-roadmap .kr-s1-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#knowledge-roadmap .kr-s1-head h3{font-size:21px;letter-spacing:-.04em;margin:2px 0 0;color:var(--navy)}
+#knowledge-roadmap .kr-start-pill{background:var(--green);color:#fff;font-weight:900;font-size:13px;border-radius:30px;padding:7px 14px;box-shadow:0 0 0 0 rgba(47,125,82,.45);animation:krPulse 2.4s ease-out infinite}
+@keyframes krPulse{0%{box-shadow:0 0 0 0 rgba(47,125,82,.45)}70%{box-shadow:0 0 0 12px rgba(47,125,82,0)}100%{box-shadow:0 0 0 0 rgba(47,125,82,0)}}
+#knowledge-roadmap .kr-s1-badge{margin-left:auto;font-size:12px;font-weight:800;color:#155d3a;background:#e2f2e8;border-radius:9px;padding:7px 11px}
+#knowledge-roadmap .kr-no{font-size:11.5px;font-weight:800;letter-spacing:.03em;color:#39739a}
+#knowledge-roadmap .kr-step1 .kr-no{color:var(--green)}
+#knowledge-roadmap .kr-s1-desc{font-size:13.5px;color:#506175;margin:10px 0 12px;line-height:1.6}
+#knowledge-roadmap .kr-s1-desc b{color:var(--green);margin-left:4px}
+#knowledge-roadmap .kr-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:0}
+#knowledge-roadmap .kr-use{min-height:0;padding:13px 15px;border-color:#d5e8dc;border-radius:12px}
+#knowledge-roadmap .kr-use .kr-tag{color:var(--green)}
+#knowledge-roadmap .kr-use h4{font-size:15.5px;margin:5px 0 5px}
+#knowledge-roadmap .kr-use p{font-size:12.5px;line-height:1.6;margin:0 0 7px}
+#knowledge-roadmap .kr-use small{font-size:11.5px}
+#knowledge-roadmap .kr-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#66869b;text-align:center}
+#knowledge-roadmap .kr-link span{font-size:11px;font-weight:700;line-height:1.35}
+#knowledge-roadmap .kr-link i{font-style:normal;font-size:28px;font-weight:800;color:var(--blue)}
+#knowledge-roadmap .kr-next{display:flex;flex-direction:column;gap:0}
+#knowledge-roadmap .kr-phase{padding:15px 17px;border-radius:14px;box-shadow:none;background:#fff}
+#knowledge-roadmap .kr-phase h3{font-size:17px;margin:5px 0 6px}
+#knowledge-roadmap .kr-phase p{font-size:12.5px;line-height:1.6;margin:0 0 9px}
+#knowledge-roadmap .kr-phase strong{font-size:11.5px;padding:7px 9px}
+#knowledge-roadmap .kr-b{border-left:4px solid var(--blue)}
+#knowledge-roadmap .kr-c{border-left:4px solid var(--purple)}
+#knowledge-roadmap .kr-c .kr-no{color:var(--purple)}
+#knowledge-roadmap .kr-b strong{color:var(--blue);background:var(--blue-pale)}
+#knowledge-roadmap .kr-c strong{color:var(--purple);background:var(--purple-light)}
+#knowledge-roadmap .kr-down{text-align:center;color:#8aa0b3;font-weight:800;font-size:18px;line-height:1;padding:5px 0}
+#knowledge-roadmap .kr-next-note{font-size:11.5px;color:var(--gray);margin-top:8px}
+#knowledge-roadmap .kr-bottom{margin-top:14px}
+#knowledge-roadmap .kr-foot{margin-top:10px}
+@media(max-width:1000px){#knowledge-roadmap .kr-map{grid-template-columns:1fr}#knowledge-roadmap .kr-link{flex-direction:row;padding:10px 0}#knowledge-roadmap .kr-link span br{display:none}#knowledge-roadmap .kr-link i{transform:rotate(90deg)}}
+@media(max-width:600px){#knowledge-roadmap .kr-grid{grid-template-columns:1fr}#knowledge-roadmap .kr-s1-badge{margin-left:0}}
+@media(prefers-reduced-motion:reduce){#knowledge-roadmap .kr-start-pill{animation:none}}
 </style></head>
 <body>
 <script>
@@ -3100,20 +3141,28 @@ section#services-3{padding-top:26px;padding-bottom:26px}
 <div class="reveal"><span class="eyebrow"><span class="num">05</span> Start Here · Knowledge First</span>
 <h2 class="sec-title">LLM Wiki를 구축하면, 여기부터 시작할 수 있습니다</h2>
 <p class="sec-lead">4번의 세 가지 기준으로 보면, 먼저 업무자료를 정리하고 찾아 쓰는 일부터 시작할 수 있습니다. AI 모델을 당장 도입하지 않아도 지식기반은 업무에 활용되며, 이후 온프레미스 AI를 연결할 때도 그대로 활용할 수 있습니다.</p></div>
-<div class="reveal" style="margin-top:24px"><h3 class="h3s">지금 바로 시작할 수 있는 업무</h3></div>
-<div class="kr-grid">
-<div class="kr-use reveal"><span class="kr-tag">01 · 규정·지침</span><h4>필요한 규정을 바로 찾기</h4><p>규정, 지침, 서식과 개정 이력을 분류해 직원이 검색하고 원문을 확인합니다.</p><small>AI 모델 없이 문서 검색·열람</small></div>
-<div class="kr-use reveal"><span class="kr-tag">02 · 사업 이력</span><h4>지난 사업의 경험 재사용</h4><p>사업별 계획서·결과보고서·결정사항을 연도와 사업명으로 연결해 찾아봅니다.</p><small>기존 자료를 업무 지식으로 축적</small></div>
-<div class="kr-use reveal"><span class="kr-tag">03 · 업무 인수인계</span><h4>절차와 노하우 공유</h4><p>업무 매뉴얼, 자주 묻는 질문, 담당자 검토사항을 위키로 정리해 업무 공백을 줄입니다.</p><small>직원이 직접 수정·버전관리</small></div>
-<div class="kr-use reveal"><span class="kr-tag">04 · 성과자료</span><h4>실적과 근거자료 한곳에서 보기</h4><p>성과지표의 정의와 원본 표·보고서 링크를 정리하고, 수치는 검증된 원본에서 확인합니다.</p><small>AI가 계산한 수치로 원본을 대체하지 않음</small></div>
+<div class="kr-map">
+<div class="kr-step1 reveal">
+<div class="kr-s1-head">
+<span class="kr-start-pill">여기서 시작</span>
+<div><span class="kr-no">STEP 1 · 지금 시작 · A 환경</span><h3>LLM Wiki로 열람·관리</h3></div>
+<strong class="kr-s1-badge">AI 모델·L1~L4 실행권한 없이도 가능</strong>
 </div>
-<div class="reveal" style="margin-top:28px"><h3 class="h3s">같은 지식기반으로, 필요한 만큼 확장합니다 <span class="h3n">운영환경과 AI 위임권한은 업무별로 별도 결정합니다.</span></h3></div>
-<div class="kr-journey reveal">
-<div class="kr-phase"><span class="kr-no">지금 시작 · A 환경</span><h3>LLM Wiki로 열람·관리</h3><p>문서 검색, 규정 확인, 사업 이력 열람, 업무 인수인계를 직원이 직접 수행합니다.</p><strong>AI 모델·L1~L4 실행권한 없이도 가능</strong></div>
-<div class="kr-arrow">→</div>
-<div class="kr-phase"><span class="kr-no">다음 확장 · B 환경</span><h3>온프레미스 AI로 업무 보조</h3><p>위키의 허용된 자료를 AI가 활용해 초안 작성(L1), 내부 자료 조회(L2), 비교·분석·제안(L3)을 지원합니다.</p><strong>AI 검색 연결·자료별 접근권한·정확성 검증 필요</strong></div>
-<div class="kr-arrow">→</div>
-<div class="kr-phase"><span class="kr-no">AI AGENT 구축 · C 외부 연계</span><h3>AI로 업무 자동화</h3><p>LLM Wiki의 업무 지식과 승인된 외부 서비스를 연결해 반복적인 정보 확인, 문서 작성, 안내 발송 등 업무 흐름을 AI가 수행하도록 합니다. 외부 연계는 공개·허용 자료에 한정하고, 실제 처리는 승인된 권한 범위에서 실행합니다.</p><strong>담당자 승인·이력 기록·중지·복구 수단 필요</strong></div>
+<p class="kr-s1-desc">문서 검색, 규정 확인, 사업 이력 열람, 업무 인수인계를 직원이 직접 수행합니다. <b>지금 바로 시작할 수 있는 업무</b></p>
+<div class="kr-grid">
+<div class="kr-use"><span class="kr-tag">01 · 규정·지침</span><h4>필요한 규정을 바로 찾기</h4><p>규정, 지침, 서식과 개정 이력을 분류해 직원이 검색하고 원문을 확인합니다.</p><small>AI 모델 없이 문서 검색·열람</small></div>
+<div class="kr-use"><span class="kr-tag">02 · 사업 이력</span><h4>지난 사업의 경험 재사용</h4><p>사업별 계획서·결과보고서·결정사항을 연도와 사업명으로 연결해 찾아봅니다.</p><small>기존 자료를 업무 지식으로 축적</small></div>
+<div class="kr-use"><span class="kr-tag">03 · 업무 인수인계</span><h4>절차와 노하우 공유</h4><p>업무 매뉴얼, 자주 묻는 질문, 담당자 검토사항을 위키로 정리해 업무 공백을 줄입니다.</p><small>직원이 직접 수정·버전관리</small></div>
+<div class="kr-use"><span class="kr-tag">04 · 성과자료</span><h4>실적과 근거자료 한곳에서 보기</h4><p>성과지표의 정의와 원본 표·보고서 링크를 정리하고, 수치는 검증된 원본에서 확인합니다.</p><small>AI가 계산한 수치로 원본을 대체하지 않음</small></div>
+</div>
+</div>
+<div class="kr-link reveal" aria-hidden="true"><span>같은<br/>지식기반으로<br/>확장</span><i>→</i></div>
+<div class="kr-next">
+<div class="kr-phase kr-b reveal"><span class="kr-no">STEP 2 · 다음 확장 · B 환경</span><h3>온프레미스 AI로 업무 보조</h3><p>위키의 허용된 자료를 AI가 활용해 초안 작성(L1), 내부 자료 조회(L2), 비교·분석·제안(L3)을 지원합니다.</p><strong>AI 검색 연결·자료별 접근권한·정확성 검증 필요</strong></div>
+<div class="kr-down reveal" aria-hidden="true">↓</div>
+<div class="kr-phase kr-c reveal"><span class="kr-no">STEP 3 · AI Agent 구축 · C 외부 연계</span><h3>AI로 업무 자동화</h3><p>LLM Wiki의 업무 지식과 승인된 외부 서비스를 연결해 정보 확인, 문서 작성, 안내 발송 같은 반복 업무를 AI가 수행합니다. 외부 연계는 공개·허용 자료에 한정하고, 실제 처리는 승인된 권한 범위에서 실행합니다.</p><strong>담당자 승인·이력 기록·중지·복구 수단 필요</strong></div>
+<p class="kr-next-note reveal">운영환경과 AI 위임권한은 업무별로 따로 정합니다.</p>
+</div>
 </div>
 <div class="kr-bottom reveal" id="kr-practice" hidden="" aria-label="실무자용: 지금 할 일과 AI 연결 준비"><div><b>지금 할 일</b><p>핵심 문서 선정 → 분류·표준화 → 원문 연결 → 담당자 검수 → 권한별 Wiki 열람</p></div><div><b>향후 AI 연결을 위한 준비</b><p>문서별 접근권한·최신성·출처 관리, 검색 품질, 망분리와 내부 운영환경 검토</p></div></div>
 <p class="kr-foot reveal" id="kr-note" hidden="">※ LLM Wiki는 AI 모델이 아니라 사람이 읽고 관리하는 지식기반입니다. A 환경의 검색·열람과 B 환경의 AI 질의응답은 구분해야 합니다. 위키를 구축했다고 AI에게 내부 자료 조회(L2)나 시스템 실행(L4) 권한이 자동으로 부여되는 것은 아닙니다. 외부 연결이 필요한 공개 업무는 4번의 C 환경 기준에 따라 별도로 검토합니다.</p>
