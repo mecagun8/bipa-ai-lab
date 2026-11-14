@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAG와 LLM Wiki · 업무 지식 관리 안내</title><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"><style>
+:root{--navy:#173b6c;--blue:#2c5aa0;--pale:#f3f7fd;--line:#dde6f2;--gray:#5d6b80;--ink:#1f2a3a;--bg:#eef3fa;--green:#2f7d52;--greenlight:#e9f4ed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.75 'Noto Sans KR',sans-serif}nav{background:#fff;border-bottom:1px solid var(--line);padding:13px 24px;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:12px;align-items:center}nav b{color:var(--navy)}a{color:var(--blue)}nav a{text-decoration:none;border:1px solid var(--line);border-radius:18px;padding:5px 12px;font-weight:700}.wrap{max-width:1120px;margin:auto;padding:32px 24px}header{background:linear-gradient(155deg,#f8fbff,#dfebfa);border-bottom:1px solid var(--line)}.eyebrow{font-weight:900;font-size:12px;letter-spacing:.09em;color:var(--blue)}h1{color:var(--navy);font-size:clamp(27px,4vw,43px);line-height:1.3;margin:10px 0}h2{font-size:23px;color:var(--navy);margin:32px 0 12px}h3{font-size:17px;color:var(--navy);margin:0 0 8px}.lead{max-width:900px;font-size:16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px;box-shadow:0 5px 19px #173b6c09}.card p{margin:6px 0}.card ul{margin:10px 0 0;padding-left:19px}.flow{background:var(--pale);border-radius:10px;padding:12px;margin:10px 0;font-weight:700;text-align:center;color:var(--navy)}.note{background:var(--greenlight);border-left:4px solid var(--green);border-radius:8px;padding:12px 16px;margin:16px 0}.muted{color:var(--gray)}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid var(--line);padding:11px 13px;vertical-align:top;text-align:left}th{background:var(--pale);color:var(--navy)}.scroll{overflow-x:auto;border-radius:12px}.steps{counter-reset:step;display:grid;gap:10px}.step{background:#fff;border-radius:12px;border:1px solid var(--line);padding:13px 17px}.step:before{counter-increment:step;content:counter(step);display:inline-grid;place-items:center;background:var(--navy);color:white;width:25px;height:25px;border-radius:50%;margin-right:8px;font-weight:700}.code{background:#142b48;color:#e9f3ff;border-radius:13px;padding:18px 22px;white-space:pre-wrap;font:13px/1.6 Consolas,monospace;overflow:auto}.small{font-size:12px}.bottom{background:#102e54;color:white;padding:30px;text-align:center}footer a{color:white}@media(max-width:780px){.grid,.grid3{grid-template-columns:1fr}.wrap{padding:24px 17px}th,td{padding:9px 10px}}@media print{nav{display:none}.card{box-shadow:none}}
+</style></head><body><nav><b>공공기관 AI 도입 가이드 · 기술 참고</b><a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">← 서비스 구성으로</a></nav>
+<header><div class="wrap"><span class="eyebrow">TECHNICAL REFERENCE · 업무 지식 운영</span><h1>RAG와 LLM Wiki의 차이<br>그리고 실무 도입 방법</h1><p class="lead">문서를 검색해 답하게 할 것인가, 업무 지식을 미리 정리해 열람할 것인가. 업무 목적과 운영인력을 기준으로 선택하며, 축적한 지식은 향후 온프레미스 AI 도입에도 활용할 수 있습니다.</p></div></header>
+<main class="wrap">
+<h2>01. 두 방식의 핵심 차이</h2><div class="grid"><article class="card"><h3>RAG · 검색 증강 생성</h3><p>직원이 질문하면 시스템이 관련 원문을 찾아 LLM에 전달하고, LLM이 근거를 바탕으로 답을 생성합니다.</p><div class="flow">질문 → 원문 검색 → 관련 내용 전달 → LLM 답변</div><p><b>적합:</b> 다수 원문에서 질의응답, 조항·근거 확인, 자주 바뀌는 자료 조회</p><p class="muted small">기본 RAG는 키워드 검색과 LLM만으로도 시작할 수 있습니다. 벡터DB나 LangGraph는 필수요건이 아닙니다.</p></article>
+<article class="card"><h3>LLM Wiki · AI 기반 지식 정리</h3><p>AI가 원문을 읽고 주제별 지식 문서를 작성합니다. 담당자가 승인한 Markdown 문서를 축적하며 직원은 이를 직접 열람합니다.</p><div class="flow">원문 → AI 정리 → 담당자 검토 → Wiki 열람</div><p><b>적합:</b> 운영절차, 인수인계, FAQ, 의사결정 이력, 반복 조회하는 규칙</p><p class="muted small">LLM Wiki는 표준화된 단일 제품명이 아니라 여기서 채택한 지식관리 운영 방식입니다. Wiki 위에 검색·질의응답을 추가하면 RAG와 결합할 수도 있습니다.</p></article></div>
+<h2>02. 업무 환경별 비교</h2><div class="scroll"><table><thead><tr><th>비교 항목</th><th>LLM Wiki 중심</th><th>기본 RAG 중심</th></tr></thead><tbody><tr><td>직원 이용 방식</td><td>완성된 문서·목차·링크 열람 (열람 시 LLM 불필요)</td><td>자연어로 질문하고 답변 확인 (응답 시 LLM 필요)</td></tr><tr><td>초기 자료 준비</td><td>주제·문서 템플릿·검토 기준 정의</td><td>원본 정리, 검색 인덱스 또는 파일 검색 설정</td></tr><tr><td>비전문 직원 반복 운영</td><td>템플릿 입력·검토·승인만 수행한다면 대체로 단순</td><td>관리형 서비스 이용 시 단순할 수 있으나 검색 품질 점검 필요</td></tr><tr><td>정확성 위험</td><td>잘못 정리한 내용이 계속 재사용될 위험</td><td>검색 누락·문맥 오해로 잘못 답할 위험</td></tr><tr><td>업데이트</td><td>원본 변경 감지 → 해당 Wiki 문서 재검토</td><td>원본 등록·변경 시 검색 인덱스 갱신</td></tr><tr><td>수천 개 문서 자유질문</td><td>단독으로는 한계가 있음</td><td>검색 품질을 확보하면 상대적으로 적합</td></tr><tr><td>권한·망분리</td><td>원본 보안등급·Wiki 열람권한 별도 관리</td><td>검색 인덱스·검색 결과에 원본 접근권한 적용</td></tr></tbody></table></div>
+<div class="note"><b>실무 판단:</b> “비전문 직원이 같은 양식으로 지식을 축적하고, 구성원은 정리된 결과를 주로 읽는다”면 LLM Wiki가 우선 검토 대상입니다. 그러나 “직원이 방대한 원본에 자유롭게 질문한다”면 RAG가 더 적합할 수 있습니다. <b>Wiki가 무조건 더 쉽거나 저렴한 것은 아닙니다.</b> 원문 변경이 잦고 승인 인력이 부족하면 오히려 관리 부담이 커질 수 있습니다.</div>
+<h2>03. 비전문 직원이 수행할 수 있는 운영 절차</h2><div class="steps">
+<div class="step"><b>대상 범위 선정</b> — 외부 홍보팀의 행사 안내문, 홍보물 제작 지침, 행사 운영 체크리스트 등 공개 가능하거나 승인된 문서 20~30건으로 시작합니다.</div>
+<div class="step"><b>원본 식별</b> — 제목, 작성·수정일, 소유 부서, 공개 가능 여부, 원본 링크를 기록합니다.</div>
+<div class="step"><b>AI 초안 생성</b> — 기관이 승인한 환경에서 정해진 양식으로 요약·절차·FAQ를 작성합니다.</div>
+<div class="step"><b>담당자 검증</b> — 지침·숫자·날짜·예외사항·출처를 원문과 대조하고 개인정보를 점검합니다.</div>
+<div class="step"><b>승인 후 게시</b> — 승인 상태와 담당자, 버전, 다음 검토일을 표시합니다. 미승인 문서는 기본 검색·열람에서 제외합니다.</div>
+<div class="step"><b>변경사항 관리</b> — 원본이 바뀌면 관련 문서를 재검토하고 이전 버전을 보존합니다.</div></div>
+<h2>04. 가벼운 파일럿 구성</h2><div class="grid grid3"><div class="card"><h3>1주 차</h3><p>문서 20~30건 선정, 원본·권한 파악, Wiki 템플릿 설계</p></div><div class="card"><h3>2주 차</h3><p>AI 초안 작성, 담당자 검토, Markdown·Git에 보관</p></div><div class="card"><h3>3~4주 차</h3><p>직원 질문 20~30개 테스트, 정확성·수정시간 측정, 갱신 책임자 지정</p></div></div>
+<h3 style="margin-top:24px">초기 폴더 구조 예시: 홍보·대외협력팀</h3><div class="code">WIKI/
+├── README.md
+├── 행사_운영/
+│   ├── 행사준비_체크리스트.md
+│   └── 행사안내문_작성기준.md
+├── 홍보물_제작/
+│   ├── 보도자료_작성절차.md
+│   └── 시각물_검수기준.md
+├── 민원안내/
+│   └── 공개FAQ.md
+└── templates/
+    └── 문서양식.md</div>
+<div class="card" style="margin-top:14px"><h3>모든 Wiki 문서에 넣을 메타데이터</h3><p>문서명 · 담당 부서 · 원본 링크 · 원본 기준일 · 보안등급/열람권한 · 검토자 · 승인 상태 · 최근 검토일 · 관련 문서</p><p class="muted">자주 변하는 행사 예산·일정 등은 확정 데이터의 원본에서 관리하고, Wiki에는 절차와 판단 기준을 기록하는 편이 안전합니다.</p></div>
+<h2>05. 언제 RAG를 더할까?</h2><div class="grid"><div class="card"><h3>Wiki만으로 충분한 시점</h3><ul><li>주요 질문이 반복되고, 목차로 찾기 쉬움</li><li>정리된 절차·FAQ 중심</li><li>승인된 게시물을 주로 읽음</li></ul></div><div class="card"><h3>RAG 검토 시점</h3><ul><li>원문 수가 늘고 미리 예상 못한 질문이 잦음</li><li>원문 문장·조항을 정확히 대조해야 함</li><li>Wiki 편집만으로 최신성을 유지하기 어려움</li></ul></div></div>
+<h2>06. 온프레미스 AI 도입을 위한 사전 준비</h2>
+<p>LLM Wiki는 당장 AI 서버를 구축하지 않아도 업무자료를 정리·검증·공유할 수 있는 <b>지식관리 기반</b>입니다. 이후 기관 내부에 LLM이나 RAG를 구축할 때 이 자료를 다시 활용할 수 있으므로, 초기 업무 개선과 장기적인 내부 AI 도입 준비를 함께 추진하는 방법으로 볼 수 있습니다. 다만 <b>온프레미스 구축의 필수 선행단계는 아닙니다.</b></p>
+<div class="grid grid3">
+  <div class="card"><h3>1단계 · 지식자산 정비</h3><p>원본 문서의 출처·기준일·보안등급을 식별하고, AI를 이용해 주제별 Wiki 초안을 작성한 뒤 담당자가 검증합니다.</p><p class="muted small">초안 생성에는 승인된 AI 환경이 필요하지만, 게시한 Markdown을 읽는 동안에는 LLM이 필요하지 않습니다.</p></div>
+  <div class="card"><h3>2단계 · 조직 지식 활용</h3><p>Obsidian(문서 열람·연결), VS Code(Markdown 편집), MkDocs(내부 웹 위키 게시) 등으로 절차·FAQ·의사결정 이력을 열람·수정합니다. 변경 이력은 Git 등으로 관리할 수 있습니다. 이 도구들은 일반적인 문서 열람에 LLM이 필요하지 않습니다.</p><p class="muted small">이 단계의 성과는 서버 성능보다 지식의 정확성, 갱신 책임, 직원의 반복업무 감소로 평가합니다.</p></div>
+  <div class="card"><h3>3단계 · 내부 AI 연계</h3><p>필요성과 예산이 확인되면 온프레미스 LLM에 검증된 Wiki를 연결하고, 원문 검색 요구가 커지면 RAG 인덱스도 구성합니다.</p><p class="muted small">문서 질의응답과 자동화는 접근권한·로그·응답검증을 갖춘 뒤 단계적으로 확대합니다.</p></div>
+</div>
+<div class="scroll" style="margin-top:15px"><table><thead><tr><th>미리 준비되는 자산</th><th>온프레미스 전환 시 활용</th><th>별도로 구축할 사항</th></tr></thead><tbody>
+<tr><td>주제별 Markdown, 원문 링크, 변경 이력</td><td>모델과 독립적으로 콘텐츠 재사용 및 검색 인덱스 구성</td><td>검색·색인 파이프라인, 원문 갱신 자동화</td></tr>
+<tr><td>검토된 FAQ, 표준 절차, 예외사항</td><td>내부 LLM의 응답 품질 평가용 질문·정답·근거 마련</td><td>모델 운영, 성능시험, 오류 대응</td></tr>
+<tr><td>문서별 소유자, 보안등급, 승인 상태</td><td>내부 자료 분류와 권한설계의 출발점</td><td>실제 사용자 인증·접근제어·감사로그</td></tr>
+</tbody></table></div>
+<div class="note"><b>비전문 직원 중심의 실무 판단:</b> 동일한 문서양식에 따라 자료를 정리하고, 담당자가 원문과 대조해 승인하며, 구성원은 완성된 지식을 읽는 업무는 LLM Wiki가 일반적으로 시작하기 쉽습니다. 반면 수많은 원본에 자유롭게 질문하고 최신 문장을 즉시 찾는 업무는 기본 RAG가 적합할 수 있습니다. Wiki 작성·검증 인력의 부담도 실제로 측정해야 합니다.</div>
+<p><b>전환 시 보안 원칙:</b> 공개 가능 자료는 승인된 외부 AI 환경에서 정리할 수 있지만, 비공개·민감 자료는 허가된 내부망에서 처리합니다. 외부에서 만든 Wiki 데이터나 도구를 물리적으로 분리된 환경에 반입할 때는 내용·개인정보·파일·의존성·통신기능을 검증합니다. 자료를 정리했다고 해서 보안 인프라가 자동으로 완성되는 것은 아닙니다.</p>
+<p class="muted small">정리하면 LLM Wiki는 'AI가 없어도 열람할 수 있는 지식자산'이자 '향후 온프레미스 AI에 투입할 검증된 콘텐츠'입니다. 단, 원본을 대체하지 않으며, 정확한 법령·수치 확인 시에는 원문 또는 공식 데이터베이스를 우선합니다.</p>
+<p class="note"><b>보안 원칙:</b> 중요 데이터는 기존 물리적 망분리와 승인된 처리환경을 유지합니다. 외부 AI로 만든 코드·Wiki 생성 도구를 내부로 가져올 때는 악성코드, 의존성, 통신 기능, 실행권한을 점검합니다. 사용환경 A(정리된 자료 열람)와 B(내부 AI)는 서로 대체되는 단계가 아니라 함께 운영할 수 있는 영역입니다.</p>
+<p class="muted small">기술 참고: <a href="https://learn.microsoft.com/azure/ai-studio/concepts/retrieval-augmented-generation">Microsoft Learn: RAG와 검색 인덱스</a>. RAG·Wiki 비교와 초기 권장 범위는 실무 운영을 위한 판단 기준이며, 성능·비용의 실측 결과를 의미하지 않습니다.</p>
+</main><footer class="bottom"><a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">AI 도입 가이드의 서비스 구성으로 돌아가기</a></footer></body></html>
