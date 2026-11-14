@@ -2234,6 +2234,7 @@
 #services-3 .delegate-switch-tip{color:var(--gray);font-size:11.5px;padding:0 10px}
 #services-3 [hidden]{display:none!important}
 #knowledge-roadmap [hidden]{display:none!important}
+section#services-4[hidden]{display:none!important}
 #services-3 .delegate-intro{margin-bottom:15px}
 #services-3 .delegate-kicker{font-size:11.5px;color:var(--blue);font-weight:700;letter-spacing:.025em}
 #services-3 .delegate-title{font-size:clamp(22px,2.5vw,31px);line-height:1.25;font-weight:900;color:var(--navy);letter-spacing:-.035em;margin:4px 0 6px}
@@ -2778,7 +2779,7 @@
 <section class="tint" id="services">
 <div class="wrap">
 <div class="reveal">
-<span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">1 / 4</span></span>
+<span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">1 / <span class="pg-total">3</span></span></span>
 <h2 class="sec-title">업무를 어떻게 구분하고, 어떻게 도입할 것인가</h2>
 <p class="sec-lead">모든 업무에 한꺼번에 AI를 넣지 않습니다. <b>업무를 세 가지 기준으로 구분</b>하고, 기준에 맞는 환경을 선택하고 AI에 필요한 권한만 부여합니다.</p>
 </div>
@@ -2802,7 +2803,7 @@
 </section>
 <section class="tint sub" data-nav="services" id="services-2">
 <div class="wrap">
-<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / 4</span></span></div>
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">2 / <span class="pg-total">3</span></span></span></div>
 <div class="reveal">
 <h3 class="h3s">기준 ② 운영 환경 A·B·C</h3>
 <p class="mix-rule">AI의 업무 활용범위에 따라 운영환경을 정리했습니다.</p>
@@ -2969,7 +2970,7 @@
 </section>
 <section class="tint sub" data-nav="services" id="services-3">
 <div class="wrap">
-<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">3 / 4</span></span></div>
+<div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">3 / <span class="pg-total">3</span></span></span></div>
 <!-- 기관장용 위임 의사결정 / 기존 실무 설명 전환 -->
 <div aria-label="AI 위임 원칙" id="delegate-exec-view" role="region">
 <div class="delegate-intro">
@@ -3053,7 +3054,7 @@
 </div>
 </div>
 </section>
-<section class="tint sub" data-nav="services" id="services-4">
+<section class="tint sub" data-nav="services" id="services-4" hidden="">
 <div class="wrap">
 <div class="reveal sub-eyebrow"><span class="eyebrow"><span class="num">04</span> Adoption by Task <span class="pg">4 / 4</span></span></div>
 <div class="reveal">
@@ -3107,7 +3108,7 @@
 <div class="kr-phase"><span class="kr-no">AI AGENT 구축 · C 외부 연계</span><h3>AI로 업무 자동화</h3><p>LLM Wiki의 업무 지식과 승인된 외부 서비스를 연결해 반복적인 정보 확인, 문서 작성, 안내 발송 등 업무 흐름을 AI가 수행하도록 합니다. 외부 연계는 공개·허용 자료에 한정하고, 실제 처리는 승인된 권한 범위에서 실행합니다.</p><strong>담당자 승인·이력 기록·중지·복구 수단 필요</strong></div>
 </div>
 <div class="kr-bottom reveal" id="kr-practice" hidden="" aria-label="실무자용: 지금 할 일과 AI 연결 준비"><div><b>지금 할 일</b><p>핵심 문서 선정 → 분류·표준화 → 원문 연결 → 담당자 검수 → 권한별 Wiki 열람</p></div><div><b>향후 AI 연결을 위한 준비</b><p>문서별 접근권한·최신성·출처 관리, 검색 품질, 망분리와 내부 운영환경 검토</p></div></div>
-<p class="kr-foot reveal">※ LLM Wiki는 AI 모델이 아니라 사람이 읽고 관리하는 지식기반입니다. A 환경의 검색·열람과 B 환경의 AI 질의응답은 구분해야 합니다. 위키를 구축했다고 AI에게 내부 자료 조회(L2)나 시스템 실행(L4) 권한이 자동으로 부여되는 것은 아닙니다. 외부 연결이 필요한 공개 업무는 4번의 C 환경 기준에 따라 별도로 검토합니다.</p>
+<p class="kr-foot reveal" id="kr-note" hidden="">※ LLM Wiki는 AI 모델이 아니라 사람이 읽고 관리하는 지식기반입니다. A 환경의 검색·열람과 B 환경의 AI 질의응답은 구분해야 합니다. 위키를 구축했다고 AI에게 내부 자료 조회(L2)나 시스템 실행(L4) 권한이 자동으로 부여되는 것은 아닙니다. 외부 연결이 필요한 공개 업무는 4번의 C 환경 기준에 따라 별도로 검토합니다.</p>
 </div></section><section class="alt" id="review">
 <div class="wrap">
 <div class="reveal">
@@ -3532,7 +3533,8 @@
     mode=name;
     exec.hidden=name!=='exec';
     detail.hidden=name!=='detail';
-    const kp=document.getElementById('kr-practice'); if(kp){kp.hidden=name!=='detail'; if(name==='detail')kp.classList.add('show');}
+    ['kr-practice','kr-note','services-4'].forEach(function(id){const el=document.getElementById(id); if(!el)return; el.hidden=name!=='detail'; if(name==='detail'){el.classList.add('show'); el.querySelectorAll('.reveal').forEach(function(r){r.classList.add('show');});}});
+    document.querySelectorAll('.pg-total').forEach(function(t){t.textContent=name==='detail'?'4':'3';});
     logo.setAttribute('aria-pressed',String(name==='detail'));
     if(name==='detail')detail.querySelectorAll('.reveal').forEach(function(el){el.classList.add('show');});
     if(scrollToSection){
