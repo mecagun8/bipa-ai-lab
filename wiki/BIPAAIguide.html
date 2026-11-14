@@ -2240,6 +2240,15 @@
 #services-3 [hidden]{display:none!important}
 #knowledge-roadmap [hidden]{display:none!important}
 section#services-4[hidden]{display:none!important}
+/* 히어로 PDF 다운로드 버튼 */
+.hero-dl{margin-top:12px;animation:fadeUp .7s var(--ease-out) .15s both}
+.dl-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--navy);font-weight:700;font-size:14px;background:rgba(255,255,255,.72);border:1px dashed #a9bfdd;border-radius:30px;padding:9px 18px;transition:background .2s,border-color .2s,transform .2s}
+.dl-btn small{font-size:12px;font-weight:500;color:var(--gray);margin-left:2px}
+.dl-btn:hover,.dl-btn:focus-visible{background:#fff;border-style:solid;border-color:var(--blue);transform:translateY(-2px)}
+.dl-btn:hover svg{animation:dlNudge .6s ease-in-out}
+@keyframes dlNudge{0%,100%{translate:0 0}50%{translate:0 3px}}
+@media(max-width:780px){.hero-dl{text-align:center}}
+@media print{.hero-dl{display:none}}
 /* 히어로 카드: 글자 키우고 단어 단위 줄바꿈 */
 .hub-pillar h4{font-size:16px}
 .hub-pillar p{font-size:14px;line-height:1.5;word-break:keep-all;overflow-wrap:break-word;text-wrap:balance}
@@ -2393,6 +2402,7 @@ section#knowledge-roadmap{padding-top:34px;padding-bottom:34px}
 <a class="btn btn-ghost" href="#solution">핵심 해결책 보기</a>
 <a class="btn btn-ghost" href="https://mecagun8.github.io/bipa-ai-lab/wiki/AIcases.html" rel="noopener" target="_blank">도입 사례집 →</a>
 </div>
+<div class="hero-dl"><a class="dl-btn" href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.pdf" download="공공기관_AI_도입_가이드.pdf" target="_blank" rel="noopener" aria-label="가이드 PDF 다운로드"><svg fill="none" height="16" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="16"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>PDF 다운로드<small>9쪽 · 한 화면 한 쪽</small></a></div>
 </div>
 <div class="hub">
 <svg class="hub-lines" preserveaspectratio="none" viewbox="0 0 620 560">
