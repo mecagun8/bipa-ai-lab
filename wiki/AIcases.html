@@ -131,7 +131,7 @@
 <body>
 <script>
   (function () {
-    function fit() { var w = innerWidth, h = innerHeight, z = 1; if (w >= 1100) z = Math.max(.8, Math.min(1.8, w / 1440)); window.__z = z; document.documentElement.style.setProperty('--z', z); }
+    function fit() { var w = innerWidth, h = innerHeight, z = 1; if (w >= 1100) z = Math.max(.8, Math.min(1.8, w / 1440)); window.__z = z; document.documentElement.style.setProperty('--z', z); (function(){var b=document.body,d=document.documentElement;if(!b)return;b.style.width='';var bw=b.getBoundingClientRect().width,cw=d.clientWidth;if(z!==1&&Math.abs(bw-cw)>2)b.style.width=(cw/z)+'px';})(); }
     fit(); addEventListener('resize', fit);
   })();
 </script>

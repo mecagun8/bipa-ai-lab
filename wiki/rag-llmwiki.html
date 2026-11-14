@@ -1,22 +1,235 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAG와 LLM Wiki · 업무 지식 관리 안내</title><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet"><style>
-:root{--navy:#173b6c;--blue:#2c5aa0;--pale:#f3f7fd;--line:#dde6f2;--gray:#5d6b80;--ink:#1f2a3a;--bg:#eef3fa;--green:#2f7d52;--greenlight:#e9f4ed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.75 'Noto Sans KR',sans-serif}nav{background:#fff;border-bottom:1px solid var(--line);padding:13px 24px;position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:12px;align-items:center}nav b{color:var(--navy)}a{color:var(--blue)}nav a{text-decoration:none;border:1px solid var(--line);border-radius:18px;padding:5px 12px;font-weight:700}.wrap{max-width:1120px;margin:auto;padding:32px 24px}header{background:linear-gradient(155deg,#f8fbff,#dfebfa);border-bottom:1px solid var(--line)}.eyebrow{font-weight:900;font-size:12px;letter-spacing:.09em;color:var(--blue)}h1{color:var(--navy);font-size:clamp(27px,4vw,43px);line-height:1.3;margin:10px 0}h2{font-size:23px;color:var(--navy);margin:32px 0 12px}h3{font-size:17px;color:var(--navy);margin:0 0 8px}.lead{max-width:900px;font-size:16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px;box-shadow:0 5px 19px #173b6c09}.card p{margin:6px 0}.card ul{margin:10px 0 0;padding-left:19px}.flow{background:var(--pale);border-radius:10px;padding:12px;margin:10px 0;font-weight:700;text-align:center;color:var(--navy)}.note{background:var(--greenlight);border-left:4px solid var(--green);border-radius:8px;padding:12px 16px;margin:16px 0}.muted{color:var(--gray)}table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}th,td{border:1px solid var(--line);padding:11px 13px;vertical-align:top;text-align:left}th{background:var(--pale);color:var(--navy)}.scroll{overflow-x:auto;border-radius:12px}.steps{counter-reset:step;display:grid;gap:10px}.step{background:#fff;border-radius:12px;border:1px solid var(--line);padding:13px 17px}.step:before{counter-increment:step;content:counter(step);display:inline-grid;place-items:center;background:var(--navy);color:white;width:25px;height:25px;border-radius:50%;margin-right:8px;font-weight:700}.code{background:#142b48;color:#e9f3ff;border-radius:13px;padding:18px 22px;white-space:pre-wrap;font:13px/1.6 Consolas,monospace;overflow:auto}.small{font-size:12px}.bottom{background:#102e54;color:white;padding:30px;text-align:center}footer a{color:white}@media(max-width:780px){.grid,.grid3{grid-template-columns:1fr}.wrap{padding:24px 17px}th,td{padding:9px 10px}}@media print{nav{display:none}.card{box-shadow:none}}
-</style></head><body><nav><b>공공기관 AI 도입 가이드 · 기술 참고</b><a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">← 서비스 구성으로</a></nav>
-<header><div class="wrap"><span class="eyebrow">TECHNICAL REFERENCE · 업무 지식 운영</span><h1>RAG와 LLM Wiki의 차이<br>그리고 실무 도입 방법</h1><p class="lead">문서를 검색해 답하게 할 것인가, 업무 지식을 미리 정리해 열람할 것인가. 업무 목적과 운영인력을 기준으로 선택하며, 축적한 지식은 향후 온프레미스 AI 도입에도 활용할 수 있습니다.</p></div></header>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RAG와 LLM Wiki · 업무 지식 관리 안내</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #173b6c; --navy-deep: #0f2c52; --blue: #2c5aa0; --blue-light: #e8f0fb; --blue-pale: #f3f7fd; --accent: #4a82d4;
+    --green: #2f7d52; --green-light: #e9f4ed; --amber: #b5561a; --amber-light: #fff1e6;
+    --ink: #1f2a3a; --gray: #5d6b80; --line: #dde6f2; --bg: #eef3fa;
+    --ease-out: cubic-bezier(.22, 1, .36, 1); --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box }
+  html { scroll-behavior: smooth; overflow-x: clip }
+  body { font-family: 'Noto Sans KR', sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; -webkit-font-smoothing: antialiased; zoom: var(--z, 1); overflow-x: clip }
+  a { color: var(--blue) }
+
+  #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; background: linear-gradient(90deg, var(--accent), var(--blue)); z-index: 200 }
+  nav { position: sticky; top: 0; z-index: 150; background: rgba(255, 255, 255, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line) }
+  .nav-in { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 11px 28px; flex-wrap: wrap }
+  .brand { font-weight: 700; color: var(--navy); font-size: 15px; margin-right: auto }
+  .brand small { font-weight: 500; color: var(--gray); margin-left: 6px }
+  .nav-in a.nl { font-size: 13px; color: var(--gray); text-decoration: none; padding: 6px 11px; border-radius: 20px; font-weight: 500; transition: .2s }
+  .nav-in a.nl:hover { background: var(--blue-light); color: var(--blue) }
+  .nav-in a.nl.active { background: var(--navy); color: #fff }
+  .back { font-size: 13px; font-weight: 700; color: var(--navy); text-decoration: none; border: 1px solid var(--line); border-radius: 20px; padding: 6px 13px; background: #fff }
+  .back:hover { border-color: var(--blue); color: var(--blue) }
+  @media(max-width:900px) { .nav-in a.nl { display: none } }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px }
+
+  header.hero { padding: 54px 0 40px; background: radial-gradient(circle at 82% 18%, rgba(74, 130, 212, .18), transparent 45%), linear-gradient(160deg, #f7faff, #dfeaf8) }
+  .badge { display: inline-flex; gap: 8px; align-items: center; background: #fff; border: 1px solid var(--line); color: var(--navy); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 30px }
+  .hero h1 { font-size: clamp(30px, 4vw, 46px); font-weight: 900; color: var(--navy); letter-spacing: -.03em; line-height: 1.2; margin: 14px 0 10px }
+  .hero h1 span { color: var(--blue) }
+  .hero p.lead { font-size: 17px; max-width: 920px }
+  .hero p.lead b { color: var(--blue) }
+  .sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px }
+  .sum a { display: block; text-decoration: none; color: inherit; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; box-shadow: 0 6px 20px rgba(23, 59, 108, .06); transition: .2s }
+  .sum a:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(23, 59, 108, .1) }
+  .sum .k { font-size: 12px; font-weight: 700; color: var(--blue); letter-spacing: .04em }
+  .sum b { display: block; font-size: 17px; color: var(--navy); margin: 3px 0 4px }
+  .sum span { font-size: 13.5px; color: var(--gray); line-height: 1.5 }
+  @media(max-width:900px) { .sum { grid-template-columns: 1fr } }
+
+  section.sec { padding: 38px 0 6px; scroll-margin-top: 70px }
+  .sec-h { display: flex; gap: 12px; align-items: center }
+  .sec-h .num { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--navy); color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 15px }
+  .sec-h h2 { font-size: clamp(21px, 2.2vw, 27px); color: var(--navy); font-weight: 900; letter-spacing: -.02em }
+  .sec-d { margin: 6px 0 0 48px; font-size: 15px; color: var(--gray); max-width: 960px }
+  @media(max-width:900px) { .sec-d { margin-left: 0 } }
+
+  .g2, .g3 { display: grid; gap: 14px; margin-top: 16px }
+  .g2 { grid-template-columns: repeat(2, 1fr) } .g3 { grid-template-columns: repeat(3, 1fr) }
+  @media(max-width:900px) { .g2, .g3 { grid-template-columns: 1fr } }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; box-shadow: 0 5px 18px rgba(23, 59, 108, .05) }
+  .card.top-blue { border-top: 3px solid var(--blue) } .card.top-green { border-top: 3px solid var(--green) }
+  .card h3 { font-size: 17px; color: var(--navy); font-weight: 900; margin-bottom: 6px }
+  .card h3 small { font-size: 12.5px; font-weight: 700; color: var(--gray); margin-left: 6px }
+  .card p { font-size: 14.5px; margin: 6px 0 }
+  .card ul { margin: 8px 0 0; padding-left: 18px; font-size: 14.5px }
+  .card li { margin: 3px 0 }
+  .muted { color: var(--gray) } .small { font-size: 12.5px !important }
+  .fit { display: grid; grid-template-columns: 44px 1fr; gap: 8px; font-size: 14px; margin-top: 8px }
+  .fit b { color: var(--blue); font-size: 13px }
+  .top-green .fit b { color: var(--green) }
+
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; background: var(--blue-pale); border-radius: 12px; padding: 12px; margin: 12px 0 }
+  .top-green .flow { background: var(--green-light) }
+  .flow span { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 13px; font-weight: 700; color: var(--navy) }
+  .flow i { font-style: normal; color: var(--gray); font-weight: 700 }
+
+  .tbl { overflow-x: auto; border-radius: 14px; border: 1px solid var(--line); margin-top: 16px; background: #fff }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px }
+  th, td { border-bottom: 1px solid var(--line); padding: 11px 14px; vertical-align: top; text-align: left }
+  thead th { background: var(--blue-pale); color: var(--navy); font-weight: 700 }
+  tbody th { color: var(--navy); font-weight: 700; width: 20%; background: #fbfcfe }
+  tr:last-child th, tr:last-child td { border-bottom: none }
+  .tbl .wk { background: var(--green-light); color: var(--green); font-weight: 700; font-size: 12px; border-radius: 6px; padding: 1px 7px; margin-right: 4px }
+
+  .note { background: var(--green-light); border-left: 4px solid var(--green); border-radius: 10px; padding: 13px 17px; margin-top: 16px; font-size: 14.5px }
+  .note b { color: var(--green) }
+  .note.warn { background: var(--amber-light); border-left-color: var(--amber) } .note.warn b { color: var(--amber) }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; counter-reset: st }
+  @media(max-width:900px) { .steps { grid-template-columns: 1fr } }
+  .step { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; font-size: 14px; position: relative }
+  .step::before { counter-increment: st; content: counter(st); display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 700; font-size: 13px; margin-bottom: 6px }
+  .step b { display: block; color: var(--navy); font-size: 15px; margin-bottom: 3px }
+
+  .wk-h { font-size: 12px; font-weight: 900; color: var(--blue); letter-spacing: .05em }
+  .code { background: #142b48; color: #e9f3ff; border-radius: 14px; padding: 16px 20px; white-space: pre; font: 13px/1.65 Consolas, monospace; overflow: auto }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
+  .meta span { font-size: 12.5px; font-weight: 700; color: var(--blue); background: var(--blue-pale); border: 1px solid var(--line); border-radius: 20px; padding: 3px 10px }
+
+  .stage { position: relative }
+  .stage .k { display: inline-block; font-size: 12px; font-weight: 900; color: #fff; background: var(--navy); border-radius: 6px; padding: 1px 8px; margin-bottom: 6px }
+  .stage:nth-child(1) .k { background: var(--green) } .stage:nth-child(2) .k { background: var(--blue) }
+
+  .sec-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px }
+  @media(max-width:900px) { .sec-list { grid-template-columns: 1fr } }
+  .sec-list div { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; padding: 13px 16px; font-size: 14.5px }
+  .sec-list b { display: block; color: var(--navy); margin-bottom: 3px }
+
+  .closing { background: #fff; border-top: 1px solid var(--line); margin-top: 40px; padding: 30px 0 34px }
+  .closing p { font-size: 15px; max-width: 980px }
+  .closing .src { margin-top: 12px; font-size: 13px; color: var(--gray) }
+  footer { background: var(--navy-deep); color: #c7d6ee; text-align: center; padding: 30px 20px; font-size: 14px }
+  footer a { color: #fff }
+
+  /* motion: Motion Prompt #074 Fade-in on scroll + #002 Stagger */
+  .rv { opacity: 0; translate: 0 20px; transition: opacity .7s var(--ease-out), translate .7s var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms) }
+  .rv.show { opacity: 1; translate: 0 0 }
+  .hero .badge { animation: pop .6s var(--ease-back) both }
+  .hero h1, .hero p.lead { animation: up .8s var(--ease-out) both } .hero p.lead { animation-delay: .12s }
+  @keyframes pop { from { opacity: 0; scale: .7 } to { opacity: 1; scale: 1 } }
+  @keyframes up { from { opacity: 0; translate: 0 16px } to { opacity: 1; translate: 0 0 } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important } .rv { opacity: 1; translate: none } }
+  @media print { nav, #progress { display: none } .rv { opacity: 1 !important; translate: none !important } body { zoom: 1 } .card { box-shadow: none } }
+</style>
+</head>
+<body>
+<script>
+  (function () {
+    function fit() {
+      var w = innerWidth, z = 1; if (w >= 1100) z = Math.max(.8, Math.min(1.8, w / 1440));
+      window.__z = z; document.documentElement.style.setProperty('--z', z);
+      var b = document.body, d = document.documentElement; if (!b) return; b.style.width = '';
+      var bw = b.getBoundingClientRect().width, cw = d.clientWidth; if (z !== 1 && Math.abs(bw - cw) > 2) b.style.width = (cw / z) + 'px';
+    }
+    fit(); addEventListener('resize', fit);
+  })();
+</script>
+<div id="progress"></div>
+<nav>
+<div class="nav-in">
+<div class="brand">업무 지식 관리 안내<small>AI 도입 가이드 · 기술 참고</small></div>
+<a class="nl" href="#s1">차이</a>
+<a class="nl" href="#s2">비교</a>
+<a class="nl" href="#s3">운영 절차</a>
+<a class="nl" href="#s4">파일럿</a>
+<a class="nl" href="#s5">RAG 추가</a>
+<a class="nl" href="#s6">온프레미스 준비</a>
+<a class="nl" href="#s7">보안</a>
+<a class="back" href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">← AI 도입 가이드</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="wrap">
+<span class="badge">Technical Reference · 업무 지식 운영</span>
+<h1>RAG와 LLM Wiki의 차이,<br/><span>그리고 실무 도입 방법</span></h1>
+<p class="lead">문서를 검색해 답하게 할 것인가, 업무 지식을 미리 정리해 열람할 것인가. <b>업무 목적과 운영 인력</b>을 기준으로 고르며, 정리해 둔 지식은 이후 온프레미스 AI를 도입할 때도 다시 쓸 수 있습니다.</p>
+<div class="sum">
+<a class="rv" href="#s1"><span class="k">RAG</span><b>질문할 때 찾아서 답하기</b><span>원문에서 관련 내용을 찾아 LLM이 답합니다. 답할 때마다 LLM이 필요합니다.</span></a>
+<a class="rv" href="#s1"><span class="k">LLM WIKI</span><b>미리 정리해 두고 읽기</b><span>AI가 정리하고 담당자가 승인한 문서를 직원이 읽습니다. 읽을 때는 LLM이 필요 없습니다.</span></a>
+<a class="rv" href="#s5"><span class="k">함께 쓰기</span><b>Wiki로 시작, 필요하면 RAG 추가</b><span>문서가 늘고 예상 못한 질문이 많아지면 Wiki 위에 검색·질의응답을 붙입니다.</span></a>
+</div>
+</div>
+</header>
+
 <main class="wrap">
-<h2>01. 두 방식의 핵심 차이</h2><div class="grid"><article class="card"><h3>RAG · 검색 증강 생성</h3><p>직원이 질문하면 시스템이 관련 원문을 찾아 LLM에 전달하고, LLM이 근거를 바탕으로 답을 생성합니다.</p><div class="flow">질문 → 원문 검색 → 관련 내용 전달 → LLM 답변</div><p><b>적합:</b> 다수 원문에서 질의응답, 조항·근거 확인, 자주 바뀌는 자료 조회</p><p class="muted small">기본 RAG는 키워드 검색과 LLM만으로도 시작할 수 있습니다. 벡터DB나 LangGraph는 필수요건이 아닙니다.</p></article>
-<article class="card"><h3>LLM Wiki · AI 기반 지식 정리</h3><p>AI가 원문을 읽고 주제별 지식 문서를 작성합니다. 담당자가 승인한 Markdown 문서를 축적하며 직원은 이를 직접 열람합니다.</p><div class="flow">원문 → AI 정리 → 담당자 검토 → Wiki 열람</div><p><b>적합:</b> 운영절차, 인수인계, FAQ, 의사결정 이력, 반복 조회하는 규칙</p><p class="muted small">LLM Wiki는 표준화된 단일 제품명이 아니라 여기서 채택한 지식관리 운영 방식입니다. Wiki 위에 검색·질의응답을 추가하면 RAG와 결합할 수도 있습니다.</p></article></div>
-<h2>02. 업무 환경별 비교</h2><div class="scroll"><table><thead><tr><th>비교 항목</th><th>LLM Wiki 중심</th><th>기본 RAG 중심</th></tr></thead><tbody><tr><td>직원 이용 방식</td><td>완성된 문서·목차·링크 열람 (열람 시 LLM 불필요)</td><td>자연어로 질문하고 답변 확인 (응답 시 LLM 필요)</td></tr><tr><td>초기 자료 준비</td><td>주제·문서 템플릿·검토 기준 정의</td><td>원본 정리, 검색 인덱스 또는 파일 검색 설정</td></tr><tr><td>비전문 직원 반복 운영</td><td>템플릿 입력·검토·승인만 수행한다면 대체로 단순</td><td>관리형 서비스 이용 시 단순할 수 있으나 검색 품질 점검 필요</td></tr><tr><td>정확성 위험</td><td>잘못 정리한 내용이 계속 재사용될 위험</td><td>검색 누락·문맥 오해로 잘못 답할 위험</td></tr><tr><td>업데이트</td><td>원본 변경 감지 → 해당 Wiki 문서 재검토</td><td>원본 등록·변경 시 검색 인덱스 갱신</td></tr><tr><td>수천 개 문서 자유질문</td><td>단독으로는 한계가 있음</td><td>검색 품질을 확보하면 상대적으로 적합</td></tr><tr><td>권한·망분리</td><td>원본 보안등급·Wiki 열람권한 별도 관리</td><td>검색 인덱스·검색 결과에 원본 접근권한 적용</td></tr></tbody></table></div>
-<div class="note"><b>실무 판단:</b> “비전문 직원이 같은 양식으로 지식을 축적하고, 구성원은 정리된 결과를 주로 읽는다”면 LLM Wiki가 우선 검토 대상입니다. 그러나 “직원이 방대한 원본에 자유롭게 질문한다”면 RAG가 더 적합할 수 있습니다. <b>Wiki가 무조건 더 쉽거나 저렴한 것은 아닙니다.</b> 원문 변경이 잦고 승인 인력이 부족하면 오히려 관리 부담이 커질 수 있습니다.</div>
-<h2>03. 비전문 직원이 수행할 수 있는 운영 절차</h2><div class="steps">
-<div class="step"><b>대상 범위 선정</b> — 외부 홍보팀의 행사 안내문, 홍보물 제작 지침, 행사 운영 체크리스트 등 공개 가능하거나 승인된 문서 20~30건으로 시작합니다.</div>
-<div class="step"><b>원본 식별</b> — 제목, 작성·수정일, 소유 부서, 공개 가능 여부, 원본 링크를 기록합니다.</div>
-<div class="step"><b>AI 초안 생성</b> — 기관이 승인한 환경에서 정해진 양식으로 요약·절차·FAQ를 작성합니다.</div>
-<div class="step"><b>담당자 검증</b> — 지침·숫자·날짜·예외사항·출처를 원문과 대조하고 개인정보를 점검합니다.</div>
-<div class="step"><b>승인 후 게시</b> — 승인 상태와 담당자, 버전, 다음 검토일을 표시합니다. 미승인 문서는 기본 검색·열람에서 제외합니다.</div>
-<div class="step"><b>변경사항 관리</b> — 원본이 바뀌면 관련 문서를 재검토하고 이전 버전을 보존합니다.</div></div>
-<h2>04. 가벼운 파일럿 구성</h2><div class="grid grid3"><div class="card"><h3>1주 차</h3><p>문서 20~30건 선정, 원본·권한 파악, Wiki 템플릿 설계</p></div><div class="card"><h3>2주 차</h3><p>AI 초안 작성, 담당자 검토, Markdown·Git에 보관</p></div><div class="card"><h3>3~4주 차</h3><p>직원 질문 20~30개 테스트, 정확성·수정시간 측정, 갱신 책임자 지정</p></div></div>
-<h3 style="margin-top:24px">초기 폴더 구조 예시: 홍보·대외협력팀</h3><div class="code">WIKI/
+
+<section class="sec" id="s1">
+<div class="sec-h rv"><span class="num">01</span><h2>두 방식의 핵심 차이</h2></div>
+<p class="sec-d rv">지식을 언제 조립하느냐가 다릅니다. RAG는 질문할 때, LLM Wiki는 미리 정리할 때 조립합니다.</p>
+<div class="g2">
+<article class="card top-blue rv">
+<h3>RAG<small>검색 증강 생성</small></h3>
+<p>직원이 질문하면 시스템이 관련 원문을 찾아 LLM에 넘기고, LLM이 그 근거로 답을 만듭니다.</p>
+<div class="flow"><span>질문</span><i>→</i><span>원문 검색</span><i>→</i><span>관련 내용 전달</span><i>→</i><span>LLM 답변</span></div>
+<div class="fit"><b>적합</b><span>여러 원문에 대한 질의응답, 조항·근거 확인, 자주 바뀌는 자료 조회</span></div>
+<p class="muted small">기본 RAG는 키워드 검색과 LLM만으로도 시작할 수 있습니다. 벡터DB나 LangGraph는 필수가 아닙니다.</p>
+</article>
+<article class="card top-green rv">
+<h3>LLM Wiki<small>AI 기반 지식 정리</small></h3>
+<p>AI가 원문을 읽고 주제별 지식 문서를 씁니다. 담당자가 승인한 Markdown 문서가 쌓이고, 직원은 그 문서를 직접 읽습니다.</p>
+<div class="flow"><span>원문</span><i>→</i><span>AI 정리</span><i>→</i><span>담당자 검토</span><i>→</i><span>Wiki 열람</span></div>
+<div class="fit"><b>적합</b><span>운영 절차, 인수인계, FAQ, 의사결정 이력, 자주 찾는 규칙</span></div>
+<p class="muted small">LLM Wiki는 표준화된 제품명이 아니라 이 가이드에서 채택한 지식관리 운영 방식입니다. Wiki 위에 검색·질의응답을 붙이면 RAG와 결합할 수도 있습니다.</p>
+</article>
+</div>
+</section>
+
+<section class="sec" id="s2">
+<div class="sec-h rv"><span class="num">02</span><h2>업무 환경별 비교</h2></div>
+<div class="tbl rv">
+<table>
+<thead><tr><th>비교 항목</th><th>LLM Wiki 중심</th><th>기본 RAG 중심</th></tr></thead>
+<tbody>
+<tr><th>직원 이용 방식</th><td>완성된 문서·목차·링크를 열람 (열람할 때 LLM 불필요)</td><td>자연어로 질문하고 답변 확인 (답할 때 LLM 필요)</td></tr>
+<tr><th>초기 준비</th><td>주제·문서 템플릿·검토 기준 정의</td><td>원본 정리, 검색 인덱스 또는 파일 검색 설정</td></tr>
+<tr><th>비전문 직원의 반복 운영</th><td>템플릿 입력·검토·승인만 한다면 대체로 단순</td><td>관리형 서비스를 쓰면 단순할 수 있으나 검색 품질 점검 필요</td></tr>
+<tr><th>정확성 위험</th><td>잘못 정리한 내용이 계속 재사용될 위험</td><td>검색 누락·문맥 오해로 잘못 답할 위험</td></tr>
+<tr><th>업데이트</th><td>원본 변경 확인 → 해당 Wiki 문서 재검토</td><td>원본 등록·변경 시 검색 인덱스 갱신</td></tr>
+<tr><th>수천 건 문서에 자유 질문</th><td>단독으로는 한계</td><td>검색 품질을 확보하면 상대적으로 적합</td></tr>
+<tr><th>권한·망분리</th><td>원본 보안등급과 Wiki 열람권한을 따로 관리</td><td>검색 인덱스·검색 결과에 원본 접근권한 적용</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note rv"><b>실무 판단</b> — 비전문 직원이 같은 양식으로 지식을 쌓고, 담당자가 원문과 대조해 승인하고, 구성원은 정리된 결과를 주로 읽는다면 <b>LLM Wiki</b>가 먼저 검토할 대상입니다. 직원이 방대한 원본에 자유롭게 묻고 최신 문장을 바로 찾아야 한다면 <b>RAG</b>가 더 맞을 수 있습니다.</div>
+<div class="note warn rv"><b>주의</b> — Wiki가 언제나 더 쉽거나 싼 것은 아닙니다. 원문이 자주 바뀌고 승인 인력이 부족하면 오히려 관리 부담이 커집니다. 파일럿에서 작성·검증에 드는 시간을 실제로 재야 합니다.</div>
+</section>
+
+<section class="sec" id="s3">
+<div class="sec-h rv"><span class="num">03</span><h2>비전문 직원이 할 수 있는 운영 절차</h2></div>
+<p class="sec-d rv">같은 양식과 검토 기준만 정해 두면, 개발 경험이 없는 직원도 아래 순서로 반복 운영할 수 있습니다.</p>
+<div class="steps">
+<div class="step rv"><b>대상 범위 정하기</b>행사 안내문, 홍보물 제작 지침, 행사 운영 체크리스트처럼 공개 가능하거나 승인된 문서 20~30건으로 시작합니다.</div>
+<div class="step rv"><b>원본 확인하기</b>제목, 작성·수정일, 소유 부서, 공개 가능 여부, 원본 링크를 기록합니다.</div>
+<div class="step rv"><b>AI 초안 만들기</b>기관이 승인한 환경에서 정해진 양식으로 요약·절차·FAQ를 작성합니다.</div>
+<div class="step rv"><b>담당자 검증</b>지침·숫자·날짜·예외사항·출처를 원문과 대조하고 개인정보를 점검합니다.</div>
+<div class="step rv"><b>승인 후 게시</b>승인 상태, 담당자, 버전, 다음 검토일을 표시합니다. 미승인 문서는 기본 검색·열람에서 뺍니다.</div>
+<div class="step rv"><b>변경 관리</b>원본이 바뀌면 관련 문서를 다시 검토하고, 이전 버전은 보존합니다.</div>
+</div>
+</section>
+
+<section class="sec" id="s4">
+<div class="sec-h rv"><span class="num">04</span><h2>가벼운 파일럿 구성 (4주)</h2></div>
+<div class="g3">
+<div class="card rv"><div class="wk-h">1주 차</div><h3>범위·구조 정하기</h3><p>문서 20~30건 선정, 원본·권한 파악, Wiki 템플릿 설계</p></div>
+<div class="card rv"><div class="wk-h">2주 차</div><h3>정리·검토</h3><p>AI 초안 작성, 담당자 검토, Markdown·Git에 보관</p></div>
+<div class="card rv"><div class="wk-h">3~4주 차</div><h3>시험·측정</h3><p>직원 질문 20~30개로 시험, 정확성·수정 시간 측정, 갱신 책임자 지정</p></div>
+</div>
+<div class="g2">
+<div class="card rv">
+<h3>초기 폴더 구조 예시<small>홍보·대외협력팀</small></h3>
+<div class="code">WIKI/
 ├── README.md
 ├── 행사_운영/
 │   ├── 행사준비_체크리스트.md
@@ -28,23 +241,75 @@
 │   └── 공개FAQ.md
 └── templates/
     └── 문서양식.md</div>
-<div class="card" style="margin-top:14px"><h3>모든 Wiki 문서에 넣을 메타데이터</h3><p>문서명 · 담당 부서 · 원본 링크 · 원본 기준일 · 보안등급/열람권한 · 검토자 · 승인 상태 · 최근 검토일 · 관련 문서</p><p class="muted">자주 변하는 행사 예산·일정 등은 확정 데이터의 원본에서 관리하고, Wiki에는 절차와 판단 기준을 기록하는 편이 안전합니다.</p></div>
-<h2>05. 언제 RAG를 더할까?</h2><div class="grid"><div class="card"><h3>Wiki만으로 충분한 시점</h3><ul><li>주요 질문이 반복되고, 목차로 찾기 쉬움</li><li>정리된 절차·FAQ 중심</li><li>승인된 게시물을 주로 읽음</li></ul></div><div class="card"><h3>RAG 검토 시점</h3><ul><li>원문 수가 늘고 미리 예상 못한 질문이 잦음</li><li>원문 문장·조항을 정확히 대조해야 함</li><li>Wiki 편집만으로 최신성을 유지하기 어려움</li></ul></div></div>
-<h2>06. 온프레미스 AI 도입을 위한 사전 준비</h2>
-<p>LLM Wiki는 당장 AI 서버를 구축하지 않아도 업무자료를 정리·검증·공유할 수 있는 <b>지식관리 기반</b>입니다. 이후 기관 내부에 LLM이나 RAG를 구축할 때 이 자료를 다시 활용할 수 있으므로, 초기 업무 개선과 장기적인 내부 AI 도입 준비를 함께 추진하는 방법으로 볼 수 있습니다. 다만 <b>온프레미스 구축의 필수 선행단계는 아닙니다.</b></p>
-<div class="grid grid3">
-  <div class="card"><h3>1단계 · 지식자산 정비</h3><p>원본 문서의 출처·기준일·보안등급을 식별하고, AI를 이용해 주제별 Wiki 초안을 작성한 뒤 담당자가 검증합니다.</p><p class="muted small">초안 생성에는 승인된 AI 환경이 필요하지만, 게시한 Markdown을 읽는 동안에는 LLM이 필요하지 않습니다.</p></div>
-  <div class="card"><h3>2단계 · 조직 지식 활용</h3><p>Obsidian(문서 열람·연결), VS Code(Markdown 편집), MkDocs(내부 웹 위키 게시) 등으로 절차·FAQ·의사결정 이력을 열람·수정합니다. 변경 이력은 Git 등으로 관리할 수 있습니다. 이 도구들은 일반적인 문서 열람에 LLM이 필요하지 않습니다.</p><p class="muted small">이 단계의 성과는 서버 성능보다 지식의 정확성, 갱신 책임, 직원의 반복업무 감소로 평가합니다.</p></div>
-  <div class="card"><h3>3단계 · 내부 AI 연계</h3><p>필요성과 예산이 확인되면 온프레미스 LLM에 검증된 Wiki를 연결하고, 원문 검색 요구가 커지면 RAG 인덱스도 구성합니다.</p><p class="muted small">문서 질의응답과 자동화는 접근권한·로그·응답검증을 갖춘 뒤 단계적으로 확대합니다.</p></div>
 </div>
-<div class="scroll" style="margin-top:15px"><table><thead><tr><th>미리 준비되는 자산</th><th>온프레미스 전환 시 활용</th><th>별도로 구축할 사항</th></tr></thead><tbody>
-<tr><td>주제별 Markdown, 원문 링크, 변경 이력</td><td>모델과 독립적으로 콘텐츠 재사용 및 검색 인덱스 구성</td><td>검색·색인 파이프라인, 원문 갱신 자동화</td></tr>
-<tr><td>검토된 FAQ, 표준 절차, 예외사항</td><td>내부 LLM의 응답 품질 평가용 질문·정답·근거 마련</td><td>모델 운영, 성능시험, 오류 대응</td></tr>
-<tr><td>문서별 소유자, 보안등급, 승인 상태</td><td>내부 자료 분류와 권한설계의 출발점</td><td>실제 사용자 인증·접근제어·감사로그</td></tr>
-</tbody></table></div>
-<div class="note"><b>비전문 직원 중심의 실무 판단:</b> 동일한 문서양식에 따라 자료를 정리하고, 담당자가 원문과 대조해 승인하며, 구성원은 완성된 지식을 읽는 업무는 LLM Wiki가 일반적으로 시작하기 쉽습니다. 반면 수많은 원본에 자유롭게 질문하고 최신 문장을 즉시 찾는 업무는 기본 RAG가 적합할 수 있습니다. Wiki 작성·검증 인력의 부담도 실제로 측정해야 합니다.</div>
-<p><b>전환 시 보안 원칙:</b> 공개 가능 자료는 승인된 외부 AI 환경에서 정리할 수 있지만, 비공개·민감 자료는 허가된 내부망에서 처리합니다. 외부에서 만든 Wiki 데이터나 도구를 물리적으로 분리된 환경에 반입할 때는 내용·개인정보·파일·의존성·통신기능을 검증합니다. 자료를 정리했다고 해서 보안 인프라가 자동으로 완성되는 것은 아닙니다.</p>
-<p class="muted small">정리하면 LLM Wiki는 'AI가 없어도 열람할 수 있는 지식자산'이자 '향후 온프레미스 AI에 투입할 검증된 콘텐츠'입니다. 단, 원본을 대체하지 않으며, 정확한 법령·수치 확인 시에는 원문 또는 공식 데이터베이스를 우선합니다.</p>
-<p class="note"><b>보안 원칙:</b> 중요 데이터는 기존 물리적 망분리와 승인된 처리환경을 유지합니다. 외부 AI로 만든 코드·Wiki 생성 도구를 내부로 가져올 때는 악성코드, 의존성, 통신 기능, 실행권한을 점검합니다. 사용환경 A(정리된 자료 열람)와 B(내부 AI)는 서로 대체되는 단계가 아니라 함께 운영할 수 있는 영역입니다.</p>
-<p class="muted small">기술 참고: <a href="https://learn.microsoft.com/azure/ai-studio/concepts/retrieval-augmented-generation">Microsoft Learn: RAG와 검색 인덱스</a>. RAG·Wiki 비교와 초기 권장 범위는 실무 운영을 위한 판단 기준이며, 성능·비용의 실측 결과를 의미하지 않습니다.</p>
-</main><footer class="bottom"><a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">AI 도입 가이드의 서비스 구성으로 돌아가기</a></footer></body></html>
+<div class="card rv">
+<h3>모든 Wiki 문서에 넣을 정보</h3>
+<div class="meta"><span>문서명</span><span>담당 부서</span><span>원본 링크</span><span>원본 기준일</span><span>보안등급·열람권한</span><span>검토자</span><span>승인 상태</span><span>최근 검토일</span><span>관련 문서</span></div>
+<p class="muted" style="margin-top:12px">자주 바뀌는 행사 예산·일정 같은 수치는 확정 데이터의 원본에서 관리하고, Wiki에는 <b>절차와 판단 기준</b>을 적는 편이 안전합니다.</p>
+</div>
+</div>
+</section>
+
+<section class="sec" id="s5">
+<div class="sec-h rv"><span class="num">05</span><h2>언제 RAG를 더할까?</h2></div>
+<div class="g2">
+<div class="card top-green rv"><h3>Wiki만으로 충분할 때</h3><ul><li>주요 질문이 반복되고, 목차로 찾기 쉬움</li><li>정리된 절차·FAQ가 중심</li><li>승인된 게시물을 주로 읽음</li></ul></div>
+<div class="card top-blue rv"><h3>RAG를 검토할 때</h3><ul><li>원문 수가 늘고 미리 예상 못한 질문이 잦음</li><li>원문 문장·조항을 정확히 대조해야 함</li><li>Wiki 편집만으로 최신 상태를 유지하기 어려움</li></ul></div>
+</div>
+</section>
+
+<section class="sec" id="s6">
+<div class="sec-h rv"><span class="num">06</span><h2>온프레미스 AI 도입을 위한 사전 준비</h2></div>
+<p class="sec-d rv">LLM Wiki는 AI 서버를 당장 구축하지 않아도 업무 자료를 정리·검증·공유할 수 있는 <b>지식관리 기반</b>입니다. 나중에 내부 LLM이나 RAG를 구축할 때 이 자료를 그대로 쓸 수 있어, 당장의 업무 개선과 장기적인 내부 AI 준비를 함께 진행할 수 있습니다. 다만 온프레미스 구축의 필수 선행 단계는 아닙니다.</p>
+<div class="g3">
+<div class="card stage rv"><span class="k">1단계</span><h3>지식자산 정비</h3><p>원본 문서의 출처·기준일·보안등급을 확인하고, AI로 주제별 Wiki 초안을 쓴 뒤 담당자가 검증합니다.</p><p class="muted small">초안을 만들 때는 승인된 AI 환경이 필요하지만, 게시한 Markdown을 읽을 때는 LLM이 필요 없습니다.</p></div>
+<div class="card stage rv"><span class="k">2단계</span><h3>조직 지식 활용</h3><p>Obsidian(열람·연결), VS Code(Markdown 편집), MkDocs(내부 웹 위키 게시) 등으로 절차·FAQ·의사결정 이력을 읽고 고칩니다. 변경 이력은 Git 등으로 관리합니다. 일반 열람에는 LLM이 필요 없습니다.</p><p class="muted small">이 단계의 성과는 서버 성능이 아니라 지식의 정확성, 갱신 책임, 반복 업무 감소로 평가합니다.</p></div>
+<div class="card stage rv"><span class="k">3단계</span><h3>내부 AI 연계</h3><p>필요성과 예산이 확인되면 온프레미스 LLM에 검증된 Wiki를 연결하고, 원문 검색 요구가 커지면 RAG 인덱스도 구성합니다.</p><p class="muted small">문서 질의응답과 자동화는 접근권한·로그·응답 검증을 갖춘 뒤 단계적으로 넓힙니다.</p></div>
+</div>
+<div class="tbl rv">
+<table>
+<thead><tr><th>미리 준비되는 자산</th><th>온프레미스 전환 시 활용</th><th>따로 구축할 사항</th></tr></thead>
+<tbody>
+<tr><td>주제별 Markdown, 원문 링크, 변경 이력</td><td>모델과 상관없이 콘텐츠 재사용, 검색 인덱스 구성</td><td>검색·색인 파이프라인, 원문 갱신 자동화</td></tr>
+<tr><td>검토된 FAQ, 표준 절차, 예외사항</td><td>내부 LLM 응답 품질을 평가할 질문·정답·근거</td><td>모델 운영, 성능 시험, 오류 대응</td></tr>
+<tr><td>문서별 소유자, 보안등급, 승인 상태</td><td>내부 자료 분류와 권한 설계의 출발점</td><td>실제 사용자 인증·접근제어·감사 로그</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="sec" id="s7">
+<div class="sec-h rv"><span class="num">07</span><h2>보안 원칙</h2></div>
+<div class="sec-list">
+<div class="rv"><b>자료 등급에 따라 처리 환경을 나눕니다</b>공개 가능한 자료는 승인된 외부 AI 환경에서 정리할 수 있지만, 비공개·민감 자료는 허가된 내부망에서 처리합니다. 중요 데이터는 기존 물리적 망분리와 승인된 처리 환경을 유지합니다.</div>
+<div class="rv"><b>반입 전에 검증합니다</b>외부에서 만든 Wiki 데이터나 코드·생성 도구를 분리된 내부 환경으로 가져올 때는 내용·개인정보·파일·의존성·외부 통신 기능·실행 권한을 점검합니다.</div>
+<div class="rv"><b>정리했다고 보안이 끝나지 않습니다</b>자료를 정리했다고 보안 인프라가 저절로 갖춰지지는 않습니다. 인증·접근제어·감사 로그는 따로 구축합니다.</div>
+<div class="rv"><b>A와 B는 함께 운영합니다</b>가이드의 운영 환경 A(정리된 자료 열람)와 B(내부 AI)는 하나가 다른 하나를 대체하는 단계가 아니라, 함께 운영할 수 있는 영역입니다.</div>
+</div>
+</section>
+</main>
+
+<section class="closing">
+<div class="wrap">
+<div class="sec-h rv"><span class="num" style="background:var(--green)">✓</span><h2>정리하면</h2></div>
+<p class="rv" style="margin-top:10px">LLM Wiki는 <b>AI 없이도 열람할 수 있는 지식자산</b>이자 <b>나중에 온프레미스 AI에 넣을 검증된 콘텐츠</b>입니다. 다만 원본을 대체하지 않으며, 법령·수치를 정확히 확인할 때는 원문이나 공식 데이터베이스를 먼저 봅니다.</p>
+<p class="src rv">기술 참고: <a href="https://learn.microsoft.com/azure/ai-studio/concepts/retrieval-augmented-generation">Microsoft Learn: RAG와 검색 인덱스</a>. RAG·Wiki 비교와 초기 권장 범위는 실무 운영을 위한 판단 기준이며, 성능·비용을 실측한 결과가 아닙니다.</p>
+</div>
+</section>
+
+<footer><a href="https://mecagun8.github.io/bipa-ai-lab/wiki/BIPAAIguide.html#services">공공기관 AI 도입 가이드로 돌아가기</a> · <a href="https://mecagun8.github.io/bipa-ai-lab/wiki/AIcases.html">도입 사례집</a></footer>
+
+<script>
+  (function () {
+    var bar = document.getElementById('progress');
+    addEventListener('scroll', function () { var h = document.documentElement.scrollHeight - innerHeight; bar.style.width = (h > 0 ? scrollY / h * 100 : 0) + '%'; }, { passive: true });
+    document.querySelectorAll('.g2,.g3,.steps,.sum,.sec-list').forEach(function (g) { Array.prototype.forEach.call(g.children, function (c, i) { c.style.setProperty('--i', i % 6) }) });
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } }) }, { threshold: .08 });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el) });
+    var links = document.querySelectorAll('.nl');
+    var so = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (l) { l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id) }) }) }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('section[id]').forEach(function (s) { so.observe(s) });
+  })();
+</script>
+</body>
+</html>
