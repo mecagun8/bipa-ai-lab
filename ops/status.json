@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-11-20T16:27:46.603Z",
+  "generatedAt": "2026-11-20T22:44:19.216Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 2462,
-      "checkedAt": "2026-11-20T16:27:34.076Z"
+      "ms": 2325,
+      "checkedAt": "2026-11-20T22:43:52.533Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 426,
-      "checkedAt": "2026-11-20T16:27:34.502Z"
+      "ms": 263,
+      "checkedAt": "2026-11-20T22:43:52.796Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2893,
-      "checkedAt": "2026-11-20T16:27:37.395Z"
+      "ms": 2452,
+      "checkedAt": "2026-11-20T22:43:55.248Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 1066,
-      "checkedAt": "2026-11-20T16:27:38.461Z"
+      "ms": 8708,
+      "checkedAt": "2026-11-20T22:44:03.956Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
       "ms": 2752,
-      "checkedAt": "2026-11-20T16:27:41.213Z"
+      "checkedAt": "2026-11-20T22:44:06.708Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 127,
-      "checkedAt": "2026-11-20T16:27:41.340Z"
+      "ms": 622,
+      "checkedAt": "2026-11-20T22:44:07.330Z"
     },
     {
       "id": "rules",
-      "ok": false,
-      "status": 503,
-      "ms": 412,
-      "checkedAt": "2026-11-20T16:27:41.752Z"
+      "ok": true,
+      "status": 404,
+      "ms": 99,
+      "checkedAt": "2026-11-20T22:44:07.429Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 2397,
-      "checkedAt": "2026-11-20T16:27:44.149Z"
+      "ms": 9346,
+      "checkedAt": "2026-11-20T22:44:16.775Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 2454,
-      "checkedAt": "2026-11-20T16:27:46.603Z"
+      "ms": 2441,
+      "checkedAt": "2026-11-20T22:44:19.216Z"
     }
   ]
 }
