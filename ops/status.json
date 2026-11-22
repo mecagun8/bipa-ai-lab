@@ -1,68 +1,68 @@
 {
-  "generatedAt": "2026-11-22T11:43:45.509Z",
+  "generatedAt": "2026-11-22T18:44:01.206Z",
   "results": [
     {
       "id": "directive",
       "ok": true,
       "status": 200,
-      "ms": 1383,
-      "checkedAt": "2026-11-22T11:43:20.123Z"
+      "ms": 1316,
+      "checkedAt": "2026-11-22T18:43:40.979Z"
     },
     {
       "id": "company-card",
       "ok": true,
       "status": 200,
-      "ms": 260,
-      "checkedAt": "2026-11-22T11:43:20.383Z"
+      "ms": 403,
+      "checkedAt": "2026-11-22T18:43:41.382Z"
     },
     {
       "id": "mou",
       "ok": true,
       "status": 200,
-      "ms": 2453,
-      "checkedAt": "2026-11-22T11:43:22.836Z"
+      "ms": 2519,
+      "checkedAt": "2026-11-22T18:43:43.901Z"
     },
     {
       "id": "jobs-2026",
       "ok": true,
       "status": 200,
-      "ms": 6977,
-      "checkedAt": "2026-11-22T11:43:29.813Z"
+      "ms": 6549,
+      "checkedAt": "2026-11-22T18:43:50.450Z"
     },
     {
       "id": "education",
       "ok": true,
       "status": 200,
-      "ms": 2613,
-      "checkedAt": "2026-11-22T11:43:32.426Z"
+      "ms": 2469,
+      "checkedAt": "2026-11-22T18:43:52.919Z"
     },
     {
       "id": "wiki",
       "ok": true,
       "status": 200,
-      "ms": 143,
-      "checkedAt": "2026-11-22T11:43:32.569Z"
+      "ms": 132,
+      "checkedAt": "2026-11-22T18:43:53.052Z"
     },
     {
       "id": "rules",
-      "ok": true,
-      "status": 404,
-      "ms": 97,
-      "checkedAt": "2026-11-22T11:43:32.666Z"
+      "ok": false,
+      "status": 503,
+      "ms": 256,
+      "checkedAt": "2026-11-22T18:43:53.308Z"
     },
     {
       "id": "notices",
       "ok": true,
       "status": 200,
-      "ms": 10435,
-      "checkedAt": "2026-11-22T11:43:43.101Z"
+      "ms": 5456,
+      "checkedAt": "2026-11-22T18:43:58.764Z"
     },
     {
       "id": "dept-company",
       "ok": true,
       "status": 200,
-      "ms": 2408,
-      "checkedAt": "2026-11-22T11:43:45.509Z"
+      "ms": 2442,
+      "checkedAt": "2026-11-22T18:44:01.206Z"
     }
   ]
 }
